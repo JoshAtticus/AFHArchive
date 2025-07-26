@@ -31,8 +31,8 @@
                             <strong>Size:</strong> {{ upload.file_size_mb }} MB<br>
                             <strong>Downloads:</strong> {{ upload.download_count }}
                         </p>
-                        <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-download"></i> Download
+                        <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-info-circle"></i> View Details
                         </a>
                     </div>
                 </div>

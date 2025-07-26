@@ -64,8 +64,8 @@
                 </p>
                 {% endif %}
                 <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download
+                    <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary">
+                        <i class="fas fa-info-circle"></i> View Details
                     </a>
                     <small class="text-muted align-self-center">
                         Uploaded {{ upload.uploaded_at.strftime('%Y-%m-%d') }}

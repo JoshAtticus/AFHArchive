@@ -137,8 +137,8 @@
                     </a>
                     
                     {% if upload.is_approved %}
-                    <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download File
+                    <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary">
+                        <i class="fas fa-info-circle"></i> View File Details
                     </a>
                     {% endif %}
                     

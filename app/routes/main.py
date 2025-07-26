@@ -117,6 +117,16 @@ def browse():
     return render_template('browse.html', uploads=uploads, manufacturers=manufacturers, 
                          current_manufacturer=manufacturer, current_model=model, current_search=search)
 
+@main_bp.route('/file/<int:upload_id>')
+def file_detail(upload_id):
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        flash('File not available', 'error')
+        return redirect(url_for('main.index'))
+    
+    return render_template('file_detail.html', upload=upload)
+
 @main_bp.route('/download/<int:upload_id>')
 def download(upload_id):
     upload = Upload.query.get_or_404(upload_id)

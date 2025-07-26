@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-file-archive"></i> {{ upload.original_filename }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Device Information</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Manufacturer:</th>
+                                <td>{{ upload.device_manufacturer }}</td>
+                            </tr>
+                            <tr>
+                                <th>Model:</th>
+                                <td>{{ upload.device_model }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>File Information</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Size:</th>
+                                <td>{{ upload.file_size_mb }} MB</td>
+                            </tr>
+                            <tr>
+                                <th>MD5 Hash:</th>
+                                <td><code>{{ upload.md5_hash }}</code></td>
+                            </tr>
+                            <tr>
+                                <th>Downloads:</th>
+                                <td>{{ upload.download_count }}</td>
+                            </tr>
+                            <tr>
+                                <th>Uploaded:</th>
+                                <td>{{ upload.uploaded_at.strftime('%B %d, %Y') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                {% if upload.afh_link or upload.xda_thread %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Original Links</h5>
+                        <div class="d-flex gap-2">
+                            {% if upload.afh_link %}
+                            <a href="{{ upload.afh_link }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-external-link-alt"></i> Original AFH Link
+                            </a>
+                            {% endif %}
+                            {% if upload.xda_thread %}
+                            <a href="{{ upload.xda_thread }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                <i class="fab fa-android"></i> XDA Thread
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if upload.notes %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Notes</h5>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <p class="mb-0">{{ upload.notes }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Browse
+                    </a>
+                    <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-success btn-lg">
+                        <i class="fas fa-download"></i> Download File
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Download Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6><i class="fas fa-shield-alt"></i> File Verification</h6>
+                    <p class="mb-2">You can verify the file integrity using the MD5 hash:</p>
+                    <code class="small">{{ upload.md5_hash }}</code>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Important</h6>
+                    <ul class="mb-0 small">
+                        <li>This file was originally hosted on AndroidFileHost</li>
+                        <li>Files are provided as-is for preservation purposes</li>
+                        <li>Use at your own risk and ensure compatibility</li>
+                        <li>Downloads are rate-limited to preserve bandwidth</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% if upload.uploader %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6><i class="fas fa-user"></i> Contributed by</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    {% if upload.uploader.avatar_url %}
+                    <img src="{{ upload.uploader.avatar_url }}" alt="{{ upload.uploader.name }}" class="rounded-circle me-2" width="32" height="32">
+                    {% endif %}
+                    <span>{{ upload.uploader.name }}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
