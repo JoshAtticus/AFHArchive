@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Files - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-search"></i> Browse Archive</h2>
+</div>
+
+<div class="search-filters">
+    <form method="GET" class="row g-3">
+        <div class="col-md-3">
+            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <select class="form-select" id="manufacturer" name="manufacturer">
+                <option value="">All Manufacturers</option>
+                {% for manufacturer in manufacturers %}
+                <option value="{{ manufacturer }}" {% if manufacturer == current_manufacturer %}selected{% endif %}>
+                    {{ manufacturer }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="model" class="form-label">Model</label>
+            <input type="text" class="form-control" id="model" name="model" 
+                   value="{{ current_model }}" placeholder="Device model">
+        </div>
+        <div class="col-md-4">
+            <label for="search" class="form-label">Search</label>
+            <input type="text" class="form-control" id="search" name="search" 
+                   value="{{ current_search }}" placeholder="Filename search">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if uploads.items %}
+<div class="row">
+    {% for upload in uploads.items %}
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-file"></i>
+                    {{ upload.original_filename }}
+                </h5>
+                <p class="card-text">
+                    <strong>Device:</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
+                    <strong>Size:</strong> {{ upload.file_size_mb }} MB<br>
+                    <strong>Downloads:</strong> {{ upload.download_count }}<br>
+                    <strong>MD5:</strong> <code>{{ upload.md5_hash }}</code>
+                </p>
+                {% if upload.afh_link %}
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fas fa-link"></i> 
+                        <a href="{{ upload.afh_link }}" target="_blank">Original AFH Link</a>
+                    </small>
+                </p>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                    <small class="text-muted align-self-center">
+                        Uploaded {{ upload.uploaded_at.strftime('%Y-%m-%d') }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if uploads.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.browse', page=uploads.prev_num, 
+                manufacturer=current_manufacturer, model=current_model, search=current_search) }}">
+                Previous
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in uploads.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != uploads.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.browse', page=page_num,
+                        manufacturer=current_manufacturer, model=current_model, search=current_search) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if uploads.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.browse', page=uploads.next_num,
+                manufacturer=current_manufacturer, model=current_model, search=current_search) }}">
+                Next
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+    <h4>No files found</h4>
+    <p class="text-muted">Try adjusting your search filters or browse all files.</p>
+</div>
+{% endif %}
+{% endblock %}

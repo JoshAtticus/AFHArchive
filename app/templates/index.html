@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="hero-section bg-primary text-white rounded p-5 mb-5">
+            <h1 class="display-4">Welcome to AFHArchive</h1>
+            <p class="lead">Preserving content from the now-defunct AndroidFileHost platform</p>
+            <p>Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.</p>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
+                    <i class="fab fa-google"></i> Sign In to Contribute
+                </a>
+            {% else %}
+                <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-upload"></i> Upload a File
+                </a>
+            {% endif %}
+        </div>
+
+        {% if uploads %}
+        <h2>Recent Uploads</h2>
+        <div class="row">
+            {% for upload in uploads %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ upload.original_filename }}</h5>
+                        <p class="card-text">
+                            <strong>Device:</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
+                            <strong>Size:</strong> {{ upload.file_size_mb }} MB<br>
+                            <strong>Downloads:</strong> {{ upload.download_count }}
+                        </p>
+                        <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Important Notice</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost.</strong></p>
+                <ul>
+                    <li>Only upload files that were once on AFH</li>
+                    <li>Provide original AFH links when possible</li>
+                    <li>Include device information and XDA threads</li>
+                    <li>All uploads require admin approval</li>
+                    <li>New builds or custom ROMs will not be approved</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Archive Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">{{ uploads|length if uploads else 0 }}</h4>
+                        <small>Files Archived</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">Active</h4>
+                        <small>Archive Status</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

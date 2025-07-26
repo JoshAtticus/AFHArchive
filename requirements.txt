@@ -1,0 +1,15 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+WTForms
+python-dotenv
+requests
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+Werkzeug
+gunicorn
+python-decouple
+rarfile
+py7zr

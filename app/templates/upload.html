@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-upload"></i> Upload File to AFHArchive</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5><i class="fas fa-exclamation-triangle"></i> Important Guidelines</h5>
+                    <ul class="mb-0">
+                        <li><strong>Only upload files that were previously hosted on AndroidFileHost</strong></li>
+                        <li>Provide as much metadata as possible to help with approval</li>
+                        <li>Include the original AFH link if you have it</li>
+                        <li>All uploads are pending review - new builds will not be approved</li>
+                        <li>Do not upload password protected archives, they will not be approved</li>
+                        <li>Maximum file size: 5GB</li>
+                    </ul>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" id="upload-form">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File *</label>
+                        <input type="file" class="form-control" id="file" name="file" required 
+                               accept=".zip,.apk,.img,.tar,.gz,.xz,.7z,.rar">
+                        <div class="form-text">Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR</div>
+                    </div>
+
+                    <!-- Progress bar (hidden initially) -->
+                    <div class="mb-3" id="progress-container" style="display: none;">
+                        <label class="form-label">Upload Progress</label>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" id="progress-bar" style="width: 0%">
+                                <span id="progress-text">0%</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <span id="upload-status">Preparing upload...</span>
+                                <span id="upload-speed" class="float-end"></span>
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="device_manufacturer" class="form-label">Device Manufacturer *</label>
+                                <input type="text" class="form-control" id="device_manufacturer" name="device_manufacturer" 
+                                       placeholder="e.g., Samsung, Google, OnePlus" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="device_model" class="form-label">Device Model *</label>
+                                <input type="text" class="form-control" id="device_model" name="device_model" 
+                                       placeholder="e.g., Galaxy S21, Pixel 6, Generic" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="afh_link" class="form-label">Original AndroidFileHost Link</label>
+                        <input type="url" class="form-control" id="afh_link" name="afh_link" 
+                               placeholder="https://androidfilehost.com/?fid=...">
+                        <div class="form-text">If you have the original AFH link, please provide it</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="xda_thread" class="form-label">XDA Thread Link</label>
+                        <input type="url" class="form-control" id="xda_thread" name="xda_thread" 
+                               placeholder="https://forum.xda-developers.com/...">
+                        <div class="form-text">Link to the XDA thread where this file was discussed</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                  placeholder="Any additional information about this file, ROM version, build date, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" id="upload-btn">
+                        <i class="fas fa-upload"></i> Upload File
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg" id="cancel-btn" style="display: none;">
+                        <i class="fas fa-times"></i> Cancel Upload
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Upload Process</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Select your file (max 5GB)</li>
+                    <li>Fill in required metadata</li>
+                    <li>File is uploaded and hashed</li>
+                    <li>Admin reviews for AFH authenticity</li>
+                    <li>Approved files become available</li>
+                </ol>
+                <div class="alert alert-info mt-3">
+                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let uploadXHR = null;
+let startTime = null;
+
+document.getElementById('file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
+        if (file.size > maxSize) {
+            alert('File is too large. Maximum size is 5GB.');
+            e.target.value = '';
+        }
+    }
+});
+
+document.getElementById('upload-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const file = document.getElementById('file').files[0];
+    
+    if (!file) {
+        alert('Please select a file to upload.');
+        return;
+    }
+    
+    // Validate required fields
+    const manufacturer = document.getElementById('device_manufacturer').value.trim();
+    const model = document.getElementById('device_model').value.trim();
+    
+    if (!manufacturer) {
+        alert('Device manufacturer is required.');
+        return;
+    }
+    
+    if (!model) {
+        alert('Device model is required.');
+        return;
+    }
+    
+    // Show progress bar and update UI
+    document.getElementById('progress-container').style.display = 'block';
+    document.getElementById('upload-btn').style.display = 'none';
+    document.getElementById('cancel-btn').style.display = 'inline-block';
+    document.getElementById('upload-status').textContent = 'Starting upload...';
+    
+    // Disable form inputs
+    const inputs = this.querySelectorAll('input, textarea, button');
+    inputs.forEach(input => {
+        if (input.id !== 'cancel-btn') {
+            input.disabled = true;
+        }
+    });
+    
+    startTime = Date.now();
+    
+    uploadXHR = new XMLHttpRequest();
+    
+    // Track upload progress
+    uploadXHR.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            const percentComplete = (e.loaded / e.total) * 100;
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const uploadStatus = document.getElementById('upload-status');
+            const uploadSpeed = document.getElementById('upload-speed');
+            
+            progressBar.style.width = percentComplete + '%';
+            progressText.textContent = Math.round(percentComplete) + '%';
+            
+            // Calculate upload speed
+            const elapsed = (Date.now() - startTime) / 1000; // seconds
+            const bytesPerSecond = e.loaded / elapsed;
+            const mbPerSecond = bytesPerSecond / (1024 * 1024);
+            
+            if (percentComplete < 100) {
+                uploadStatus.textContent = `Uploading... ${formatBytes(e.loaded)} of ${formatBytes(e.total)}`;
+                uploadSpeed.textContent = `${mbPerSecond.toFixed(1)} MB/s`;
+            } else {
+                uploadStatus.textContent = 'Processing upload...';
+                uploadSpeed.textContent = '';
+                progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+            }
+        }
+    });
+    
+    // Handle upload completion
+    uploadXHR.addEventListener('load', function() {
+        if (this.status === 200) {
+            try {
+                const response = JSON.parse(this.responseText);
+                if (response.success) {
+                    document.getElementById('upload-status').textContent = 'Upload completed successfully!';
+                    document.getElementById('progress-bar').className = 'progress-bar bg-success';
+                    
+                    // Show success message and redirect
+                    setTimeout(function() {
+                        window.location.href = '/my-uploads';
+                    }, 2000);
+                } else {
+                    throw new Error(response.error || 'Upload failed');
+                }
+            } catch (e) {
+                handleUploadError('Invalid response from server');
+            }
+        } else {
+            handleUploadError('Upload failed with status: ' + this.status);
+        }
+    });
+    
+    // Handle upload errors
+    uploadXHR.addEventListener('error', function() {
+        handleUploadError('Network error occurred during upload');
+    });
+    
+    // Handle upload abort
+    uploadXHR.addEventListener('abort', function() {
+        handleUploadError('Upload was cancelled');
+    });
+    
+    // Send the request
+    uploadXHR.open('POST', '/api/upload-progress');
+    uploadXHR.send(formData);
+});
+
+// Cancel upload functionality
+document.getElementById('cancel-btn').addEventListener('click', function() {
+    if (uploadXHR) {
+        uploadXHR.abort();
+        resetUploadForm();
+    }
+});
+
+function handleUploadError(message) {
+    document.getElementById('upload-status').textContent = message;
+    document.getElementById('progress-bar').className = 'progress-bar bg-danger';
+    document.getElementById('upload-speed').textContent = '';
+    
+    setTimeout(function() {
+        resetUploadForm();
+    }, 3000);
+}
+
+function resetUploadForm() {
+    // Hide progress bar
+    document.getElementById('progress-container').style.display = 'none';
+    
+    // Reset progress bar
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = '0%';
+    progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated';
+    document.getElementById('progress-text').textContent = '0%';
+    
+    // Show upload button, hide cancel button
+    document.getElementById('upload-btn').style.display = 'inline-block';
+    document.getElementById('cancel-btn').style.display = 'none';
+    
+    // Re-enable form inputs
+    const inputs = document.querySelectorAll('#upload-form input, #upload-form textarea, #upload-form button');
+    inputs.forEach(input => input.disabled = false);
+    
+    uploadXHR = null;
+}
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+</script>
+{% endblock %}

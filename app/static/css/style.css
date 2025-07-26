@@ -1,0 +1,114 @@
+/* AFHArchive Custom Styles */
+
+.hero-section {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.btn {
+    border-radius: 6px;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.upload-zone {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.file-info {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.status-badge {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-approved {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.metadata-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.metadata-table td:first-child {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    width: 150px;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.table-responsive {
+    border-radius: 8px;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+.search-filters {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-section {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 30px 20px !important;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+}

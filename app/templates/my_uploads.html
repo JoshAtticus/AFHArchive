@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}My Uploads - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-cloud-upload-alt"></i> My Uploads</h2>
+    <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Upload New File
+    </a>
+</div>
+
+{% if uploads %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Filename</th>
+                <th>Device</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Uploaded</th>
+                <th>Downloads</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in uploads %}
+            <tr>
+                <td>
+                    <i class="fas fa-file"></i>
+                    {{ upload.original_filename }}
+                </td>
+                <td>{{ upload.device_manufacturer }} {{ upload.device_model }}</td>
+                <td>{{ upload.file_size_mb }} MB</td>
+                <td>
+                    {% if upload.is_pending %}
+                        <span class="badge status-badge status-pending">Pending</span>
+                    {% elif upload.is_approved %}
+                        <span class="badge status-badge status-approved">Approved</span>
+                    {% else %}
+                        <span class="badge status-badge status-rejected" title="{{ upload.rejection_reason }}">Rejected</span>
+                    {% endif %}
+                </td>
+                <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    {% if upload.is_approved %}
+                        {{ upload.download_count }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+    <h4>No uploads yet</h4>
+    <p class="text-muted">Start contributing to the archive by uploading your first file!</p>
+    <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-upload"></i> Upload First File
+    </a>
+</div>
+{% endif %}
+{% endblock %}

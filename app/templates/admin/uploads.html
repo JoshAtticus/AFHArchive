@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Uploads - Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-list"></i> Manage Uploads</h2>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="search-filters">
+    <form method="GET" class="row g-3">
+        <div class="col-md-2">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status">
+                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="approved" {% if current_status == 'approved' %}selected{% endif %}>Approved</option>
+                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                <option value="all" {% if current_status == 'all' %}selected{% endif %}>All</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <select class="form-select" id="manufacturer" name="manufacturer">
+                <option value="">All Manufacturers</option>
+                {% for manufacturer in manufacturers %}
+                <option value="{{ manufacturer }}" {% if manufacturer == current_manufacturer %}selected{% endif %}>
+                    {{ manufacturer }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-5">
+            <label for="search" class="form-label">Search</label>
+            <input type="text" class="form-control" id="search" name="search" 
+                   value="{{ current_search }}" placeholder="Filename search">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-search"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
+
+{% if uploads.items %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Filename</th>
+                <th>User</th>
+                <th>Device</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Uploaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in uploads.items %}
+            <tr>
+                <td>
+                    <i class="fas fa-file"></i>
+                    <a href="{{ url_for('admin.view_upload', upload_id=upload.id) }}">
+                        {{ upload.original_filename }}
+                    </a>
+                </td>
+                <td>{{ upload.uploader.name }}</td>
+                <td>{{ upload.device_manufacturer }} {{ upload.device_model }}</td>
+                <td>{{ upload.file_size_mb }} MB</td>
+                <td>
+                    {% if upload.is_pending %}
+                        <span class="badge status-badge status-pending">Pending</span>
+                    {% elif upload.is_approved %}
+                        <span class="badge status-badge status-approved">Approved</span>
+                    {% else %}
+                        <span class="badge status-badge status-rejected">Rejected</span>
+                    {% endif %}
+                </td>
+                <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ url_for('admin.view_upload', upload_id=upload.id) }}" 
+                           class="btn btn-info" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        {% if upload.is_pending %}
+                        <form method="POST" action="{{ url_for('admin.approve_upload', upload_id=upload.id) }}" 
+                              style="display: inline;" onsubmit="return confirm('Approve this upload?')">
+                            <button type="submit" class="btn btn-success" title="Approve">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                        <a href="{{ url_for('admin.edit_upload', upload_id=upload.id) }}" 
+                           class="btn btn-warning" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if uploads.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.uploads', page=uploads.prev_num, 
+                status=current_status, manufacturer=current_manufacturer, search=current_search) }}">
+                Previous
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in uploads.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != uploads.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.uploads', page=page_num,
+                        status=current_status, manufacturer=current_manufacturer, search=current_search) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if uploads.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.uploads', page=uploads.next_num,
+                status=current_status, manufacturer=current_manufacturer, search=current_search) }}">
+                Next
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+    <h4>No uploads found</h4>
+    <p class="text-muted">No uploads match your current filters.</p>
+</div>
+{% endif %}
+{% endblock %}

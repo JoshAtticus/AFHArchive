@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Pending</h5>
+                        <h2>{{ stats.pending }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('admin.uploads', status='pending') }}" class="text-white">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Approved</h5>
+                        <h2>{{ stats.approved }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('admin.uploads', status='approved') }}" class="text-white">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Rejected</h5>
+                        <h2>{{ stats.rejected }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-times fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('admin.uploads', status='rejected') }}" class="text-white">View Details</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Users</h5>
+                        <h2>{{ stats.total_users }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('admin.users') }}" class="text-white">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tasks"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('admin.uploads', status='pending') }}" class="btn btn-warning btn-lg w-100 mb-3">
+                            <i class="fas fa-clock"></i><br>
+                            Review Pending Uploads
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('admin.uploads', status='all') }}" class="btn btn-primary btn-lg w-100 mb-3">
+                            <i class="fas fa-list"></i><br>
+                            Manage All Uploads
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('admin.users') }}" class="btn btn-info btn-lg w-100 mb-3">
+                            <i class="fas fa-users"></i><br>
+                            Manage Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
