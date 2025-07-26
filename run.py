@@ -26,9 +26,12 @@ def start_gunicorn():
     import subprocess
     from decouple import config
     
+    # Detect Python command
+    python_cmd = 'python3' if os.name != 'nt' else 'python'
+    
     # Build Gunicorn command
     cmd = [
-        '/usr/bin/python3',
+        python_cmd,
         '-m',
         'gunicorn',
         '--config', 'gunicorn.conf.py',
