@@ -66,16 +66,41 @@
             <div class="card-body">
                 <div class="row text-center">
                     <div class="col-6">
-                        <h4 class="text-primary">{{ uploads|length if uploads else 0 }}</h4>
+                        <h4 class="text-primary" id="files-archived">{{ uploads|length if uploads else 0 }}</h4>
                         <small>Files Archived</small>
                     </div>
                     <div class="col-6">
-                        <h4 class="text-success">Active</h4>
-                        <small>Archive Status</small>
+                        <h4 class="text-info" id="percentage-archived">0.00%</h4>
+                        <small>of AFH Preserved</small>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">Total AFH files: 277,446</small>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filesArchivedElement = document.getElementById('files-archived');
+    const percentageElement = document.getElementById('percentage-archived');
+    
+    const archivedCount = parseInt(filesArchivedElement.textContent) || 0;
+    const totalAFHFiles = 277446;
+    
+    const percentage = (archivedCount / totalAFHFiles * 100).toFixed(4);
+    percentageElement.textContent = percentage + '%';
+    
+    // Update color based on percentage
+    if (percentage < 1) {
+        percentageElement.className = 'text-danger';
+    } else if (percentage < 5) {
+        percentageElement.className = 'text-warning';
+    } else {
+        percentageElement.className = 'text-success';
+    }
+});
+</script>
 {% endblock %}
