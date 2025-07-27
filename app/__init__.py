@@ -25,7 +25,7 @@ def create_app():
     app.config['SECRET_KEY'] = config('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL', default='sqlite:///afharchive.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['MAX_CONTENT_LENGTH'] = safe_int_config('MAX_CONTENT_LENGTH', 1073741824)
+    app.config['MAX_CONTENT_LENGTH'] = safe_int_config('MAX_CONTENT_LENGTH', 5368709120)  # 5GB
     app.config['UPLOAD_FOLDER'] = config('UPLOAD_DIR', default='uploads')
     app.config['GOOGLE_CLIENT_ID'] = config('GOOGLE_CLIENT_ID')
     app.config['GOOGLE_CLIENT_SECRET'] = config('GOOGLE_CLIENT_SECRET')
@@ -34,6 +34,10 @@ def create_app():
     
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
+    # Ensure chunks directory exists
+    chunks_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'chunks')
+    os.makedirs(chunks_dir, exist_ok=True)
     
     # Initialize extensions with app
     db.init_app(app)

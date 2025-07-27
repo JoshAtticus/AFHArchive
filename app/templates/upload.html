@@ -104,12 +104,13 @@
                 <ol>
                     <li>Select your file (max 5GB)</li>
                     <li>Fill in required metadata</li>
-                    <li>File is uploaded and hashed</li>
+                    <li>File is uploaded in 90MB chunks for reliability</li>
+                    <li>Chunks are assembled and file is hashed</li>
                     <li>Admin reviews for AFH authenticity</li>
                     <li>Approved files become available</li>
                 </ol>
                 <div class="alert alert-info mt-3">
-                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation.</small>
+                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation. Large files are automatically split into chunks to work with network limitations.</small>
                 </div>
             </div>
         </div>
@@ -119,8 +120,18 @@
 
 {% block scripts %}
 <script>
-let uploadXHR = null;
-let startTime = null;
+let uploadState = {
+    uploadId: null,
+    file: null,
+    chunks: [],
+    currentChunk: 0,
+    totalChunks: 0,
+    chunkSize: 90 * 1024 * 1024, // 90MB
+    startTime: null,
+    uploadedBytes: 0,
+    cancelled: false,
+    activeXHR: null
+};
 
 document.getElementById('file').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -136,7 +147,6 @@ document.getElementById('file').addEventListener('change', function(e) {
 document.getElementById('upload-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const formData = new FormData(this);
     const file = document.getElementById('file').files[0];
     
     if (!file) {
@@ -158,101 +168,224 @@ document.getElementById('upload-form').addEventListener('submit', function(e) {
         return;
     }
     
-    // Show progress bar and update UI
+    // Start chunked upload
+    startChunkedUpload(file, {
+        deviceManufacturer: manufacturer,
+        deviceModel: model,
+        afhLink: document.getElementById('afh_link').value.trim(),
+        xdaThread: document.getElementById('xda_thread').value.trim(),
+        notes: document.getElementById('notes').value.trim()
+    });
+});
+
+async function startChunkedUpload(file, metadata) {
+    try {
+        // Reset state
+        uploadState.file = file;
+        uploadState.currentChunk = 0;
+        uploadState.uploadedBytes = 0;
+        uploadState.cancelled = false;
+        uploadState.startTime = Date.now();
+        
+        // Show progress UI
+        showUploadProgress();
+        updateStatus('Initializing upload...');
+        
+        // Initialize upload session
+        const initResponse = await fetch('/api/upload-init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                filename: file.name,
+                fileSize: file.size
+            })
+        });
+        
+        const initData = await initResponse.json();
+        
+        if (!initData.success) {
+            throw new Error(initData.error || 'Failed to initialize upload');
+        }
+        
+        uploadState.uploadId = initData.uploadId;
+        uploadState.chunkSize = initData.chunkSize;
+        uploadState.totalChunks = initData.totalChunks;
+        
+        // Calculate MD5 hash of the file for integrity checking
+        updateStatus('Calculating file hash...');
+        const fileHash = await calculateMD5(file);
+        
+        // Start uploading chunks
+        updateStatus('Starting chunk upload...');
+        await uploadChunks(metadata, fileHash);
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        handleUploadError(error.message || 'Upload failed');
+    }
+}
+
+async function uploadChunks(metadata, fileHash) {
+    const file = uploadState.file;
+    
+    for (let i = 0; i < uploadState.totalChunks; i++) {
+        if (uploadState.cancelled) {
+            throw new Error('Upload cancelled');
+        }
+        
+        uploadState.currentChunk = i;
+        
+        // Calculate chunk boundaries
+        const start = i * uploadState.chunkSize;
+        const end = Math.min(start + uploadState.chunkSize, file.size);
+        const chunk = file.slice(start, end);
+        
+        // Upload chunk
+        await uploadSingleChunk(chunk, i, uploadState.totalChunks);
+        
+        // Update progress
+        uploadState.uploadedBytes += chunk.size;
+        updateProgress();
+    }
+    
+    // Complete the upload
+    await completeUpload(metadata, fileHash);
+}
+
+async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('chunk', chunk);
+        formData.append('chunkIndex', chunkIndex);
+        formData.append('totalChunks', totalChunks);
+        formData.append('uploadId', uploadState.uploadId);
+        
+        const xhr = new XMLHttpRequest();
+        uploadState.activeXHR = xhr;
+        
+        xhr.onload = function() {
+            if (this.status === 200) {
+                try {
+                    const response = JSON.parse(this.responseText);
+                    if (response.success) {
+                        resolve(response);
+                    } else {
+                        reject(new Error(response.error || 'Chunk upload failed'));
+                    }
+                } catch (e) {
+                    reject(new Error('Invalid response from server'));
+                }
+            } else {
+                reject(new Error(`Chunk upload failed with status: ${this.status}`));
+            }
+        };
+        
+        xhr.onerror = function() {
+            reject(new Error('Network error during chunk upload'));
+        };
+        
+        xhr.onabort = function() {
+            reject(new Error('Chunk upload cancelled'));
+        };
+        
+        xhr.open('POST', '/api/upload-chunk');
+        xhr.send(formData);
+    });
+}
+
+async function completeUpload(metadata, fileHash) {
+    updateStatus('Assembling file...');
+    
+    const completeData = {
+        uploadId: uploadState.uploadId,
+        totalChunks: uploadState.totalChunks,
+        originalFilename: uploadState.file.name,
+        fileHash: fileHash,
+        deviceManufacturer: metadata.deviceManufacturer,
+        deviceModel: metadata.deviceModel,
+        afhLink: metadata.afhLink,
+        xdaThread: metadata.xdaThread,
+        notes: metadata.notes
+    };
+    
+    const response = await fetch('/api/upload-complete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(completeData)
+    });
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+        throw new Error(result.error || 'Failed to complete upload');
+    }
+    
+    // Success!
+    updateStatus('Upload completed successfully!');
+    document.getElementById('progress-bar').className = 'progress-bar bg-success';
+    
+    setTimeout(function() {
+        window.location.href = '/my-uploads';
+    }, 2000);
+}
+
+function updateProgress() {
+    const percentComplete = (uploadState.uploadedBytes / uploadState.file.size) * 100;
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const uploadSpeed = document.getElementById('upload-speed');
+    
+    progressBar.style.width = percentComplete + '%';
+    progressText.textContent = Math.round(percentComplete) + '%';
+    
+    // Calculate upload speed
+    const elapsed = (Date.now() - uploadState.startTime) / 1000; // seconds
+    const bytesPerSecond = uploadState.uploadedBytes / elapsed;
+    const mbPerSecond = bytesPerSecond / (1024 * 1024);
+    
+    if (percentComplete < 100) {
+        uploadSpeed.textContent = `${mbPerSecond.toFixed(1)} MB/s`;
+        updateStatus(`Uploading chunk ${uploadState.currentChunk + 1} of ${uploadState.totalChunks}... ${formatBytes(uploadState.uploadedBytes)} of ${formatBytes(uploadState.file.size)}`);
+    } else {
+        uploadSpeed.textContent = '';
+    }
+}
+
+function updateStatus(message) {
+    document.getElementById('upload-status').textContent = message;
+}
+
+function showUploadProgress() {
     document.getElementById('progress-container').style.display = 'block';
     document.getElementById('upload-btn').style.display = 'none';
     document.getElementById('cancel-btn').style.display = 'inline-block';
-    document.getElementById('upload-status').textContent = 'Starting upload...';
     
     // Disable form inputs
-    const inputs = this.querySelectorAll('input, textarea, button');
+    const inputs = document.querySelectorAll('#upload-form input, #upload-form textarea, #upload-form button');
     inputs.forEach(input => {
         if (input.id !== 'cancel-btn') {
             input.disabled = true;
         }
     });
-    
-    startTime = Date.now();
-    
-    uploadXHR = new XMLHttpRequest();
-    
-    // Track upload progress
-    uploadXHR.upload.addEventListener('progress', function(e) {
-        if (e.lengthComputable) {
-            const percentComplete = (e.loaded / e.total) * 100;
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            const uploadStatus = document.getElementById('upload-status');
-            const uploadSpeed = document.getElementById('upload-speed');
-            
-            progressBar.style.width = percentComplete + '%';
-            progressText.textContent = Math.round(percentComplete) + '%';
-            
-            // Calculate upload speed
-            const elapsed = (Date.now() - startTime) / 1000; // seconds
-            const bytesPerSecond = e.loaded / elapsed;
-            const mbPerSecond = bytesPerSecond / (1024 * 1024);
-            
-            if (percentComplete < 100) {
-                uploadStatus.textContent = `Uploading... ${formatBytes(e.loaded)} of ${formatBytes(e.total)}`;
-                uploadSpeed.textContent = `${mbPerSecond.toFixed(1)} MB/s`;
-            } else {
-                uploadStatus.textContent = 'Processing upload...';
-                uploadSpeed.textContent = '';
-                progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
-            }
-        }
-    });
-    
-    // Handle upload completion
-    uploadXHR.addEventListener('load', function() {
-        if (this.status === 200) {
-            try {
-                const response = JSON.parse(this.responseText);
-                if (response.success) {
-                    document.getElementById('upload-status').textContent = 'Upload completed successfully!';
-                    document.getElementById('progress-bar').className = 'progress-bar bg-success';
-                    
-                    // Show success message and redirect
-                    setTimeout(function() {
-                        window.location.href = '/my-uploads';
-                    }, 2000);
-                } else {
-                    throw new Error(response.error || 'Upload failed');
-                }
-            } catch (e) {
-                handleUploadError('Invalid response from server');
-            }
-        } else {
-            handleUploadError('Upload failed with status: ' + this.status);
-        }
-    });
-    
-    // Handle upload errors
-    uploadXHR.addEventListener('error', function() {
-        handleUploadError('Network error occurred during upload');
-    });
-    
-    // Handle upload abort
-    uploadXHR.addEventListener('abort', function() {
-        handleUploadError('Upload was cancelled');
-    });
-    
-    // Send the request
-    uploadXHR.open('POST', '/api/upload-progress');
-    uploadXHR.send(formData);
-});
+}
 
 // Cancel upload functionality
 document.getElementById('cancel-btn').addEventListener('click', function() {
-    if (uploadXHR) {
-        uploadXHR.abort();
-        resetUploadForm();
+    uploadState.cancelled = true;
+    
+    if (uploadState.activeXHR) {
+        uploadState.activeXHR.abort();
     }
+    
+    resetUploadForm();
 });
 
 function handleUploadError(message) {
-    document.getElementById('upload-status').textContent = message;
+    updateStatus(message);
     document.getElementById('progress-bar').className = 'progress-bar bg-danger';
     document.getElementById('upload-speed').textContent = '';
     
@@ -279,7 +412,19 @@ function resetUploadForm() {
     const inputs = document.querySelectorAll('#upload-form input, #upload-form textarea, #upload-form button');
     inputs.forEach(input => input.disabled = false);
     
-    uploadXHR = null;
+    // Reset state
+    uploadState = {
+        uploadId: null,
+        file: null,
+        chunks: [],
+        currentChunk: 0,
+        totalChunks: 0,
+        chunkSize: 90 * 1024 * 1024,
+        startTime: null,
+        uploadedBytes: 0,
+        cancelled: false,
+        activeXHR: null
+    };
 }
 
 function formatBytes(bytes) {
@@ -289,5 +434,43 @@ function formatBytes(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
+
+// MD5 calculation function
+async function calculateMD5(file) {
+    return new Promise((resolve, reject) => {
+        const chunkSize = 2097152; // 2MB chunks for hash calculation
+        const chunks = Math.ceil(file.size / chunkSize);
+        let currentChunk = 0;
+        
+        const spark = new SparkMD5.ArrayBuffer();
+        const fileReader = new FileReader();
+        
+        fileReader.onload = function(e) {
+            spark.append(e.target.result);
+            currentChunk++;
+            
+            if (currentChunk < chunks) {
+                loadNext();
+            } else {
+                resolve(spark.end());
+            }
+        };
+        
+        fileReader.onerror = function() {
+            reject(new Error('Error reading file for hash calculation'));
+        };
+        
+        function loadNext() {
+            const start = currentChunk * chunkSize;
+            const end = Math.min(start + chunkSize, file.size);
+            fileReader.readAsArrayBuffer(file.slice(start, end));
+        }
+        
+        loadNext();
+    });
+}
 </script>
+
+<!-- Include SparkMD5 for client-side MD5 calculation -->
+<script src="https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js"></script>
 {% endblock %}
