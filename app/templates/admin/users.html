@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-users"></i> Manage Users</h2>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+{% if users.items %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Uploads</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr>
+                <td>
+                    {% if user.avatar_url %}
+                    <img src="{{ user.avatar_url }}" alt="{{ user.name }}" class="rounded-circle" width="40" height="40">
+                    {% else %}
+                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ user.name }}</strong>
+                </td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.is_admin %}
+                    <span class="badge bg-danger">
+                        <i class="fas fa-crown"></i> Admin
+                    </span>
+                    {% else %}
+                    <span class="badge bg-primary">
+                        <i class="fas fa-user"></i> User
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge bg-info">
+                        {{ user.uploads|length }}
+                    </span>
+                </td>
+                <td>
+                    <small class="text-muted">
+                        {{ user.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </small>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                        {% if not user.is_admin %}
+                        <button type="button" class="btn btn-outline-warning" 
+                                onclick="toggleAdmin({{ user.id }}, true)" 
+                                title="Make Admin">
+                            <i class="fas fa-user-shield"></i>
+                        </button>
+                        {% else %}
+                        {% if user.id != current_user.id %}
+                        <button type="button" class="btn btn-outline-secondary" 
+                                onclick="toggleAdmin({{ user.id }}, false)" 
+                                title="Remove Admin">
+                            <i class="fas fa-user-minus"></i>
+                        </button>
+                        {% endif %}
+                        {% endif %}
+                        
+                        <a href="{{ url_for('admin.uploads', status='all') }}?user_id={{ user.id }}" 
+                           class="btn btn-outline-primary" title="View User's Uploads">
+                            <i class="fas fa-file-archive"></i>
+                        </a>
+                        
+                        {% if user.id != current_user.id %}
+                        <button type="button" class="btn btn-outline-danger" 
+                                onclick="deleteUser({{ user.id }}, '{{ user.name }}')" 
+                                title="Delete User">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Users pagination">
+    <ul class="pagination justify-content-center">
+        {% if users.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.users', page=users.prev_num) }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in users.iter_pages() %}
+        {% if page_num %}
+        {% if page_num != users.page %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.users', page=page_num) }}">{{ page_num }}</a>
+        </li>
+        {% else %}
+        <li class="page-item active">
+            <span class="page-link">{{ page_num }}</span>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if users.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin.users', page=users.next_num) }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+    <h4>No Users Found</h4>
+    <p class="text-muted">No users have registered yet.</p>
+</div>
+{% endif %}
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete user <strong id="deleteUserName"></strong>?</p>
+                <p class="text-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This action cannot be undone. All uploads by this user will also be deleted.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteUserForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAdmin(userId, makeAdmin) {
+    const action = makeAdmin ? 'make-admin' : 'remove-admin';
+    const message = makeAdmin ? 'make this user an admin' : 'remove admin privileges from this user';
+    
+    if (confirm(`Are you sure you want to ${message}?`)) {
+        fetch(`/admin/user/${userId}/${action}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('An error occurred: ' + error);
+        });
+    }
+}
+
+function deleteUser(userId, userName) {
+    document.getElementById('deleteUserName').textContent = userName;
+    document.getElementById('deleteUserForm').action = `/admin/user/${userId}/delete`;
+    
+    const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+    modal.show();
+}
+</script>
+
+{% endblock %}
