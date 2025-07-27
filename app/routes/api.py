@@ -5,6 +5,7 @@ import time
 import uuid
 import hashlib
 import json
+from datetime import datetime
 from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
@@ -18,52 +19,84 @@ rate_limiter = RateLimiter()
 
 @api_bp.route('/download/<int:upload_id>')
 def download_file(upload_id):
-    upload = Upload.query.get_or_404(upload_id)
-    
-    if upload.status != 'approved':
-        abort(404)
-    
-    # Convert relative path to absolute path
-    if not os.path.isabs(upload.file_path):
-        # Make path relative to application root directory (go up from app/routes/api.py to project root)
-        app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        file_path = os.path.join(app_root, upload.file_path)
-    else:
-        file_path = upload.file_path
-    
-    # Check if file exists
-    if not os.path.exists(file_path):
-        abort(404)
-    
-    # Get bandwidth limit from config
-    download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
-    
-    # Create bandwidth-limited file object
-    limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
-    
-    def generate():
-        """Generator function to stream file with bandwidth limiting"""
+    try:
+        # Log the download request
+        current_app.logger.info(f'Download request for upload ID: {upload_id}')
+        
+        upload = Upload.query.get(upload_id)
+        if not upload:
+            current_app.logger.warning(f'Upload not found: {upload_id}')
+            abort(404)
+        
+        # Log upload details for debugging
+        current_app.logger.info(f'Upload found - ID: {upload.id}, Status: {upload.status}, Path: {upload.file_path}')
+        
+        if upload.status != 'approved':
+            current_app.logger.warning(f'Upload not approved: {upload_id}, status: {upload.status}')
+            abort(404)
+        
+        # Convert relative path to absolute path
+        if not os.path.isabs(upload.file_path):
+            # Make path relative to application root directory (go up from app/routes/api.py to project root)
+            app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            file_path = os.path.join(app_root, upload.file_path)
+        else:
+            file_path = upload.file_path
+        
+        # Log file path resolution
+        current_app.logger.info(f'Resolved file path: {file_path}')
+        
+        # Check if file exists
+        if not os.path.exists(file_path):
+            current_app.logger.error(f'File not found on disk: {file_path}')
+            abort(404)
+        
+        # Verify file is readable
         try:
-            while True:
-                # Read in 64KB chunks
-                chunk = limited_file.read(65536)
-                if not chunk:
-                    break
-                yield chunk
-        finally:
-            limited_file.close()
-    
-    # Create response with proper headers
-    response = Response(
-        generate(),
-        mimetype='application/octet-stream',
-        headers={
-            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
-            'Content-Length': str(upload.file_size)
-        }
-    )
-    
-    return response
+            with open(file_path, 'rb') as test_file:
+                test_file.read(1)
+        except (IOError, OSError) as e:
+            current_app.logger.error(f'File not readable: {file_path}, error: {str(e)}')
+            abort(404)
+        
+        current_app.logger.info(f'Starting download for file: {upload.original_filename}')
+        
+        # Get bandwidth limit from config
+        download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
+        
+        # Create bandwidth-limited file object
+        limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
+        
+        def generate():
+            """Generator function to stream file with bandwidth limiting"""
+            try:
+                while True:
+                    # Read in 64KB chunks
+                    chunk = limited_file.read(65536)
+                    if not chunk:
+                        break
+                    yield chunk
+            except Exception as e:
+                current_app.logger.error(f'Error during file streaming: {str(e)}')
+                raise
+            finally:
+                limited_file.close()
+        
+        # Create response with proper headers
+        response = Response(
+            generate(),
+            mimetype='application/octet-stream',
+            headers={
+                'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
+                'Content-Length': str(upload.file_size)
+            }
+        )
+        
+        return response
+        
+    except Exception as e:
+        current_app.logger.error(f'Unexpected error in download_file: {str(e)}')
+        abort(404)
 
 @api_bp.route('/bandwidth-status')
 def bandwidth_status():
@@ -85,6 +118,104 @@ def bandwidth_status():
             'Mbps': round(speed_per_download_bps * 8 / 1000000, 2) if speed_per_download_bps > 0 else 0
         }
     }
+
+@api_bp.route('/health')
+def health_check():
+    """Health check endpoint"""
+    try:
+        # Check database connectivity
+        upload_count = Upload.query.count()
+        approved_count = Upload.query.filter_by(status='approved').count()
+        
+        # Check upload directory
+        upload_dir = current_app.config['UPLOAD_FOLDER']
+        upload_dir_exists = os.path.exists(upload_dir)
+        upload_dir_writable = os.access(upload_dir, os.W_OK) if upload_dir_exists else False
+        
+        return jsonify({
+            'status': 'healthy',
+            'timestamp': datetime.utcnow().isoformat() + 'Z',
+            'database': {
+                'connected': True,
+                'total_uploads': upload_count,
+                'approved_uploads': approved_count
+            },
+            'storage': {
+                'upload_dir': upload_dir,
+                'exists': upload_dir_exists,
+                'writable': upload_dir_writable
+            },
+            'config': {
+                'max_content_length': current_app.config.get('MAX_CONTENT_LENGTH'),
+                'download_speed_limit': current_app.config.get('DOWNLOAD_SPEED_LIMIT')
+            }
+        })
+    except Exception as e:
+        current_app.logger.error(f'Health check failed: {str(e)}')
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat() + 'Z'
+        }), 500
+
+@api_bp.route('/debug/upload/<int:upload_id>')
+def debug_upload(upload_id):
+    """Debug endpoint to check upload and file status"""
+    try:
+        upload = Upload.query.get(upload_id)
+        if not upload:
+            return jsonify({
+                'error': 'Upload not found',
+                'upload_id': upload_id,
+                'exists': False
+            }), 404
+        
+        # Check file path resolution
+        if not os.path.isabs(upload.file_path):
+            app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            resolved_path = os.path.join(app_root, upload.file_path)
+        else:
+            resolved_path = upload.file_path
+        
+        file_exists = os.path.exists(resolved_path)
+        file_readable = False
+        file_size_on_disk = None
+        
+        if file_exists:
+            try:
+                with open(resolved_path, 'rb') as test_file:
+                    test_file.read(1)
+                file_readable = True
+                file_size_on_disk = os.path.getsize(resolved_path)
+            except (IOError, OSError):
+                pass
+        
+        return jsonify({
+            'upload_id': upload.id,
+            'exists': True,
+            'status': upload.status,
+            'is_approved': upload.status == 'approved',
+            'original_filename': upload.original_filename,
+            'stored_filename': upload.filename,
+            'file_path_stored': upload.file_path,
+            'file_path_resolved': resolved_path,
+            'file_path_is_absolute': os.path.isabs(upload.file_path),
+            'file_exists': file_exists,
+            'file_readable': file_readable,
+            'file_size_in_db': upload.file_size,
+            'file_size_on_disk': file_size_on_disk,
+            'size_matches': file_size_on_disk == upload.file_size if file_size_on_disk is not None else None,
+            'upload_date': upload.uploaded_at.isoformat() if upload.uploaded_at else None,
+            'download_count': upload.download_count
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f'Error in debug_upload: {str(e)}')
+        return jsonify({
+            'error': 'Internal server error',
+            'details': str(e),
+            'upload_id': upload_id
+        }), 500
 
 @api_bp.route('/upload-progress', methods=['POST'])
 @login_required
