@@ -356,8 +356,8 @@ def init_chunked_upload():
         # Generate upload session ID
         upload_id = str(uuid.uuid4())
         
-        # Calculate chunk size (90MB) and total chunks
-        chunk_size = 90 * 1024 * 1024  # 90MB
+        # Calculate chunk size (1MB) and total chunks
+        chunk_size = 1 * 1024 * 1024  # 1MB
         total_chunks = (file_size + chunk_size - 1) // chunk_size
         
         return jsonify({

@@ -104,13 +104,11 @@
                 <ol>
                     <li>Select your file (max 5GB)</li>
                     <li>Fill in required metadata</li>
-                    <li>File is uploaded in 90MB chunks for reliability</li>
-                    <li>Chunks are assembled and file is hashed</li>
                     <li>Admin reviews for AFH authenticity</li>
                     <li>Approved files become available</li>
                 </ol>
                 <div class="alert alert-info mt-3">
-                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation. Large files are automatically split into chunks to work with network limitations.</small>
+                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation.</small>
                 </div>
             </div>
         </div>
@@ -126,7 +124,7 @@ let uploadState = {
     chunks: [],
     currentChunk: 0,
     totalChunks: 0,
-    chunkSize: 90 * 1024 * 1024, // 90MB
+    chunkSize: 1 * 1024 * 1024, // 1MB
     startTime: null,
     uploadedBytes: 0,
     cancelled: false,
@@ -419,7 +417,7 @@ function resetUploadForm() {
         chunks: [],
         currentChunk: 0,
         totalChunks: 0,
-        chunkSize: 90 * 1024 * 1024,
+        chunkSize: 1 * 1024 * 1024,
         startTime: null,
         uploadedBytes: 0,
         cancelled: false,
