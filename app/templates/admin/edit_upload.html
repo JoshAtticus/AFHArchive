@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Upload - Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-edit"></i> Edit Upload Metadata</h2>
+    <a href="{{ url_for('admin.view_upload', upload_id=upload.id) }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Upload Details
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-file-alt"></i> {{ upload.original_filename }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="device_manufacturer" class="form-label">Device Manufacturer *</label>
+                                <input type="text" class="form-control" id="device_manufacturer" name="device_manufacturer" 
+                                       value="{{ upload.device_manufacturer }}" placeholder="e.g., Samsung, Google, OnePlus" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="device_model" class="form-label">Device Model *</label>
+                                <input type="text" class="form-control" id="device_model" name="device_model" 
+                                       value="{{ upload.device_model }}" placeholder="e.g., Galaxy S21, Pixel 6, Generic" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="afh_link" class="form-label">Original AndroidFileHost Link</label>
+                        <input type="url" class="form-control" id="afh_link" name="afh_link" 
+                               value="{{ upload.afh_link or '' }}" placeholder="https://androidfilehost.com/?fid=...">
+                        <div class="form-text">If you have the original AFH link, please provide it</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="xda_thread" class="form-label">XDA Thread Link</label>
+                        <input type="url" class="form-control" id="xda_thread" name="xda_thread" 
+                               value="{{ upload.xda_thread or '' }}" placeholder="https://forum.xda-developers.com/...">
+                        <div class="form-text">Link to the XDA thread where this file was discussed</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                  placeholder="Any additional information about this file, ROM version, build date, etc.">{{ upload.notes or '' }}</textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a href="{{ url_for('admin.view_upload', upload_id=upload.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> File Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="metadata-table w-100">
+                    <tr>
+                        <td>Filename</td>
+                        <td>{{ upload.original_filename }}</td>
+                    </tr>
+                    <tr>
+                        <td>File Size</td>
+                        <td>{{ upload.file_size_mb }} MB</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            {% if upload.is_pending %}
+                                <span class="badge status-badge status-pending">Pending Review</span>
+                            {% elif upload.is_approved %}
+                                <span class="badge status-badge status-approved">Approved</span>
+                            {% else %}
+                                <span class="badge status-badge status-rejected">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Uploaded By</td>
+                        <td>{{ upload.uploader.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Upload Date</td>
+                        <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Download Count</td>
+                        <td>{{ upload.download_count }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle"></i> Important Note</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning mb-0">
+                    <small>
+                        <strong>Note:</strong> Only metadata can be edited here. The actual file cannot be modified. 
+                        If the file itself needs to be changed, it should be re-uploaded.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
