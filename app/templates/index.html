@@ -60,26 +60,4 @@
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filesArchivedElement = document.getElementById('files-archived');
-    const percentageElement = document.getElementById('percentage-archived');
-    
-    const archivedCount = parseInt(filesArchivedElement.textContent) || 0;
-    const totalAFHFiles = 277446;
-    
-    const percentage = (archivedCount / totalAFHFiles * 100).toFixed(4);
-    percentageElement.textContent = percentage + '%';
-    
-    // Update color based on percentage
-    if (percentage < 1) {
-        percentageElement.className = 'text-danger';
-    } else if (percentage < 5) {
-        percentageElement.className = 'text-warning';
-    } else {
-        percentageElement.className = 'text-success';
-    }
-});
-</script>
 {% endblock %}
