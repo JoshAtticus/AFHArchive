@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}503 - Service Unavailable | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-warning">503</h1>
+                <h2 class="mb-4">Service Unavailable</h2>
+                <p class="lead mb-4">
+                    The service is temporarily unavailable due to maintenance or high load.
+                </p>
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-tools"></i>
+                    <strong>Maintenance Mode:</strong> We're performing scheduled maintenance.
+                </div>
+                <p class="text-muted mb-4">
+                    We'll be back online shortly. Thank you for your patience.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <button onclick="location.reload()" class="btn btn-primary">
+                        <i class="fas fa-refresh"></i> Check Again
+                    </button>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <small class="text-muted">
+                        Auto-refresh in <span id="countdown">60</span> seconds...
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let countdown = 60;
+const countdownElement = document.getElementById('countdown');
+
+const timer = setInterval(function() {
+    countdown--;
+    countdownElement.textContent = countdown;
+    
+    if (countdown <= 0) {
+        clearInterval(timer);
+        location.reload();
+    }
+}, 1000);
+</script>
+{% endblock %}

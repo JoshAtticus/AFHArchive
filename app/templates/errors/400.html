@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}400 - Bad Request | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-danger">400</h1>
+                <h2 class="mb-4">Bad Request</h2>
+                <p class="lead mb-4">
+                    The request you sent to the server was invalid or malformed.
+                </p>
+                <p class="text-muted mb-4">
+                    This usually happens when required parameters are missing or incorrectly formatted.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

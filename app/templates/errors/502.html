@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}502 - Bad Gateway | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-danger">502</h1>
+                <h2 class="mb-4">Bad Gateway</h2>
+                <p class="lead mb-4">
+                    The server received an invalid response from an upstream server.
+                </p>
+                <div class="alert alert-warning mb-4">
+                    <i class="fas fa-server"></i>
+                    <strong>Gateway Error:</strong> There's a problem with our server infrastructure.
+                </div>
+                <p class="text-muted mb-4">
+                    This usually indicates a temporary issue with our services. 
+                    Please try again in a few minutes.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <button onclick="location.reload()" class="btn btn-primary">
+                        <i class="fas fa-refresh"></i> Try Again
+                    </button>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error.code }} | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-secondary">{{ error.code }}</h1>
+                <h2 class="mb-4">{{ error.name }}</h2>
+                <p class="lead mb-4">
+                    {{ error.description }}
+                </p>
+                {% if error.code == 215 %}
+                <div class="alert alert-warning mb-4">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>HTTP 215:</strong> This is a non-standard HTTP status code.
+                </div>
+                {% endif %}
+                <p class="text-muted mb-4">
+                    An unexpected error occurred. Please try again or contact support if the problem persists.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

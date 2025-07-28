@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}403 - Forbidden | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-warning">403</h1>
+                <h2 class="mb-4">Access Forbidden</h2>
+                <p class="lead mb-4">
+                    You don't have permission to access this resource.
+                </p>
+                <p class="text-muted mb-4">
+                    This page requires special permissions or you may need to log in with the appropriate account.
+                </p>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    {% endif %}
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

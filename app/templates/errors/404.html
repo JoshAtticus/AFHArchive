@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found | AFHArchive{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="mb-4">Page Not Found</h2>
+                <p class="lead mb-4">
+                    The page you're looking for doesn't exist or has been moved.
+                </p>
+                <p class="text-muted mb-4">
+                    This could be due to a broken link, mistyped URL, or the file may have been removed from our archive.
+                </p>
+                <div class="mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for files..." id="searchInput">
+                        <button class="btn btn-outline-primary" type="button" onclick="searchFiles()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Go Home
+                    </a>
+                    <a href="{{ url_for('main.browse') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i> Browse Files
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function searchFiles() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (query) {
+        window.location.href = "{{ url_for('main.browse') }}?search=" + encodeURIComponent(query);
+    }
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchFiles();
+    }
+});
+</script>
+{% endblock %}

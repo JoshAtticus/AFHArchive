@@ -112,3 +112,56 @@ footer {
         margin-bottom: 15px;
     }
 }
+
+/* Error Page Styles */
+.error-page {
+    padding: 40px 20px;
+}
+
+.error-page .display-1 {
+    font-size: 8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-page h2 {
+    color: #495057;
+    margin-bottom: 20px;
+}
+
+.error-page .lead {
+    color: #6c757d;
+    font-size: 1.2rem;
+}
+
+.error-page .alert {
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+}
+
+.error-page .input-group {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.error-page .btn {
+    margin: 5px;
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .error-page .display-1 {
+        font-size: 6rem;
+    }
+    
+    .error-page {
+        padding: 20px 10px;
+    }
+    
+    .error-page .btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+}

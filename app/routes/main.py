@@ -12,9 +12,35 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
+    # Check if there's a file ID parameter for AFH link redirection
+    fid = request.args.get('fid')
+    if fid:
+        return handle_afh_redirect(fid)
+    
     # Get approved uploads for public display
     approved_uploads = Upload.query.filter_by(status='approved').order_by(Upload.uploaded_at.desc()).limit(10).all()
     return render_template('index.html', uploads=approved_uploads)
+
+def handle_afh_redirect(fid):
+    try:
+        uploads = Upload.query.filter(
+            Upload.afh_link.like(f'%fid={fid}%'),
+            Upload.status == 'approved'
+        ).all()
+        
+        if uploads:
+            # If we found matching uploads, redirect to the first one
+            upload = uploads[0]
+            return redirect(url_for('main.file_detail', upload_id=upload.id))
+        else:
+            # If no matching upload found, show error and redirect to main page
+            flash(f'File with AFH ID {fid} not found in our archive', 'error')
+            return redirect(url_for('main.index'))
+            
+    except Exception as e:
+        current_app.logger.error(f'AFH redirect error: {str(e)}')
+        flash('Error processing file ID', 'error')
+        return redirect(url_for('main.index'))
 
 @main_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
