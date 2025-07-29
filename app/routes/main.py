@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+main_bp = Blueprint('main', __name__)
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -167,3 +168,13 @@ def download(upload_id):
     
     # Use a route that handles rate-limited downloads
     return redirect(url_for('api.download_file', upload_id=upload_id))
+
+# Privacy Policy
+@main_bp.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+# Terms of Service
+@main_bp.route('/terms')
+def terms():
+    return render_template('terms.html')
