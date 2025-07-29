@@ -1,0 +1,18 @@
+{% extends "emails/email_base.html" %}
+{% block content %}
+<table style="width:100%;max-width:600px;margin:auto;font-family:Arial,sans-serif;background:#fff;border-radius:8px;box-shadow:0 2px 8px #eee;">
+<tr><td style="background:#007bff;color:#fff;padding:24px 32px 12px 32px;border-radius:8px 8px 0 0;text-align:center;">
+    <h1 style="margin:0;font-size:2em;">Welcome to AFHArchive!</h1>
+</td></tr>
+<tr><td style="padding:32px 32px 24px 32px;">
+    <p style="font-size:1.1em;">Hi {{ user.name }},</p>
+    <p>Thank you for signing up to <strong>AFHArchive</strong>! We're excited to have you join our mission to preserve AndroidFileHost content for the community.</p>
+    <p>You can now upload files, browse the archive, and help keep Android development history alive.</p>
+    <div style="margin:32px 0;text-align:center;">
+        <a href="{{ base_url }}/upload" style="background:#007bff;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:1.1em;">Upload Your First File</a>
+    </div>
+    <p style="color:#888;font-size:0.95em;">If you have any questions or feedback, just reply to this email or <a href="https://github.com/JoshAtticus/AFHArchive/issues">open an issue</a>.</p>
+    <p style="margin-top:32px;font-size:0.95em;color:#888;">— The AFHArchive Team</p>
+</td></tr>
+</table>
+{% endblock %}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AFHArchive Email{% endblock %}</title>
+    <style>
+        body { background: #f4f4f4; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .email-container { background: #fff; max-width: 600px; margin: 40px auto; border-radius: 8px; box-shadow: 0 2px 8px #eee; overflow: hidden; }
+        .email-header { background: #007bff; color: #fff; padding: 24px 32px 12px 32px; text-align: center; }
+        .email-body { padding: 32px 32px 24px 32px; }
+        .email-footer { color: #888; font-size: 0.95em; text-align: center; padding: 16px; }
+        a.button { background: #007bff; color: #fff; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1.1em; display: inline-block; margin: 24px 0; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        {% block content %}{% endblock %}
+        <div class="email-footer">
+            &mdash; The AFHArchive Team
+        </div>
+    </div>
+</body>
+</html>

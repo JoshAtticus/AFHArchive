@@ -1,9 +1,50 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
 from flask_login import login_required, current_user
 from app import db
 from app.models import Upload, User
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file
+from app.utils.email_utils import send_email, render_email_template
+from threading import Timer
+from sqlalchemy import or_
+from collections import defaultdict
+pending_email_batches = defaultdict(lambda: {'approved': [], 'rejected': [], 'timer': None})
+def schedule_upload_notification(user, approved_uploads, rejected_uploads):
+    """Batch notifications for 5 minutes before sending approval/rejection emails"""
+    user_id = user.id
+    batch = pending_email_batches[user_id]
+    batch['approved'].extend(approved_uploads)
+    batch['rejected'].extend(rejected_uploads)
+    if batch['timer']:
+        batch['timer'].cancel()
+    def send_batched_email():
+        approved = batch['approved']
+        rejected = batch['rejected']
+        subject = None
+        template = None
+        context = {'user': user}
+        if approved and not rejected:
+            subject = "Your uploads were approved"
+            template = 'uploads_approved.html'
+            context['uploads'] = approved
+        elif approved and rejected:
+            subject = "Some of your uploads were approved"
+            template = 'uploads_some_approved.html'
+            context['approved_uploads'] = approved
+            context['rejected_uploads'] = rejected
+        elif rejected and not approved:
+            subject = "Your uploads were rejected"
+            template = 'uploads_rejected.html'
+            context['uploads'] = rejected
+        else:
+            return
+        html = render_email_template(template, **context)
+        send_email(user.email, subject, html)
+        # Clear batch
+        pending_email_batches[user_id] = {'approved': [], 'rejected': [], 'timer': None}
+    # Schedule for 5 minutes (300 seconds)
+    batch['timer'] = Timer(300, send_batched_email)
+    batch['timer'].start()
 from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__)
@@ -77,10 +118,11 @@ def approve_upload(upload_id):
     upload.status = 'approved'
     upload.reviewed_at = datetime.utcnow()
     upload.reviewed_by = current_user.id
-    
     db.session.commit()
     flash(f'Upload "{upload.original_filename}" approved', 'success')
-    
+    # Schedule notification to uploader
+    if upload.uploader:
+        schedule_upload_notification(upload.uploader, [upload], [])
     return redirect(url_for('admin.uploads'))
 
 @admin_bp.route('/upload/<int:upload_id>/reject', methods=['POST'])
@@ -89,16 +131,32 @@ def approve_upload(upload_id):
 def reject_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
     reason = request.form.get('reason', '').strip()
-    
     upload.status = 'rejected'
     upload.rejection_reason = reason
     upload.reviewed_at = datetime.utcnow()
     upload.reviewed_by = current_user.id
-    
     db.session.commit()
     flash(f'Upload "{upload.original_filename}" rejected', 'warning')
-    
+    # Schedule notification to uploader
+    if upload.uploader:
+        schedule_upload_notification(upload.uploader, [], [upload])
     return redirect(url_for('admin.uploads'))
+# Admin announcement email route
+@admin_bp.route('/announcement', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def send_announcement():
+    if request.method == 'POST':
+        subject = request.form.get('subject', 'Announcement from AFHArchive')
+        message = request.form.get('message', '')
+        # Send to all users
+        users = User.query.all()
+        html = render_email_template('announcement.html', message=message)
+        for user in users:
+            send_email(user.email, subject, html)
+        flash('Announcement sent to all users', 'success')
+        return redirect(url_for('admin.dashboard'))
+    return render_template('admin/announcement.html')
 
 @admin_bp.route('/upload/<int:upload_id>/edit', methods=['GET', 'POST'])
 @login_required

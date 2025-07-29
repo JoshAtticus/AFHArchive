@@ -4,6 +4,7 @@ from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 import requests
 from app import db, login_manager
+from app.utils.email_utils import send_email, render_email_template
 from app.models import User
 
 auth_bp = Blueprint('auth', __name__)
@@ -82,6 +83,9 @@ def google_callback():
             db.session.add(user)
             db.session.commit()
             flash(f'Welcome to AFHArchive, {name}!', 'success')
+            # Send welcome email
+            html = render_email_template('welcome.html', user=user)
+            send_email(user.email, 'Welcome to AFHArchive!', html)
         else:
             # Update existing user info
             user.name = name

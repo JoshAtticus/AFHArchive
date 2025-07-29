@@ -1,0 +1,24 @@
+{% extends "emails/email_base.html" %}
+{% block content %}
+<table style="width:100%;max-width:600px;margin:auto;font-family:Arial,sans-serif;background:#fff;border-radius:8px;box-shadow:0 2px 8px #eee;">
+<tr><td style="background:#dc3545;color:#fff;padding:24px 32px 12px 32px;border-radius:8px 8px 0 0;text-align:center;">
+    <h1 style="margin:0;font-size:2em;">Your Uploads Were Rejected</h1>
+</td></tr>
+<tr><td style="padding:32px 32px 24px 32px;">
+    <p style="font-size:1.1em;">Hi {{ user.name }},</p>
+    <p>Unfortunately, the following uploads were <strong>rejected</strong>:</p>
+    <ul style="font-size:1.05em;">
+        {% for upload in uploads %}
+        <li><strong>{{ upload.original_filename }}</strong> ({{ upload.device_manufacturer }} {{ upload.device_model }})<br>
+            <span style="color:#d9534f;">Reason: {{ upload.rejection_reason }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <p style="color:#888;font-size:0.95em;">If you believe this was a mistake, please <a href="https://github.com/JoshAtticus/AFHArchive/issues">open an issue on GitHub</a>, send an email to <a href="mailto:afh@joshattic.us">afh@joshattic.us</a> or reply to our <a href="https://xdaforums.com/t/website-afharchive-archiving-the-now-defunct-androidfilehost.4752119">XDA thread</a>.</p>
+    <div style="margin:32px 0;text-align:center;">
+        <a href="{{ base_url }}/my-uploads" style="background:#007bff;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:1.1em;">View My Uploads</a>
+    </div>
+    <p style="margin-top:32px;font-size:0.95em;color:#888;">— The AFHArchive Team</p>
+</td></tr>
+</table>
+{% endblock %}

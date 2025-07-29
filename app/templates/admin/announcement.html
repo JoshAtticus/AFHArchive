@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Send Announcement - Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-bullhorn"></i> Send Announcement</h2>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+<form method="POST">
+    <div class="mb-3">
+        <label for="subject" class="form-label">Subject</label>
+        <input type="text" class="form-control" id="subject" name="subject" placeholder="Announcement subject" required>
+    </div>
+    <div class="mb-3">
+        <label for="message" class="form-label">Message (HTML allowed)</label>
+        <textarea class="form-control" id="message" name="message" rows="8" placeholder="Type your announcement here..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Announcement</button>
+</form>
+{% endblock %}

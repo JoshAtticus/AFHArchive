@@ -94,41 +94,40 @@ def upload_with_progress():
         # Check if file was uploaded
         if 'file' not in request.files:
             return jsonify({'error': 'No file selected'}), 400
-        
+
         file = request.files['file']
         if file.filename == '':
             return jsonify({'error': 'No file selected'}), 400
-        
+
         if not allowed_file(file.filename):
             return jsonify({'error': 'File type not allowed'}), 400
-        
+
         # Get metadata from form
         device_manufacturer = request.form.get('device_manufacturer', '').strip()
         device_model = request.form.get('device_model', '').strip()
         afh_link = request.form.get('afh_link', '').strip()
         xda_thread = request.form.get('xda_thread', '').strip()
         notes = request.form.get('notes', '').strip()
-        
+
         # Validate required fields
         if not device_manufacturer:
             return jsonify({'error': 'Device manufacturer is required'}), 400
-        
+
         if not device_model:
             return jsonify({'error': 'Device model is required'}), 400
-        
+
         # Generate unique filename
         original_filename = secure_filename(file.filename)
         file_extension = original_filename.rsplit('.', 1)[1].lower()
         unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
-        
+
         # Create upload path
         upload_dir = current_app.config['UPLOAD_FOLDER']
         file_path = os.path.join(upload_dir, unique_filename)
-        
-        # Save file with progress tracking
+
+        # Save file in 1MB chunks to avoid memory issues and worker timeout
         file_size = 0
-        chunk_size = 64 * 1024  # 64KB chunks
-        
+        chunk_size = 1 * 1024 * 1024  # 1MB
         with open(file_path, 'wb') as f:
             while True:
                 chunk = file.stream.read(chunk_size)
@@ -136,10 +135,10 @@ def upload_with_progress():
                     break
                 f.write(chunk)
                 file_size += len(chunk)
-        
+
         # Calculate MD5 hash
         md5_hash = calculate_md5(file_path)
-        
+
         # Create upload record
         upload = Upload(
             filename=unique_filename,
@@ -154,16 +153,16 @@ def upload_with_progress():
             notes=notes,
             user_id=current_user.id
         )
-        
+
         db.session.add(upload)
         db.session.commit()
-        
+
         return jsonify({
             'success': True,
             'message': 'File uploaded successfully and is pending review',
             'upload_id': upload.id
         })
-        
+
     except Exception as e:
         current_app.logger.error(f'Upload error: {str(e)}')
         return jsonify({'error': 'Upload failed. Please try again.'}), 500
