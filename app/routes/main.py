@@ -12,7 +12,7 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    # Check if there's a file ID parameter for AFH link redirection
+     # Check if there's a file ID parameter for AFH link redirection
     fid = request.args.get('fid')
     if fid:
         return handle_afh_redirect(fid)
