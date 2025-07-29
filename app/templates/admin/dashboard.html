@@ -92,23 +92,29 @@
                 <h5><i class="fas fa-tasks"></i> Quick Actions</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
+                <div class="row flex-nowrap overflow-auto">
+                    <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.uploads', status='pending') }}" class="btn btn-warning btn-lg w-100 mb-3">
                             <i class="fas fa-clock"></i><br>
                             Review Pending Uploads
                         </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.uploads', status='all') }}" class="btn btn-primary btn-lg w-100 mb-3">
                             <i class="fas fa-list"></i><br>
                             Manage All Uploads
                         </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.users') }}" class="btn btn-info btn-lg w-100 mb-3">
                             <i class="fas fa-users"></i><br>
                             Manage Users
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6 col-lg-3 px-1">
+                        <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-danger btn-lg w-100 mb-3">
+                            <i class="fas fa-bullhorn"></i><br>
+                            Make Announcement
                         </a>
                     </div>
                 </div>

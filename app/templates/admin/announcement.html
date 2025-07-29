@@ -16,6 +16,10 @@
         <label for="message" class="form-label">Message (HTML allowed)</label>
         <textarea class="form-control" id="message" name="message" rows="8" placeholder="Type your announcement here..." required></textarea>
     </div>
+    <div class="alert alert-warning" role="alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges.
+    </div>
     <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Announcement</button>
 </form>
 {% endblock %}
