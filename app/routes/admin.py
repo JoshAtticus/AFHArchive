@@ -18,30 +18,32 @@ def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     if batch['timer']:
         batch['timer'].cancel()
     def send_batched_email():
-        approved = batch['approved']
-        rejected = batch['rejected']
-        subject = None
-        template = None
-        context = {'user': user}
-        if approved and not rejected:
-            subject = "Your uploads were approved"
-            template = 'uploads_approved.html'
-            context['uploads'] = approved
-        elif approved and rejected:
-            subject = "Some of your uploads were approved"
-            template = 'uploads_some_approved.html'
-            context['approved_uploads'] = approved
-            context['rejected_uploads'] = rejected
-        elif rejected and not approved:
-            subject = "Your uploads were rejected"
-            template = 'uploads_rejected.html'
-            context['uploads'] = rejected
-        else:
-            return
-        html = render_email_template(template, **context)
-        send_email(user.email, subject, html)
-        # Clear batch
-        pending_email_batches[user_id] = {'approved': [], 'rejected': [], 'timer': None}
+        app = current_app._get_current_object()
+        with app.app_context():
+            approved = batch['approved']
+            rejected = batch['rejected']
+            subject = None
+            template = None
+            context = {'user': user}
+            if approved and not rejected:
+                subject = "Your uploads were approved"
+                template = 'uploads_approved.html'
+                context['uploads'] = approved
+            elif approved and rejected:
+                subject = "Some of your uploads were approved"
+                template = 'uploads_some_approved.html'
+                context['approved_uploads'] = approved
+                context['rejected_uploads'] = rejected
+            elif rejected and not approved:
+                subject = "Your uploads were rejected"
+                template = 'uploads_rejected.html'
+                context['uploads'] = rejected
+            else:
+                return
+            html = render_email_template(template, **context)
+            send_email(user.email, subject, html)
+            # Clear batch
+            pending_email_batches[user_id] = {'approved': [], 'rejected': [], 'timer': None}
     # Schedule for 5 minutes (300 seconds)
     batch['timer'] = Timer(300, send_batched_email)
     batch['timer'].start()
