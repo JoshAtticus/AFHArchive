@@ -122,7 +122,31 @@ def complete_chunked_upload():
                                 final_file.write(chunk_data)
                                 total_size += len(chunk_data)
                     md5_hash = calculate_md5(final_path)
-                    if file_hash and md5_hash != file_hash:
+                    # Check for duplicate MD5
+                    duplicate = Upload.query.filter_by(md5_hash=md5_hash).first()
+                    if duplicate:
+                        # Auto-reject: do not save file, but record rejected upload for user
+                        os.remove(final_path)
+                        cleanup_chunks_dir(chunks_dir)
+                        upload = Upload(
+                            filename=unique_filename,
+                            original_filename=original_filename,
+                            file_path=final_path,
+                            file_size=total_size,
+                            md5_hash=md5_hash,
+                            device_manufacturer=device_manufacturer,
+                            device_model=device_model,
+                            afh_link=afh_link,
+                            xda_thread=xda_thread,
+                            notes=notes,
+                            user_id=user_id,
+                            status='rejected',
+                            rejection_reason='Thank you for your contribution, this file has already been uploaded and is not needed.'
+                        )
+                        db.session.add(upload)
+                        db.session.commit()
+                        status = {'error': 'Duplicate file. Auto-rejected.', 'rejected': True}
+                    elif file_hash and md5_hash != file_hash:
                         os.remove(final_path)
                         cleanup_chunks_dir(chunks_dir)
                         status = {'error': 'File integrity check failed'}
