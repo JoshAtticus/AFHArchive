@@ -124,7 +124,7 @@ let uploadState = {
     chunks: [],
     currentChunk: 0,
     totalChunks: 0,
-    chunkSize: 1 * 1024 * 1024, // 1MB
+    chunkSize: 5 * 1024 * 1024, // 5MB
     startTime: null,
     uploadedBytes: 0,
     cancelled: false,
@@ -142,32 +142,26 @@ document.getElementById('file').addEventListener('change', function(e) {
     }
 });
 
-document.getElementById('upload-form').addEventListener('submit', function(e) {
+document.getElementById('upload-form').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
     const file = document.getElementById('file').files[0];
-    
     if (!file) {
         alert('Please select a file to upload.');
         return;
     }
-    
     // Validate required fields
     const manufacturer = document.getElementById('device_manufacturer').value.trim();
     const model = document.getElementById('device_model').value.trim();
-    
     if (!manufacturer) {
         alert('Device manufacturer is required.');
         return;
     }
-    
     if (!model) {
         alert('Device model is required.');
         return;
     }
-    
-    // Start chunked upload
-    startChunkedUpload(file, {
+    // Start chunked upload asynchronously
+    await startChunkedUpload(file, {
         deviceManufacturer: manufacturer,
         deviceModel: model,
         afhLink: document.getElementById('afh_link').value.trim(),
@@ -211,13 +205,9 @@ async function startChunkedUpload(file, metadata) {
         uploadState.chunkSize = initData.chunkSize;
         uploadState.totalChunks = initData.totalChunks;
         
-        // Calculate MD5 hash of the file for integrity checking
-        updateStatus('Calculating file hash...');
-        const fileHash = await calculateMD5(file);
-        
         // Start uploading chunks
         updateStatus('Starting chunk upload...');
-        await uploadChunks(metadata, fileHash);
+        await uploadChunks(metadata);
         
     } catch (error) {
         console.error('Upload error:', error);
@@ -225,31 +215,21 @@ async function startChunkedUpload(file, metadata) {
     }
 }
 
-async function uploadChunks(metadata, fileHash) {
+async function uploadChunks(metadata) {
     const file = uploadState.file;
-    
     for (let i = 0; i < uploadState.totalChunks; i++) {
         if (uploadState.cancelled) {
             throw new Error('Upload cancelled');
         }
-        
         uploadState.currentChunk = i;
-        
-        // Calculate chunk boundaries
         const start = i * uploadState.chunkSize;
         const end = Math.min(start + uploadState.chunkSize, file.size);
         const chunk = file.slice(start, end);
-        
-        // Upload chunk
         await uploadSingleChunk(chunk, i, uploadState.totalChunks);
-        
-        // Update progress
         uploadState.uploadedBytes += chunk.size;
         updateProgress();
     }
-    
-    // Complete the upload
-    await completeUpload(metadata, fileHash);
+    await completeUpload(metadata);
 }
 
 async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
@@ -293,21 +273,18 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
     });
 }
 
-async function completeUpload(metadata, fileHash) {
+async function completeUpload(metadata) {
     updateStatus('Assembling file...');
-    
     const completeData = {
         uploadId: uploadState.uploadId,
         totalChunks: uploadState.totalChunks,
         originalFilename: uploadState.file.name,
-        fileHash: fileHash,
         deviceManufacturer: metadata.deviceManufacturer,
         deviceModel: metadata.deviceModel,
         afhLink: metadata.afhLink,
         xdaThread: metadata.xdaThread,
         notes: metadata.notes
     };
-    
     const response = await fetch('/api/upload-complete', {
         method: 'POST',
         headers: {
@@ -315,17 +292,12 @@ async function completeUpload(metadata, fileHash) {
         },
         body: JSON.stringify(completeData)
     });
-    
     const result = await response.json();
-    
     if (!result.success) {
         throw new Error(result.error || 'Failed to complete upload');
     }
-    
-    // Success!
     updateStatus('Upload completed successfully!');
     document.getElementById('progress-bar').className = 'progress-bar bg-success';
-    
     setTimeout(function() {
         window.location.href = '/my-uploads';
     }, 2000);
@@ -433,40 +405,7 @@ function formatBytes(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// MD5 calculation function
-async function calculateMD5(file) {
-    return new Promise((resolve, reject) => {
-        const chunkSize = 2097152; // 2MB chunks for hash calculation
-        const chunks = Math.ceil(file.size / chunkSize);
-        let currentChunk = 0;
-        
-        const spark = new SparkMD5.ArrayBuffer();
-        const fileReader = new FileReader();
-        
-        fileReader.onload = function(e) {
-            spark.append(e.target.result);
-            currentChunk++;
-            
-            if (currentChunk < chunks) {
-                loadNext();
-            } else {
-                resolve(spark.end());
-            }
-        };
-        
-        fileReader.onerror = function() {
-            reject(new Error('Error reading file for hash calculation'));
-        };
-        
-        function loadNext() {
-            const start = currentChunk * chunkSize;
-            const end = Math.min(start + chunkSize, file.size);
-            fileReader.readAsArrayBuffer(file.slice(start, end));
-        }
-        
-        loadNext();
-    });
-}
+
 </script>
 
 <!-- Include SparkMD5 for client-side MD5 calculation -->

@@ -5,6 +5,7 @@ import time
 import uuid
 import hashlib
 import json
+import threading
 from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
@@ -62,110 +63,119 @@ def download_file(upload_id):
             'Content-Length': str(upload.file_size)
         }
     )
-    
-    return response
-
-@api_bp.route('/bandwidth-status')
-def bandwidth_status():
-    """Debug endpoint to show current bandwidth usage"""
-    info = rate_limiter.get_active_downloads_info()
-    total_bps = info['total_bandwidth']
-    speed_per_download_bps = info['speed_per_download']
-    
-    return {
-        'active_downloads': info['active_count'],
-        'total_bandwidth': {
-            'bytes_per_sec': total_bps,
-            'MB_per_sec': round(total_bps / 1048576, 2),
-            'Mbps': round(total_bps * 8 / 1000000, 2)
-        },
-        'speed_per_download': {
-            'bytes_per_sec': speed_per_download_bps,
-            'MB_per_sec': round(speed_per_download_bps / 1048576, 2) if speed_per_download_bps > 0 else 0,
-            'Mbps': round(speed_per_download_bps * 8 / 1000000, 2) if speed_per_download_bps > 0 else 0
-        }
-    }
-
-@api_bp.route('/upload-progress', methods=['POST'])
-@login_required
-def upload_with_progress():
-    """Handle file upload with progress tracking"""
+def complete_chunked_upload():
+    """Assemble chunks into final file and create upload record asynchronously"""
     try:
-        # Check if file was uploaded
-        if 'file' not in request.files:
-            return jsonify({'error': 'No file selected'}), 400
-
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': 'No file selected'}), 400
-
-        if not allowed_file(file.filename):
-            return jsonify({'error': 'File type not allowed'}), 400
-
-        # Get metadata from form
-        device_manufacturer = request.form.get('device_manufacturer', '').strip()
-        device_model = request.form.get('device_model', '').strip()
-        afh_link = request.form.get('afh_link', '').strip()
-        xda_thread = request.form.get('xda_thread', '').strip()
-        notes = request.form.get('notes', '').strip()
+        data = request.get_json()
+        upload_id = data.get('uploadId', '')
+        total_chunks = int(data.get('totalChunks', 0))
+        original_filename = data.get('originalFilename', '')
+        file_hash = data.get('fileHash', '')
+        device_manufacturer = data.get('deviceManufacturer', '').strip()
+        device_model = data.get('deviceModel', '').strip()
+        afh_link = data.get('afhLink', '').strip()
+        xda_thread = data.get('xdaThread', '').strip()
+        notes = data.get('notes', '').strip()
 
         # Validate required fields
+        if not upload_id or not original_filename:
+            return jsonify({'error': 'Missing required parameters'}), 400
         if not device_manufacturer:
             return jsonify({'error': 'Device manufacturer is required'}), 400
-
         if not device_model:
             return jsonify({'error': 'Device model is required'}), 400
+        if not allowed_file(original_filename):
+            return jsonify({'error': 'File type not allowed'}), 400
 
-        # Generate unique filename
-        original_filename = secure_filename(file.filename)
-        file_extension = original_filename.rsplit('.', 1)[1].lower()
-        unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
+        # Get chunks directory
+        chunks_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'chunks', upload_id)
+        if not os.path.exists(chunks_dir):
+            return jsonify({'error': 'Chunks not found'}), 404
 
-        # Create upload path
-        upload_dir = current_app.config['UPLOAD_FOLDER']
-        file_path = os.path.join(upload_dir, unique_filename)
+        # Check for missing chunks
+        missing_chunks = []
+        for i in range(total_chunks):
+            chunk_filename = f"chunk_{i:04d}"
+            chunk_path = os.path.join(chunks_dir, chunk_filename)
+            if not os.path.exists(chunk_path):
+                missing_chunks.append(i)
+        if missing_chunks:
+            return jsonify({'error': f'Missing chunks: {missing_chunks}'}), 400
 
-        # Save file in 1MB chunks to avoid memory issues and worker timeout
-        file_size = 0
-        chunk_size = 1 * 1024 * 1024  # 1MB
-        with open(file_path, 'wb') as f:
-            while True:
-                chunk = file.stream.read(chunk_size)
-                if not chunk:
-                    break
-                f.write(chunk)
-                file_size += len(chunk)
+        # Start background thread for assembly and DB insert
+        def process_upload_async(user_id, upload_id, total_chunks, original_filename, file_hash, device_manufacturer, device_model, afh_link, xda_thread, notes, chunks_dir):
+            app = current_app._get_current_object()
+            with app.app_context():
+                try:
+                    secure_original = secure_filename(original_filename)
+                    file_extension = secure_original.rsplit('.', 1)[1].lower()
+                    unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
+                    final_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+                    total_size = 0
+                    with open(final_path, 'wb') as final_file:
+                        for i in range(total_chunks):
+                            chunk_filename = f"chunk_{i:04d}"
+                            chunk_path = os.path.join(chunks_dir, chunk_filename)
+                            with open(chunk_path, 'rb') as chunk_file:
+                                chunk_data = chunk_file.read()
+                                final_file.write(chunk_data)
+                                total_size += len(chunk_data)
+                    md5_hash = calculate_md5(final_path)
+                    if file_hash and md5_hash != file_hash:
+                        os.remove(final_path)
+                        cleanup_chunks_dir(chunks_dir)
+                        status = {'error': 'File integrity check failed'}
+                    else:
+                        upload = Upload(
+                            filename=unique_filename,
+                            original_filename=original_filename,
+                            file_path=final_path,
+                            file_size=total_size,
+                            md5_hash=md5_hash,
+                            device_manufacturer=device_manufacturer,
+                            device_model=device_model,
+                            afh_link=afh_link,
+                            xda_thread=xda_thread,
+                            notes=notes,
+                            user_id=user_id
+                        )
+                        db.session.add(upload)
+                        db.session.commit()
+                        status = {'success': True, 'upload_id': upload.id}
+                    cleanup_chunks_dir(chunks_dir)
+                except Exception as e:
+                    app.logger.error(f'Async complete upload error: {str(e)}')
+                    status = {'error': 'Failed to complete upload'}
+                # Save status to a temp file for polling
+                status_path = os.path.join(app.config['UPLOAD_FOLDER'], 'chunks', f'{upload_id}_status.json')
+                with open(status_path, 'w') as f:
+                    json.dump(status, f)
 
-        # Calculate MD5 hash
-        md5_hash = calculate_md5(file_path)
-
-        # Create upload record
-        upload = Upload(
-            filename=unique_filename,
-            original_filename=file.filename,
-            file_path=file_path,
-            file_size=file_size,
-            md5_hash=md5_hash,
-            device_manufacturer=device_manufacturer,
-            device_model=device_model,
-            afh_link=afh_link,
-            xda_thread=xda_thread,
-            notes=notes,
-            user_id=current_user.id
-        )
-
-        db.session.add(upload)
-        db.session.commit()
+        # Start thread
+        thread = threading.Thread(target=process_upload_async, args=(current_user.id, upload_id, total_chunks, original_filename, file_hash, device_manufacturer, device_model, afh_link, xda_thread, notes, chunks_dir))
+        thread.start()
 
         return jsonify({
             'success': True,
-            'message': 'File uploaded successfully and is pending review',
-            'upload_id': upload.id
+            'message': 'Upload is being processed asynchronously. You can check status shortly.'
         })
-
     except Exception as e:
-        current_app.logger.error(f'Upload error: {str(e)}')
-        return jsonify({'error': 'Upload failed. Please try again.'}), 500
+        current_app.logger.error(f'Complete upload error: {str(e)}')
+        return jsonify({'error': 'Failed to complete upload'}), 500
+
+# Endpoint to poll for upload completion status
+@api_bp.route('/upload-status/<upload_id>')
+@login_required
+def upload_status(upload_id):
+    status_path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'chunks', f'{upload_id}_status.json')
+    if not os.path.exists(status_path):
+        return jsonify({'processing': True})
+    with open(status_path, 'r') as f:
+        status = json.load(f)
+    # Optionally, delete status file after reading
+    os.remove(status_path)
+    return jsonify(status)
+
 
 @api_bp.route('/upload-chunk', methods=['POST'])
 @login_required
@@ -355,8 +365,8 @@ def init_chunked_upload():
         # Generate upload session ID
         upload_id = str(uuid.uuid4())
         
-        # Calculate chunk size (1MB) and total chunks
-        chunk_size = 1 * 1024 * 1024  # 1MB
+        # Calculate chunk size (5MB) and total chunks
+        chunk_size = 5 * 1024 * 1024  # 5MB
         total_chunks = (file_size + chunk_size - 1) // chunk_size
         
         return jsonify({
