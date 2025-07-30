@@ -63,6 +63,7 @@ def download_file(upload_id):
             'Content-Length': str(upload.file_size)
         }
     )
+    return response
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record asynchronously"""
     try:
