@@ -3,18 +3,23 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-8">
-        <div class="hero-section bg-primary text-white rounded p-5 mb-5">
-            <h1 class="display-4">Welcome to AFHArchive</h1>
-            <p class="lead">Preserving content from the now-defunct AndroidFileHost platform</p>
-            <p>Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.</p>
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
-                    <i class="fab fa-google"></i> Sign In to Contribute
-                </a>
-            {% else %}
-                <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-upload"></i> Upload a File
-                </a>
+        <div class="hero-section bg-primary text-white rounded p-5 mb-5 position-relative overflow-hidden">
+            <div class="hero-content" style="position: relative; z-index: 2;">
+                <h1 class="display-4">Welcome to AFHArchive</h1>
+                <p class="lead">Preserving content from the now-defunct AndroidFileHost platform</p>
+                <p>Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.</p>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
+                        <i class="fab fa-google"></i> Sign In to Contribute
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-upload"></i> Upload a File
+                    </a>
+                {% endif %}
+            </div>
+            {% if random_image %}
+                <img src="{{ url_for('static', filename='devimages/' + random_image) }}" class="hero-bg-img" alt="Device Image" />
             {% endif %}
         </div>
 
@@ -43,7 +48,7 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="card">
+        <div class="card h-100">
             <div class="card-header">
                 <h5><i class="fas fa-info-circle"></i> Important Notice</h5>
             </div>

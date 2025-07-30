@@ -13,14 +13,24 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-     # Check if there's a file ID parameter for AFH link redirection
+    # Check if there's a file ID parameter for AFH link redirection
     fid = request.args.get('fid')
     if fid:
         return handle_afh_redirect(fid)
-    
+
     # Get approved uploads for public display
     approved_uploads = Upload.query.filter_by(status='approved').order_by(Upload.uploaded_at.desc()).limit(10).all()
-    return render_template('index.html', uploads=approved_uploads)
+
+    # Get random image from devimages
+    devimages_dir = os.path.join(current_app.static_folder, 'devimages')
+    try:
+        images = [f for f in os.listdir(devimages_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp'))]
+    except Exception:
+        images = []
+    import random
+    random_image = random.choice(images) if images else None
+
+    return render_template('index.html', uploads=approved_uploads, random_image=random_image)
 
 def handle_afh_redirect(fid):
     try:
