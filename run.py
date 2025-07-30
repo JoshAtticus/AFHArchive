@@ -6,7 +6,39 @@ AFHArchive Application Runner
 import sys
 import os
 from app import create_app, db
-from app.models import User, Upload
+from app.models import User, Upload, Announcement
+import shutil
+import datetime
+def backup_database(db_path):
+    if not os.path.exists(db_path):
+        print(f"No database found at {db_path}, skipping backup.")
+        return None
+    backup_name = db_path + ".bak-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    shutil.copy2(db_path, backup_name)
+    print(f"✓ Database backed up to {backup_name}")
+    return backup_name
+
+def auto_migrate():
+    """Backup DB and auto-migrate schema (using Flask-Migrate if available, else fallback to create_all)"""
+    app = create_app()
+    db_path = app.config.get('SQLALCHEMY_DATABASE_URI', '').replace('sqlite:///', '')
+    backup_database(db_path)
+    with app.app_context():
+        try:
+            # Try Flask-Migrate/Alembic if available
+            try:
+                from flask_migrate import upgrade
+                print("Running Flask-Migrate database upgrade...")
+                upgrade()
+                print("✓ Database migration complete!")
+            except ImportError:
+                print("Flask-Migrate not installed, falling back to db.create_all()...")
+                db.create_all()
+                print("✓ Database tables created/updated!")
+            return True
+        except Exception as e:
+            print(f"✗ Error during migration: {e}")
+            return False
 
 def init_database():
     """Initialize the database tables"""
@@ -67,6 +99,9 @@ def main():
         if command == 'init-db':
             success = init_database()
             sys.exit(0 if success else 1)
+        elif command == 'auto-migrate':
+            success = auto_migrate()
+            sys.exit(0 if success else 1)
         elif command == 'gunicorn':
             start_gunicorn()
         elif command == 'production':
@@ -76,7 +111,7 @@ def main():
             start_gunicorn()
         else:
             print(f"Unknown command: {command}")
-            print("Available commands: init-db, gunicorn, production")
+            print("Available commands: init-db, auto-migrate, gunicorn, production")
             sys.exit(1)
     
     # Run the Flask development server

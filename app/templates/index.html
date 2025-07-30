@@ -3,6 +3,13 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-8">
+        {% if announcement %}
+        <div class="alert alert-info shadow-sm mb-4" style="border-left: 6px solid #007bff;">
+            <h4 class="mb-2"><i class="fas fa-bullhorn"></i> {{ announcement.subject }}</h4>
+            <div>{{ announcement.message|safe }}</div>
+            <small class="text-muted">Announcement posted {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }} (active for 48 hours)</small>
+        </div>
+        {% endif %}
         <div class="hero-section bg-primary text-white rounded p-5 mb-5 position-relative overflow-hidden">
             <div class="hero-content" style="position: relative; z-index: 2;">
                 <h1 class="display-4">Welcome to AFHArchive</h1>
@@ -48,7 +55,7 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="card h-100">
+        <div class="card">
             <div class="card-header">
                 <h5><i class="fas fa-info-circle"></i> Important Notice</h5>
             </div>

@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import hashlib
 from app import db
-from app.models import Upload, User
+from app.models import Upload, User, Announcement
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 
@@ -30,7 +30,12 @@ def index():
     import random
     random_image = random.choice(images) if images else None
 
-    return render_template('index.html', uploads=approved_uploads, random_image=random_image)
+    # Get latest active announcement (if any)
+    announcement = Announcement.query.order_by(Announcement.created_at.desc()).first()
+    if announcement and not announcement.is_active:
+        announcement = None
+
+    return render_template('index.html', uploads=approved_uploads, random_image=random_image, announcement=announcement)
 
 def handle_afh_redirect(fid):
     try:

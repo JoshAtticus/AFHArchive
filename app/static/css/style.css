@@ -8,7 +8,7 @@
     top: 0;
     right: 0;
     height: 100%;
-    width: 60%;
+    max-width: 100%;
     object-fit: cover;
     opacity: 0.2;
     z-index: 1;
@@ -29,21 +29,13 @@
     display: block;
 }
 
-@media (max-width: 991.98px) {
-    .random-device-img {
-        display: none;
-    }
-}
-
 @media (min-width: 992px) {
     .random-device-img {
         height: 100%;
         min-height: 350px;
         max-height: 100%;
     }
-    .col-lg-4 .card {
-        height: 100%;
-    }
+    /* .col-lg-4 .card { height: 100%; } -- removed to prevent stretching of Important Notice box */
 }
 /* AFHArchive Custom Styles */
 

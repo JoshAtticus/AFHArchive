@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
 from flask_login import login_required, current_user
 from app import db
-from app.models import Upload, User
+from app.models import Upload, User, Announcement
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file
 from app.utils.email_utils import send_email, render_email_template
@@ -151,12 +151,36 @@ def send_announcement():
     if request.method == 'POST':
         subject = request.form.get('subject', 'Announcement from AFHArchive')
         message = request.form.get('message', '')
-        # Send to all users
-        users = User.query.all()
-        html = render_email_template('announcement.html', message=message)
-        for user in users:
-            send_email(user.email, subject, html)
-        flash('Announcement sent to all users', 'success')
+        send_homepage = request.form.get('send_homepage') == '1'
+        send_email_flag = request.form.get('send_email') == '1'
+        recipients_type = request.form.get('recipients', 'all')
+
+        # Determine recipients
+        if recipients_type == 'uploaders':
+            users = User.query.join(User.uploads).distinct().all()
+        else:
+            users = User.query.all()
+
+        # Send email if requested
+        if send_email_flag:
+            html = render_email_template('announcement.html', message=message)
+            for user in users:
+                send_email(user.email, subject, html)
+
+        # Post to homepage if requested
+        if send_homepage:
+            announcement = Announcement(subject=subject, message=message)
+            db.session.add(announcement)
+            db.session.commit()
+
+        if send_email_flag and send_homepage:
+            flash('Announcement sent to selected users and posted to homepage', 'success')
+        elif send_email_flag:
+            flash('Announcement sent to selected users', 'success')
+        elif send_homepage:
+            flash('Announcement posted to homepage', 'success')
+        else:
+            flash('No delivery method selected. Announcement not sent.', 'warning')
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/announcement.html')
 

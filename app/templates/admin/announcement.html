@@ -16,6 +16,28 @@
         <label for="message" class="form-label">Message (HTML allowed)</label>
         <textarea class="form-control" id="message" name="message" rows="8" placeholder="Type your announcement here..." required></textarea>
     </div>
+    <div class="mb-3">
+        <label class="form-label">Delivery Method</label><br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="send_homepage" name="send_homepage" value="1" checked>
+            <label class="form-check-label" for="send_homepage">Homepage Banner</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="send_email" name="send_email" value="1" checked>
+            <label class="form-check-label" for="send_email">Email</label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Recipients</label><br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="recipients_all" name="recipients" value="all" checked>
+            <label class="form-check-label" for="recipients_all">All Users</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="recipients_uploaders" name="recipients" value="uploaders">
+            <label class="form-check-label" for="recipients_uploaders">Only Users Who Have Uploaded</label>
+        </div>
+    </div>
     <div class="alert alert-warning" role="alert">
         <i class="fas fa-exclamation-triangle"></i>
         With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges.

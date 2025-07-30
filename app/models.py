@@ -1,3 +1,4 @@
+from datetime import timedelta
 from app import db
 from flask_login import UserMixin
 from datetime import datetime
@@ -70,3 +71,17 @@ class Upload(db.Model):
     @property
     def is_rejected(self):
         return self.status == 'rejected'
+
+
+# Announcement model
+class Announcement(db.Model):
+    __tablename__ = 'announcements'
+    id = Column(Integer, primary_key=True)
+    subject = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    @property
+    def is_active(self):
+        # Active for 48 hours
+        return (datetime.utcnow() - self.created_at) < timedelta(hours=48)
