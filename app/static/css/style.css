@@ -12,7 +12,6 @@
     object-fit: cover;
     opacity: 0.2;
     z-index: 1;
-    transform: translateX(25%); /* Only show half the image */
     pointer-events: none;
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
