@@ -4,6 +4,10 @@ WSGI entry point for AFHArchive application
 This file is used by Gunicorn and other WSGI servers
 """
 
+# IMPORTANT: Monkey patch BEFORE any other imports to avoid SSL/HTTP conflicts
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import os
 import sys
 from decouple import config

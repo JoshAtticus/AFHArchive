@@ -3,6 +3,10 @@
 AFHArchive Application Runner
 """
 
+# IMPORTANT: Monkey patch BEFORE any other imports to avoid SSL/HTTP conflicts
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import sys
 import os
 from app import create_app, db
