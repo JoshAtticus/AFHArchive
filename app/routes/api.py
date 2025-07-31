@@ -6,11 +6,11 @@ import uuid
 import hashlib
 import json
 import threading
+import queue
 from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
 from app.utils.file_handler import allowed_file, calculate_md5
-from app.utils.download_manager import download_manager
 from werkzeug.utils import secure_filename
 
 api_bp = Blueprint('api', __name__)
@@ -20,7 +20,6 @@ rate_limiter = RateLimiter()
 
 @api_bp.route('/download/<int:upload_id>')
 def download_file(upload_id):
-    """Direct download with rate limiting - maintains backward compatibility"""
     upload = Upload.query.get_or_404(upload_id)
     
     if upload.status != 'approved':
@@ -41,20 +40,61 @@ def download_file(upload_id):
     # Get bandwidth limit from config
     download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
     
-    # Create bandwidth-limited file object
-    limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
-    
     def generate():
-        """Generator function to stream file with bandwidth limiting"""
+        """Asynchronous generator function to stream file with bandwidth limiting"""
+        # Create a queue for communication between threads
+        chunk_queue = queue.Queue(maxsize=10)  # Buffer up to 10 chunks
+        error_flag = threading.Event()
+        finished_flag = threading.Event()
+        
+        def read_file_async():
+            """Background thread to read file and put chunks in queue"""
+            limited_file = None
+            try:
+                limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
+                while True:
+                    chunk = limited_file.read(65536)  # 64KB chunks
+                    if not chunk:
+                        break
+                    chunk_queue.put(chunk, timeout=30)  # 30 second timeout for queue operations
+                finished_flag.set()
+            except Exception as e:
+                current_app.logger.error(f'Async download error: {str(e)}')
+                error_flag.set()
+            finally:
+                if limited_file:
+                    limited_file.close()
+                chunk_queue.put(None)  # Signal end of file
+        
+        # Start background thread
+        thread = threading.Thread(target=read_file_async, daemon=True)
+        thread.start()
+        
         try:
             while True:
-                # Read in 64KB chunks
-                chunk = limited_file.read(65536)
-                if not chunk:
+                # Check for errors
+                if error_flag.is_set():
                     break
-                yield chunk
-        finally:
-            limited_file.close()
+                
+                try:
+                    # Get chunk from queue with timeout to prevent blocking forever
+                    chunk = chunk_queue.get(timeout=60)  # 60 second timeout
+                    if chunk is None:  # End of file signal
+                        break
+                    yield chunk
+                except queue.Empty:
+                    # Timeout occurred, check if thread is still alive
+                    if not thread.is_alive() and finished_flag.is_set():
+                        break
+                    # If thread died unexpectedly, break
+                    if not thread.is_alive():
+                        break
+                    continue
+        except GeneratorExit:
+            # Client disconnected, log but don't raise
+            current_app.logger.info('Download client disconnected')
+        except Exception as e:
+            current_app.logger.error(f'Download streaming error: {str(e)}')
     
     # Create response with proper headers
     response = Response(
@@ -68,106 +108,6 @@ def download_file(upload_id):
         }
     )
     return response
-
-
-@api_bp.route('/download-async/<int:upload_id>')
-def download_async(upload_id):
-    """Start an async download session"""
-    upload = Upload.query.get_or_404(upload_id)
-    
-    if upload.status != 'approved':
-        abort(404)
-    
-    # Convert relative path to absolute path
-    if not os.path.isabs(upload.file_path):
-        # Make path relative to application root directory (go up from app/routes/api.py to project root)
-        app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        file_path = os.path.join(app_root, upload.file_path)
-    else:
-        file_path = upload.file_path
-    
-    # Check if file exists
-    if not os.path.exists(file_path):
-        abort(404)
-    
-    # Clean up old sessions
-    download_manager.cleanup_old_sessions()
-    
-    # Start async download
-    session_id = download_manager.start_download(
-        upload_id=upload.id,
-        file_path=file_path,
-        file_size=upload.file_size,
-        filename=upload.original_filename
-    )
-    
-    # Return session info for client to poll
-    return jsonify({
-        'session_id': session_id,
-        'upload_id': upload.id,
-        'filename': upload.original_filename,
-        'file_size': upload.file_size,
-        'status': 'pending',
-        'message': 'Download session started. Use /api/download-status/{session_id} to check progress.'
-    })
-
-
-@api_bp.route('/download-status/<session_id>')
-def download_status(session_id):
-    """Get download session status"""
-    status = download_manager.get_download_status(session_id)
-    if not status:
-        return jsonify({'error': 'Session not found'}), 404
-    
-    return jsonify(status)
-
-
-@api_bp.route('/download-stream/<session_id>')
-def download_stream(session_id):
-    """Stream the downloaded file once ready"""
-    session = download_manager.get_session(session_id)
-    if not session:
-        abort(404)
-    
-    if session.status == 'pending' or session.status == 'active':
-        return jsonify({
-            'error': 'Download not ready yet',
-            'status': session.status,
-            'progress': session.progress,
-            'file_size': session.file_size
-        }), 202  # Accepted but not ready
-    
-    if session.status != 'completed':
-        error_msg = session.error_message or 'Download failed'
-        return jsonify({'error': error_msg}), 400
-    
-    # Get the download stream
-    stream = download_manager.get_download_stream(session_id)
-    if not stream:
-        return jsonify({'error': 'Download data not available'}), 404
-    
-    # Create response with proper headers
-    response = Response(
-        stream,
-        mimetype='application/octet-stream',
-        headers={
-            'Content-Disposition': f'attachment; filename="{session.filename}"',
-            'Content-Length': str(session.file_size),
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive'
-        }
-    )
-    return response
-
-
-@api_bp.route('/download-cancel/<session_id>', methods=['POST'])
-def cancel_download(session_id):
-    """Cancel an active download"""
-    success = download_manager.cancel_download(session_id)
-    if success:
-        return jsonify({'success': True, 'message': 'Download cancelled'})
-    else:
-        return jsonify({'error': 'Session not found'}), 404
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record asynchronously"""
     try:
