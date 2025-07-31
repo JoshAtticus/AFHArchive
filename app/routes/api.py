@@ -10,6 +10,7 @@ from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
 from app.utils.file_handler import allowed_file, calculate_md5
+from app.utils.download_manager import download_manager
 from werkzeug.utils import secure_filename
 
 api_bp = Blueprint('api', __name__)
@@ -19,6 +20,7 @@ rate_limiter = RateLimiter()
 
 @api_bp.route('/download/<int:upload_id>')
 def download_file(upload_id):
+    """Start an async download session"""
     upload = Upload.query.get_or_404(upload_id)
     
     if upload.status != 'approved':
@@ -36,42 +38,84 @@ def download_file(upload_id):
     if not os.path.exists(file_path):
         abort(404)
     
-    # Get bandwidth limit from config
-    download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
+    # Clean up old sessions
+    download_manager.cleanup_old_sessions()
     
-    # Create bandwidth-limited file object
-    limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
+    # Start async download
+    session_id = download_manager.start_download(
+        upload_id=upload.id,
+        file_path=file_path,
+        file_size=upload.file_size,
+        filename=upload.original_filename
+    )
     
-    def generate():
-        """Generator function to stream file with bandwidth limiting"""
-        try:
-            while True:
-                # Read in 64KB chunks
-                chunk = limited_file.read(65536)
-                if not chunk:
-                    break
-                yield chunk
-        except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError) as e:
-            # Client disconnected - log and stop gracefully
-            current_app.logger.info(f'Download interrupted by client disconnect: {e}')
-        except Exception as e:
-            # Log other errors but don't crash the application
-            current_app.logger.error(f'Download error: {e}')
-        finally:
-            limited_file.close()
+    # Return session info for client to poll
+    return jsonify({
+        'session_id': session_id,
+        'upload_id': upload.id,
+        'filename': upload.original_filename,
+        'file_size': upload.file_size,
+        'status': 'pending',
+        'message': 'Download session started. Use /api/download-status/{session_id} to check progress.'
+    })
+
+
+@api_bp.route('/download-status/<session_id>')
+def download_status(session_id):
+    """Get download session status"""
+    status = download_manager.get_download_status(session_id)
+    if not status:
+        return jsonify({'error': 'Session not found'}), 404
     
-    # Create response with proper headers for long downloads
+    return jsonify(status)
+
+
+@api_bp.route('/download-stream/<session_id>')
+def download_stream(session_id):
+    """Stream the downloaded file once ready"""
+    session = download_manager.get_session(session_id)
+    if not session:
+        abort(404)
+    
+    if session.status == 'pending' or session.status == 'active':
+        return jsonify({
+            'error': 'Download not ready yet',
+            'status': session.status,
+            'progress': session.progress,
+            'file_size': session.file_size
+        }), 202  # Accepted but not ready
+    
+    if session.status != 'completed':
+        error_msg = session.error_message or 'Download failed'
+        return jsonify({'error': error_msg}), 400
+    
+    # Get the download stream
+    stream = download_manager.get_download_stream(session_id)
+    if not stream:
+        return jsonify({'error': 'Download data not available'}), 404
+    
+    # Create response with proper headers
     response = Response(
-        generate(),
+        stream,
         mimetype='application/octet-stream',
         headers={
-            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
-            'Content-Length': str(upload.file_size),
+            'Content-Disposition': f'attachment; filename="{session.filename}"',
+            'Content-Length': str(session.file_size),
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive'
         }
     )
     return response
+
+
+@api_bp.route('/download-cancel/<session_id>', methods=['POST'])
+def cancel_download(session_id):
+    """Cancel an active download"""
+    success = download_manager.cancel_download(session_id)
+    if success:
+        return jsonify({'success': True, 'message': 'Download cancelled'})
+    else:
+        return jsonify({'error': 'Session not found'}), 404
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record asynchronously"""
     try:
