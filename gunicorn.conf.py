@@ -19,9 +19,10 @@ max_requests = int(os.getenv('GUNICORN_MAX_REQUESTS', '1000'))
 max_requests_jitter = int(os.getenv('GUNICORN_MAX_REQUESTS_JITTER', '50'))
 preload_app = os.getenv('GUNICORN_PRELOAD_APP', 'True').lower() in ('true', '1', 'yes')
 
-# Timeouts
-timeout = int(os.getenv('GUNICORN_TIMEOUT', '30'))
-keepalive = int(os.getenv('GUNICORN_KEEPALIVE', '5'))
+# Timeouts - Increased to handle large file downloads with rate limiting
+# With 10MB/s rate limit and multiple concurrent downloads, large files can take several minutes
+timeout = int(os.getenv('GUNICORN_TIMEOUT', '300'))  # 5 minutes for large downloads
+keepalive = int(os.getenv('GUNICORN_KEEPALIVE', '30'))  # Longer keepalive for downloads
 
 # Logging
 loglevel = os.getenv('GUNICORN_LOG_LEVEL', 'info')

@@ -51,16 +51,24 @@ def download_file(upload_id):
                 if not chunk:
                     break
                 yield chunk
+        except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError) as e:
+            # Client disconnected - log and stop gracefully
+            current_app.logger.info(f'Download interrupted by client disconnect: {e}')
+        except Exception as e:
+            # Log other errors but don't crash the application
+            current_app.logger.error(f'Download error: {e}')
         finally:
             limited_file.close()
     
-    # Create response with proper headers
+    # Create response with proper headers for long downloads
     response = Response(
         generate(),
         mimetype='application/octet-stream',
         headers={
             'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
-            'Content-Length': str(upload.file_size)
+            'Content-Length': str(upload.file_size),
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive'
         }
     )
     return response
