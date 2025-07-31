@@ -17,8 +17,11 @@ def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     batch['rejected'].extend(rejected_uploads)
     if batch['timer']:
         batch['timer'].cancel()
+    
+    # Capture the app instance while we're still in the application context
+    app = current_app._get_current_object()
+    
     def send_batched_email():
-        app = current_app._get_current_object()
         with app.app_context():
             approved = batch['approved']
             rejected = batch['rejected']
