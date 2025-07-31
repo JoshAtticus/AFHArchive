@@ -67,7 +67,10 @@
                     <div class="mb-3">
                         <label for="afh_link" class="form-label">Original AndroidFileHost Link</label>
                         <input type="url" class="form-control" id="afh_link" name="afh_link" 
-                               placeholder="https://androidfilehost.com/?fid=...">
+               placeholder="https://androidfilehost.com/?fid=...">
+        <div class="invalid-feedback" id="afh-link-feedback" style="display:none;">
+            Folder links are not allowed. Please provide a direct file link (with <code>fid=</code> in the URL).
+        </div>
                         <div class="form-text">If you have the original AFH link, please provide it</div>
                     </div>
 
@@ -160,11 +163,24 @@ document.getElementById('upload-form').addEventListener('submit', async function
         alert('Device model is required.');
         return;
     }
+    // Validate AFH link (must not be a folder link)
+    const afhLinkInput = document.getElementById('afh_link');
+    const afhLink = afhLinkInput.value.trim();
+    const feedback = document.getElementById('afh-link-feedback');
+    if (afhLink && (afhLink.includes('flid=') || afhLink.includes('a=show&w=files'))) {
+        afhLinkInput.classList.add('is-invalid');
+        feedback.style.display = 'block';
+        afhLinkInput.focus();
+        return;
+    } else {
+        afhLinkInput.classList.remove('is-invalid');
+        feedback.style.display = 'none';
+    }
     // Start chunked upload asynchronously
     await startChunkedUpload(file, {
         deviceManufacturer: manufacturer,
         deviceModel: model,
-        afhLink: document.getElementById('afh_link').value.trim(),
+        afhLink: afhLink,
         xdaThread: document.getElementById('xda_thread').value.trim(),
         notes: document.getElementById('notes').value.trim()
     });
