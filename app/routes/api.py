@@ -20,6 +20,58 @@ rate_limiter = RateLimiter()
 
 @api_bp.route('/download/<int:upload_id>')
 def download_file(upload_id):
+    """Direct download with rate limiting - maintains backward compatibility"""
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        abort(404)
+    
+    # Convert relative path to absolute path
+    if not os.path.isabs(upload.file_path):
+        # Make path relative to application root directory (go up from app/routes/api.py to project root)
+        app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        file_path = os.path.join(app_root, upload.file_path)
+    else:
+        file_path = upload.file_path
+    
+    # Check if file exists
+    if not os.path.exists(file_path):
+        abort(404)
+    
+    # Get bandwidth limit from config
+    download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
+    
+    # Create bandwidth-limited file object
+    limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
+    
+    def generate():
+        """Generator function to stream file with bandwidth limiting"""
+        try:
+            while True:
+                # Read in 64KB chunks
+                chunk = limited_file.read(65536)
+                if not chunk:
+                    break
+                yield chunk
+        finally:
+            limited_file.close()
+    
+    # Create response with proper headers
+    response = Response(
+        generate(),
+        mimetype='application/octet-stream',
+        headers={
+            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
+            'Content-Length': str(upload.file_size),
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive'
+        }
+    )
+    return response
+
+
+@api_bp.route('/download-async/<int:upload_id>')
+def download_async(upload_id):
     """Start an async download session"""
     upload = Upload.query.get_or_404(upload_id)
     
