@@ -10,6 +10,7 @@ google-auth-oauthlib
 google-auth-httplib2
 Werkzeug
 gunicorn
+gevent
 python-decouple
 rarfile
 py7zr

@@ -67,10 +67,7 @@
                     <div class="mb-3">
                         <label for="afh_link" class="form-label">Original AndroidFileHost Link</label>
                         <input type="url" class="form-control" id="afh_link" name="afh_link" 
-               placeholder="https://androidfilehost.com/?fid=...">
-        <div class="invalid-feedback" id="afh-link-feedback" style="display:none;">
-            Folder links are not allowed. Please provide a file link instead.
-        </div>
+                               placeholder="https://androidfilehost.com/?fid=...">
                         <div class="form-text">If you have the original AFH link, please provide it</div>
                     </div>
 
@@ -127,7 +124,7 @@ let uploadState = {
     chunks: [],
     currentChunk: 0,
     totalChunks: 0,
-    chunkSize: 5 * 1024 * 1024, // 5MB
+    chunkSize: 1 * 1024 * 1024, // 1MB
     startTime: null,
     uploadedBytes: 0,
     cancelled: false,
@@ -145,42 +142,35 @@ document.getElementById('file').addEventListener('change', function(e) {
     }
 });
 
-document.getElementById('upload-form').addEventListener('submit', async function(e) {
+document.getElementById('upload-form').addEventListener('submit', function(e) {
     e.preventDefault();
+    
     const file = document.getElementById('file').files[0];
+    
     if (!file) {
         alert('Please select a file to upload.');
         return;
     }
+    
     // Validate required fields
     const manufacturer = document.getElementById('device_manufacturer').value.trim();
     const model = document.getElementById('device_model').value.trim();
+    
     if (!manufacturer) {
         alert('Device manufacturer is required.');
         return;
     }
+    
     if (!model) {
         alert('Device model is required.');
         return;
     }
-    // Validate AFH link (must not be a folder link)
-    const afhLinkInput = document.getElementById('afh_link');
-    const afhLink = afhLinkInput.value.trim();
-    const feedback = document.getElementById('afh-link-feedback');
-    if (afhLink && (afhLink.includes('flid=') || afhLink.includes('a=show&w=files'))) {
-        afhLinkInput.classList.add('is-invalid');
-        feedback.style.display = 'block';
-        afhLinkInput.focus();
-        return;
-    } else {
-        afhLinkInput.classList.remove('is-invalid');
-        feedback.style.display = 'none';
-    }
-    // Start chunked upload asynchronously
-    await startChunkedUpload(file, {
+    
+    // Start chunked upload
+    startChunkedUpload(file, {
         deviceManufacturer: manufacturer,
         deviceModel: model,
-        afhLink: afhLink,
+        afhLink: document.getElementById('afh_link').value.trim(),
         xdaThread: document.getElementById('xda_thread').value.trim(),
         notes: document.getElementById('notes').value.trim()
     });
@@ -221,9 +211,13 @@ async function startChunkedUpload(file, metadata) {
         uploadState.chunkSize = initData.chunkSize;
         uploadState.totalChunks = initData.totalChunks;
         
+        // Calculate MD5 hash of the file for integrity checking
+        updateStatus('Calculating file hash...');
+        const fileHash = await calculateMD5(file);
+        
         // Start uploading chunks
         updateStatus('Starting chunk upload...');
-        await uploadChunks(metadata);
+        await uploadChunks(metadata, fileHash);
         
     } catch (error) {
         console.error('Upload error:', error);
@@ -231,21 +225,31 @@ async function startChunkedUpload(file, metadata) {
     }
 }
 
-async function uploadChunks(metadata) {
+async function uploadChunks(metadata, fileHash) {
     const file = uploadState.file;
+    
     for (let i = 0; i < uploadState.totalChunks; i++) {
         if (uploadState.cancelled) {
             throw new Error('Upload cancelled');
         }
+        
         uploadState.currentChunk = i;
+        
+        // Calculate chunk boundaries
         const start = i * uploadState.chunkSize;
         const end = Math.min(start + uploadState.chunkSize, file.size);
         const chunk = file.slice(start, end);
+        
+        // Upload chunk
         await uploadSingleChunk(chunk, i, uploadState.totalChunks);
+        
+        // Update progress
         uploadState.uploadedBytes += chunk.size;
         updateProgress();
     }
-    await completeUpload(metadata);
+    
+    // Complete the upload
+    await completeUpload(metadata, fileHash);
 }
 
 async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
@@ -289,18 +293,21 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
     });
 }
 
-async function completeUpload(metadata) {
+async function completeUpload(metadata, fileHash) {
     updateStatus('Assembling file...');
+    
     const completeData = {
         uploadId: uploadState.uploadId,
         totalChunks: uploadState.totalChunks,
         originalFilename: uploadState.file.name,
+        fileHash: fileHash,
         deviceManufacturer: metadata.deviceManufacturer,
         deviceModel: metadata.deviceModel,
         afhLink: metadata.afhLink,
         xdaThread: metadata.xdaThread,
         notes: metadata.notes
     };
+    
     const response = await fetch('/api/upload-complete', {
         method: 'POST',
         headers: {
@@ -308,12 +315,17 @@ async function completeUpload(metadata) {
         },
         body: JSON.stringify(completeData)
     });
+    
     const result = await response.json();
+    
     if (!result.success) {
         throw new Error(result.error || 'Failed to complete upload');
     }
+    
+    // Success!
     updateStatus('Upload completed successfully!');
     document.getElementById('progress-bar').className = 'progress-bar bg-success';
+    
     setTimeout(function() {
         window.location.href = '/my-uploads';
     }, 2000);
@@ -421,7 +433,40 @@ function formatBytes(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-
+// MD5 calculation function
+async function calculateMD5(file) {
+    return new Promise((resolve, reject) => {
+        const chunkSize = 2097152; // 2MB chunks for hash calculation
+        const chunks = Math.ceil(file.size / chunkSize);
+        let currentChunk = 0;
+        
+        const spark = new SparkMD5.ArrayBuffer();
+        const fileReader = new FileReader();
+        
+        fileReader.onload = function(e) {
+            spark.append(e.target.result);
+            currentChunk++;
+            
+            if (currentChunk < chunks) {
+                loadNext();
+            } else {
+                resolve(spark.end());
+            }
+        };
+        
+        fileReader.onerror = function() {
+            reject(new Error('Error reading file for hash calculation'));
+        };
+        
+        function loadNext() {
+            const start = currentChunk * chunkSize;
+            const end = Math.min(start + chunkSize, file.size);
+            fileReader.readAsArrayBuffer(file.slice(start, end));
+        }
+        
+        loadNext();
+    });
+}
 </script>
 
 <!-- Include SparkMD5 for client-side MD5 calculation -->

@@ -11,7 +11,7 @@ bind = f"{os.getenv('GUNICORN_HOST', '0.0.0.0')}:{os.getenv('GUNICORN_PORT', '80
 
 # Worker processes
 workers = int(os.getenv('GUNICORN_WORKERS', multiprocessing.cpu_count() * 2 + 1))
-worker_class = os.getenv('GUNICORN_WORKER_CLASS', 'sync')
+worker_class = os.getenv('GUNICORN_WORKER_CLASS', 'gevent')
 worker_connections = int(os.getenv('GUNICORN_WORKER_CONNECTIONS', '1000'))
 
 # Performance tuning
@@ -20,8 +20,8 @@ max_requests_jitter = int(os.getenv('GUNICORN_MAX_REQUESTS_JITTER', '50'))
 preload_app = os.getenv('GUNICORN_PRELOAD_APP', 'True').lower() in ('true', '1', 'yes')
 
 # Timeouts
-timeout = int(os.getenv('GUNICORN_TIMEOUT', '30'))
-keepalive = int(os.getenv('GUNICORN_KEEPALIVE', '5'))
+timeout = int(os.getenv('GUNICORN_TIMEOUT', '300'))  # Increased for large file downloads
+keepalive = int(os.getenv('GUNICORN_KEEPALIVE', '30'))
 
 # Logging
 loglevel = os.getenv('GUNICORN_LOG_LEVEL', 'info')

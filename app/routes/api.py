@@ -6,7 +6,6 @@ import uuid
 import hashlib
 import json
 import threading
-import queue
 from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
@@ -41,58 +40,14 @@ def download_file(upload_id):
     download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
     
     def generate():
-        """Asynchronous generator function to stream file with bandwidth limiting"""
-        # Create a queue for communication between threads
-        chunk_queue = queue.Queue(maxsize=10)  # Buffer up to 10 chunks
-        error_flag = threading.Event()
-        finished_flag = threading.Event()
-        
-        def read_file_async():
-            """Background thread to read file and put chunks in queue"""
-            limited_file = None
-            try:
-                limited_file = rate_limiter.create_limited_file(file_path, download_speed_limit)
+        """Stream file with bandwidth limiting"""
+        try:
+            with rate_limiter.create_limited_file(file_path, download_speed_limit) as limited_file:
                 while True:
                     chunk = limited_file.read(65536)  # 64KB chunks
                     if not chunk:
                         break
-                    chunk_queue.put(chunk, timeout=30)  # 30 second timeout for queue operations
-                finished_flag.set()
-            except Exception as e:
-                current_app.logger.error(f'Async download error: {str(e)}')
-                error_flag.set()
-            finally:
-                if limited_file:
-                    limited_file.close()
-                chunk_queue.put(None)  # Signal end of file
-        
-        # Start background thread
-        thread = threading.Thread(target=read_file_async, daemon=True)
-        thread.start()
-        
-        try:
-            while True:
-                # Check for errors
-                if error_flag.is_set():
-                    break
-                
-                try:
-                    # Get chunk from queue with timeout to prevent blocking forever
-                    chunk = chunk_queue.get(timeout=60)  # 60 second timeout
-                    if chunk is None:  # End of file signal
-                        break
                     yield chunk
-                except queue.Empty:
-                    # Timeout occurred, check if thread is still alive
-                    if not thread.is_alive() and finished_flag.is_set():
-                        break
-                    # If thread died unexpectedly, break
-                    if not thread.is_alive():
-                        break
-                    continue
-        except GeneratorExit:
-            # Client disconnected, log but don't raise
-            current_app.logger.info('Download client disconnected')
         except Exception as e:
             current_app.logger.error(f'Download streaming error: {str(e)}')
     
