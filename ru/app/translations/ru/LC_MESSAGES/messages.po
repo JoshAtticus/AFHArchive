@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-01 17:34+0800\n"
-"PO-Revision-Date: 2025-08-01 11:42\n"
+"PO-Revision-Date: 2025-08-01 13:36\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -20,56 +20,56 @@ msgstr ""
 
 #: app/templates/base.html:28
 msgid "Home"
-msgstr ""
+msgstr "Главная"
 
 #: app/templates/base.html:31
 msgid "Browse"
-msgstr ""
+msgstr "Обзор"
 
 #: app/templates/base.html:59
 msgid "Avatar"
-msgstr ""
+msgstr "Аватар"
 
 #: app/templates/base.html:64 app/templates/upload.html:3
 msgid "Upload File"
-msgstr ""
+msgstr "Загрузить файл"
 
 #: app/templates/base.html:65
 msgid "My Uploads"
-msgstr ""
+msgstr "Мои загрузки"
 
 #: app/templates/base.html:68
 msgid "Admin Panel"
-msgstr ""
+msgstr "Админ-панель"
 
 #: app/templates/base.html:71
 msgid "Logout"
-msgstr ""
+msgstr "Выйти"
 
 #: app/templates/base.html:76
 msgid "Login"
-msgstr ""
+msgstr "Войти"
 
 #: app/templates/base.html:101
 msgid "Source on"
-msgstr ""
+msgstr "Исходный код на"
 
 #: app/templates/base.html:101
 msgid "Our Privacy Policy"
-msgstr ""
+msgstr "Политика конфиденциальности"
 
 #: app/templates/base.html:101
 msgid "Terms of Service"
-msgstr ""
+msgstr "Условия использования"
 
 #: app/templates/base.html:101
 msgid "Help translate AFHArchive"
-msgstr ""
+msgstr "Помогите перевести AFHArchive"
 
 #: app/templates/index.html:10
 #, python-format
 msgid "Announcement posted %(date)s (active for 48 hours)"
-msgstr ""
+msgstr "Новость от %(date)s (активна в течение 48 часов)"
 
 #: app/templates/index.html:15
 msgid "Welcome to AFHArchive"
@@ -77,7 +77,7 @@ msgstr ""
 
 #: app/templates/index.html:16
 msgid "Preserving content from the now-defunct AndroidFileHost platform"
-msgstr ""
+msgstr "Архивация файлов с ныне неработающей платформы AndroidFileHost"
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
