@@ -211,13 +211,9 @@ async function startChunkedUpload(file, metadata) {
         uploadState.chunkSize = initData.chunkSize;
         uploadState.totalChunks = initData.totalChunks;
         
-        // Calculate MD5 hash of the file for integrity checking
-        updateStatus('Calculating file hash...');
-        const fileHash = await calculateMD5(file);
-        
         // Start uploading chunks
         updateStatus('Starting chunk upload...');
-        await uploadChunks(metadata, fileHash);
+        await uploadChunks(metadata);
         
     } catch (error) {
         console.error('Upload error:', error);
@@ -225,7 +221,7 @@ async function startChunkedUpload(file, metadata) {
     }
 }
 
-async function uploadChunks(metadata, fileHash) {
+async function uploadChunks(metadata) {
     const file = uploadState.file;
     
     for (let i = 0; i < uploadState.totalChunks; i++) {
@@ -249,7 +245,7 @@ async function uploadChunks(metadata, fileHash) {
     }
     
     // Complete the upload
-    await completeUpload(metadata, fileHash);
+    await completeUpload(metadata);
 }
 
 async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
@@ -293,14 +289,13 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
     });
 }
 
-async function completeUpload(metadata, fileHash) {
+async function completeUpload(metadata) {
     updateStatus('Assembling file...');
     
     const completeData = {
         uploadId: uploadState.uploadId,
         totalChunks: uploadState.totalChunks,
         originalFilename: uploadState.file.name,
-        fileHash: fileHash,
         deviceManufacturer: metadata.deviceManufacturer,
         deviceModel: metadata.deviceModel,
         afhLink: metadata.afhLink,
@@ -432,43 +427,5 @@ function formatBytes(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
-
-// MD5 calculation function
-async function calculateMD5(file) {
-    return new Promise((resolve, reject) => {
-        const chunkSize = 2097152; // 2MB chunks for hash calculation
-        const chunks = Math.ceil(file.size / chunkSize);
-        let currentChunk = 0;
-        
-        const spark = new SparkMD5.ArrayBuffer();
-        const fileReader = new FileReader();
-        
-        fileReader.onload = function(e) {
-            spark.append(e.target.result);
-            currentChunk++;
-            
-            if (currentChunk < chunks) {
-                loadNext();
-            } else {
-                resolve(spark.end());
-            }
-        };
-        
-        fileReader.onerror = function() {
-            reject(new Error('Error reading file for hash calculation'));
-        };
-        
-        function loadNext() {
-            const start = currentChunk * chunkSize;
-            const end = Math.min(start + chunkSize, file.size);
-            fileReader.readAsArrayBuffer(file.slice(start, end));
-        }
-        
-        loadNext();
-    });
-}
 </script>
-
-<!-- Include SparkMD5 for client-side MD5 calculation -->
-<script src="https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js"></script>
 {% endblock %}
