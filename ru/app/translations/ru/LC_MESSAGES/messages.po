@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-01 17:34+0800\n"
-"PO-Revision-Date: 2025-08-01 13:36\n"
+"PO-Revision-Date: 2025-08-01 14:41\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgstr "Новость от %(date)s (активна в течение 48 час
 
 #: app/templates/index.html:15
 msgid "Welcome to AFHArchive"
-msgstr ""
+msgstr "Добро пожаловать в AFHArchive"
 
 #: app/templates/index.html:16
 msgid "Preserving content from the now-defunct AndroidFileHost platform"
@@ -81,113 +81,113 @@ msgstr "Архивация файлов с ныне неработающей п�
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "Помогите сохранить историю Android, загрузив файлы, которые раньше были на AndroidFileHost."
 
 #: app/templates/index.html:20
 msgid "Sign In to Contribute"
-msgstr ""
+msgstr "Войдите, чтобы внести вклад"
 
 #: app/templates/index.html:24
 msgid "Upload a File"
-msgstr ""
+msgstr "Загрузить файл"
 
 #: app/templates/index.html:29
 msgid "Device Image"
-msgstr ""
+msgstr "Изображение устройства"
 
 #: app/templates/index.html:34
 msgid "Recent Uploads"
-msgstr ""
+msgstr "Последние загрузки"
 
 #: app/templates/index.html:42
 msgid "Device:"
-msgstr ""
+msgstr "Устройство:"
 
 #: app/templates/index.html:43
 msgid "Size:"
-msgstr ""
+msgstr "Размер:"
 
 #: app/templates/index.html:44
 msgid "Downloads:"
-msgstr ""
+msgstr "Скачиваний:"
 
 #: app/templates/index.html:47
 msgid "View Details"
-msgstr ""
+msgstr "Подробнее"
 
 #: app/templates/index.html:60
 msgid "Important Notice"
-msgstr ""
+msgstr "Важное примечание"
 
 #: app/templates/index.html:63
 msgid "AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "AFHArchive предназначен для хранения файлов, которые ранее были размещены на AndroidFileHost."
 
 #: app/templates/index.html:65
 msgid "Only upload files that were once on AFH"
-msgstr ""
+msgstr "Загружайте только файлы, которые когда-то были на AFH"
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
-msgstr ""
+msgstr "По возможности предоставляйте ссылки с AFH"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
-msgstr ""
+msgstr "Указывайте устройство и обсуждение на XDA"
 
 #: app/templates/index.html:68
 msgid "All uploads require admin approval"
-msgstr ""
+msgstr "Все файлы проходят проверку"
 
 #: app/templates/index.html:69
 msgid "New builds or custom ROMs will not be approved"
-msgstr ""
+msgstr "Новые сборки и прошивки не принимаются"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
-msgstr ""
+msgstr "Загрузка файла в AFHArchive"
 
 #: app/templates/upload.html:14
 msgid "Important Guidelines"
-msgstr ""
+msgstr "Важные рекомендации"
 
 #: app/templates/upload.html:16
 msgid "Only upload files that were previously hosted on AndroidFileHost"
-msgstr ""
+msgstr "Загружайте только файлы, ранее размещённые на AndroidFileHost"
 
 #: app/templates/upload.html:17
 msgid "Provide as much metadata as possible to help with approval"
-msgstr ""
+msgstr "Указывайте максимум метаданных для облегчения проверки"
 
 #: app/templates/upload.html:18
 msgid "Include the original AFH link if you have it"
-msgstr ""
+msgstr "Если есть, указывайте оригинальную ссылку AFH"
 
 #: app/templates/upload.html:19
 msgid "All uploads are pending review - new builds will not be approved"
-msgstr ""
+msgstr "Все загрузки ожидают проверки — новые сборки не будут одобрены"
 
 #: app/templates/upload.html:20
 msgid "Do not upload password protected archives, they will not be approved"
-msgstr ""
+msgstr "Не загружайте архивы с паролем — они не будут одобрены"
 
 #: app/templates/upload.html:21
 msgid "Maximum file size: 5GB"
-msgstr ""
+msgstr "Максимальный размер файла: 5 ГБ"
 
 #: app/templates/upload.html:27
 msgid "Select File"
-msgstr ""
+msgstr "Выбрать файл"
 
 #: app/templates/upload.html:30
 msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
-msgstr ""
+msgstr "Разрешённые форматы: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
 
 #: app/templates/upload.html:35
 msgid "Upload Progress"
-msgstr ""
+msgstr "Ход загрузки"
 
 #: app/templates/upload.html:44
 msgid "Preparing upload..."
-msgstr ""
+msgstr "Подготовка к загрузке..."
 
