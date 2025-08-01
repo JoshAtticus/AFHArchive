@@ -61,6 +61,10 @@ msgstr ""
 msgid "Terms of Service"
 msgstr ""
 
+#: app/templates/base.html:101
+msgid "Help translate AFHArchive"
+msgstr ""
+
 #: app/templates/index.html:10
 #, python-format
 msgid "Announcement posted %(date)s (active for 48 hours)"
