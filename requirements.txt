@@ -3,6 +3,7 @@ Flask-SQLAlchemy
 Flask-Login
 Flask-WTF
 WTForms
+Flask-Babel
 python-dotenv
 requests
 google-auth

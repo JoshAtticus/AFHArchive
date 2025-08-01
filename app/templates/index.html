@@ -7,31 +7,31 @@
         <div class="alert alert-info shadow-sm mb-4" style="border-left: 6px solid #007bff;">
             <h4 class="mb-2"><i class="fas fa-bullhorn"></i> {{ announcement.subject }}</h4>
             <div>{{ announcement.message|safe }}</div>
-            <small class="text-muted">Announcement posted {{ announcement.created_at.strftime('%Y-%m-%d %H:%M') }} (active for 48 hours)</small>
+            <small class="text-muted">{{ _('Announcement posted %(date)s (active for 48 hours)', date=announcement.created_at.strftime('%Y-%m-%d %H:%M')) }}</small>
         </div>
         {% endif %}
         <div class="hero-section bg-primary text-white rounded p-5 mb-5 position-relative overflow-hidden">
             <div class="hero-content" style="position: relative; z-index: 2;">
-                <h1 class="display-4">Welcome to AFHArchive</h1>
-                <p class="lead">Preserving content from the now-defunct AndroidFileHost platform</p>
-                <p>Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.</p>
+                <h1 class="display-4">{{ _('Welcome to AFHArchive') }}</h1>
+                <p class="lead">{{ _('Preserving content from the now-defunct AndroidFileHost platform') }}</p>
+                <p>{{ _('Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.') }}</p>
                 {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
-                        <i class="fab fa-google"></i> Sign In to Contribute
+                        <i class="fab fa-google"></i> {{ _('Sign In to Contribute') }}
                     </a>
                 {% else %}
                     <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-upload"></i> Upload a File
+                        <i class="fas fa-upload"></i> {{ _('Upload a File') }}
                     </a>
                 {% endif %}
             </div>
             {% if random_image %}
-                <img src="{{ url_for('static', filename='devimages/' + random_image) }}" class="hero-bg-img" alt="Device Image" />
+                <img src="{{ url_for('static', filename='devimages/' + random_image) }}" class="hero-bg-img" alt="{{ _('Device Image') }}" />
             {% endif %}
         </div>
 
         {% if uploads %}
-        <h2>Recent Uploads</h2>
+        <h2>{{ _('Recent Uploads') }}</h2>
         <div class="row">
             {% for upload in uploads %}
             <div class="col-md-6 mb-3">
@@ -39,12 +39,12 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ upload.original_filename }}</h5>
                         <p class="card-text">
-                            <strong>Device:</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
-                            <strong>Size:</strong> {{ upload.file_size_mb }} MB<br>
-                            <strong>Downloads:</strong> {{ upload.download_count }}
+                            <strong>{{ _('Device:') }}</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
+                            <strong>{{ _('Size:') }}</strong> {{ upload.file_size_mb }} MB<br>
+                            <strong>{{ _('Downloads:') }}</strong> {{ upload.download_count }}
                         </p>
                         <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-info-circle"></i> View Details
+                            <i class="fas fa-info-circle"></i> {{ _('View Details') }}
                         </a>
                     </div>
                 </div>
@@ -57,16 +57,16 @@
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h5><i class="fas fa-info-circle"></i> Important Notice</h5>
+                <h5><i class="fas fa-info-circle"></i> {{ _('Important Notice') }}</h5>
             </div>
             <div class="card-body">
-                <p><strong>AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost.</strong></p>
+                <p><strong>{{ _('AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost.') }}</strong></p>
                 <ul>
-                    <li>Only upload files that were once on AFH</li>
-                    <li>Provide original AFH links when possible</li>
-                    <li>Include device information and XDA threads</li>
-                    <li>All uploads require admin approval</li>
-                    <li>New builds or custom ROMs will not be approved</li>
+                    <li>{{ _('Only upload files that were once on AFH') }}</li>
+                    <li>{{ _('Provide original AFH links when possible') }}</li>
+                    <li>{{ _('Include device information and XDA threads') }}</li>
+                    <li>{{ _('All uploads require admin approval') }}</li>
+                    <li>{{ _('New builds or custom ROMs will not be approved') }}</li>
                 </ul>
             </div>
         </div>

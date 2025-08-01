@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session
 main_bp = Blueprint('main', __name__)
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -193,3 +193,12 @@ def privacy():
 @main_bp.route('/terms')
 def terms():
     return render_template('terms.html')
+
+# Language selection
+@main_bp.route('/set_language/<language>')
+def set_language(language):
+    """Set the user's language preference"""
+    supported_languages = current_app.config.get('LANGUAGES', {})
+    if language in supported_languages:
+        session['language'] = language
+    return redirect(request.referrer or url_for('main.index'))

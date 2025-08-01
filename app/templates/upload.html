@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Upload File - AFHArchive{% endblock %}
+{% block title %}{{ _('Upload File') }} - AFHArchive{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
-                <h3><i class="fas fa-upload"></i> Upload File to AFHArchive</h3>
+                <h3><i class="fas fa-upload"></i> {{ _('Upload File to AFHArchive') }}</h3>
             </div>
             <div class="card-body">
                 <div class="alert alert-warning">
-                    <h5><i class="fas fa-exclamation-triangle"></i> Important Guidelines</h5>
+                    <h5><i class="fas fa-exclamation-triangle"></i> {{ _('Important Guidelines') }}</h5>
                     <ul class="mb-0">
-                        <li><strong>Only upload files that were previously hosted on AndroidFileHost</strong></li>
-                        <li>Provide as much metadata as possible to help with approval</li>
-                        <li>Include the original AFH link if you have it</li>
-                        <li>All uploads are pending review - new builds will not be approved</li>
-                        <li>Do not upload password protected archives, they will not be approved</li>
-                        <li>Maximum file size: 5GB</li>
+                        <li><strong>{{ _('Only upload files that were previously hosted on AndroidFileHost') }}</strong></li>
+                        <li>{{ _('Provide as much metadata as possible to help with approval') }}</li>
+                        <li>{{ _('Include the original AFH link if you have it') }}</li>
+                        <li>{{ _('All uploads are pending review - new builds will not be approved') }}</li>
+                        <li>{{ _('Do not upload password protected archives, they will not be approved') }}</li>
+                        <li>{{ _('Maximum file size: 5GB') }}</li>
                     </ul>
                 </div>
 
                 <form method="POST" enctype="multipart/form-data" id="upload-form">
                     <div class="mb-3">
-                        <label for="file" class="form-label">Select File *</label>
+                        <label for="file" class="form-label">{{ _('Select File') }} *</label>
                         <input type="file" class="form-control" id="file" name="file" required 
                                accept=".zip,.apk,.img,.tar,.gz,.xz,.7z,.rar,.md5">
-                        <div class="form-text">Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5</div>
+                        <div class="form-text">{{ _('Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5') }}</div>
                     </div>
 
                     <!-- Progress bar (hidden initially) -->
                     <div class="mb-3" id="progress-container" style="display: none;">
-                        <label class="form-label">Upload Progress</label>
+                        <label class="form-label">{{ _('Upload Progress') }}</label>
                         <div class="progress" style="height: 25px;">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" 
                                  role="progressbar" id="progress-bar" style="width: 0%">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="mt-2">
                             <small class="text-muted">
-                                <span id="upload-status">Preparing upload...</span>
+                                <span id="upload-status">{{ _('Preparing upload...') }}</span>
                                 <span id="upload-speed" class="float-end"></span>
                             </small>
                         </div>
