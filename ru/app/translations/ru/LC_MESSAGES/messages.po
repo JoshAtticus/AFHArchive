@@ -1,0 +1,189 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: afharchive\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-08-01 17:34+0800\n"
+"PO-Revision-Date: 2025-08-01 10:02\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: afharchive\n"
+"X-Crowdin-Project-ID: 815004\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /main/app/translations/messages.pot\n"
+"X-Crowdin-File-ID: 8\n"
+"Language: ru_RU\n"
+
+#: app/templates/base.html:28
+msgid "Home"
+msgstr ""
+
+#: app/templates/base.html:31
+msgid "Browse"
+msgstr ""
+
+#: app/templates/base.html:59
+msgid "Avatar"
+msgstr ""
+
+#: app/templates/base.html:64 app/templates/upload.html:3
+msgid "Upload File"
+msgstr ""
+
+#: app/templates/base.html:65
+msgid "My Uploads"
+msgstr ""
+
+#: app/templates/base.html:68
+msgid "Admin Panel"
+msgstr ""
+
+#: app/templates/base.html:71
+msgid "Logout"
+msgstr ""
+
+#: app/templates/base.html:76
+msgid "Login"
+msgstr ""
+
+#: app/templates/base.html:101
+msgid "Source on"
+msgstr ""
+
+#: app/templates/base.html:101
+msgid "Our Privacy Policy"
+msgstr ""
+
+#: app/templates/base.html:101
+msgid "Terms of Service"
+msgstr ""
+
+#: app/templates/index.html:10
+#, python-format
+msgid "Announcement posted %(date)s (active for 48 hours)"
+msgstr ""
+
+#: app/templates/index.html:15
+msgid "Welcome to AFHArchive"
+msgstr ""
+
+#: app/templates/index.html:16
+msgid "Preserving content from the now-defunct AndroidFileHost platform"
+msgstr ""
+
+#: app/templates/index.html:17
+msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
+msgstr ""
+
+#: app/templates/index.html:20
+msgid "Sign In to Contribute"
+msgstr ""
+
+#: app/templates/index.html:24
+msgid "Upload a File"
+msgstr ""
+
+#: app/templates/index.html:29
+msgid "Device Image"
+msgstr ""
+
+#: app/templates/index.html:34
+msgid "Recent Uploads"
+msgstr ""
+
+#: app/templates/index.html:42
+msgid "Device:"
+msgstr ""
+
+#: app/templates/index.html:43
+msgid "Size:"
+msgstr ""
+
+#: app/templates/index.html:44
+msgid "Downloads:"
+msgstr ""
+
+#: app/templates/index.html:47
+msgid "View Details"
+msgstr ""
+
+#: app/templates/index.html:60
+msgid "Important Notice"
+msgstr ""
+
+#: app/templates/index.html:63
+msgid "AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost."
+msgstr ""
+
+#: app/templates/index.html:65
+msgid "Only upload files that were once on AFH"
+msgstr ""
+
+#: app/templates/index.html:66
+msgid "Provide original AFH links when possible"
+msgstr ""
+
+#: app/templates/index.html:67
+msgid "Include device information and XDA threads"
+msgstr ""
+
+#: app/templates/index.html:68
+msgid "All uploads require admin approval"
+msgstr ""
+
+#: app/templates/index.html:69
+msgid "New builds or custom ROMs will not be approved"
+msgstr ""
+
+#: app/templates/upload.html:10
+msgid "Upload File to AFHArchive"
+msgstr ""
+
+#: app/templates/upload.html:14
+msgid "Important Guidelines"
+msgstr ""
+
+#: app/templates/upload.html:16
+msgid "Only upload files that were previously hosted on AndroidFileHost"
+msgstr ""
+
+#: app/templates/upload.html:17
+msgid "Provide as much metadata as possible to help with approval"
+msgstr ""
+
+#: app/templates/upload.html:18
+msgid "Include the original AFH link if you have it"
+msgstr ""
+
+#: app/templates/upload.html:19
+msgid "All uploads are pending review - new builds will not be approved"
+msgstr ""
+
+#: app/templates/upload.html:20
+msgid "Do not upload password protected archives, they will not be approved"
+msgstr ""
+
+#: app/templates/upload.html:21
+msgid "Maximum file size: 5GB"
+msgstr ""
+
+#: app/templates/upload.html:27
+msgid "Select File"
+msgstr ""
+
+#: app/templates/upload.html:30
+msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
+msgstr ""
+
+#: app/templates/upload.html:35
+msgid "Upload Progress"
+msgstr ""
+
+#: app/templates/upload.html:44
+msgid "Preparing upload..."
+msgstr ""
+
