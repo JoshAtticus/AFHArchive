@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-02 12:27\n"
+"PO-Revision-Date: 2025-08-02 13:29\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr "Поиск по имени файла"
 
 #: app/templates/browse.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Применить фильтр"
 
 #: app/templates/browse.html:53 app/templates/index.html:42
 msgid "Device:"
@@ -119,11 +119,11 @@ msgstr "Скачиваний:"
 
 #: app/templates/browse.html:56
 msgid "MD5:"
-msgstr ""
+msgstr "MD5:"
 
 #: app/templates/browse.html:62 app/templates/file_detail.html:55
 msgid "Original AFH Link"
-msgstr ""
+msgstr "Оригинал на AFH"
 
 #: app/templates/admin/dashboard.html:25 app/templates/admin/dashboard.html:44
 #: app/templates/admin/dashboard.html:63 app/templates/admin/dashboard.html:82
@@ -133,119 +133,119 @@ msgstr "Подробнее"
 
 #: app/templates/browse.html:71 app/templates/my_uploads.html:22
 msgid "Uploaded"
-msgstr ""
+msgstr "Загружено"
 
 #: app/templates/browse.html:87
 msgid "Previous"
-msgstr ""
+msgstr "Назад"
 
 #: app/templates/browse.html:117
 msgid "Next"
-msgstr ""
+msgstr "Далее"
 
 #: app/templates/browse.html:126
 msgid "No files found"
-msgstr ""
+msgstr "Файлы не найдены"
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
-msgstr ""
+msgstr "Измените фильтры поиска или посмотрите все файлы."
 
 #: app/templates/file_detail.html:13
 msgid "Device Information"
-msgstr ""
+msgstr "Информация об устройстве"
 
 #: app/templates/file_detail.html:16
 msgid "Manufacturer:"
-msgstr ""
+msgstr "Производитель:"
 
 #: app/templates/file_detail.html:20
 msgid "Model:"
-msgstr ""
+msgstr "Модель:"
 
 #: app/templates/file_detail.html:26
 msgid "File Information"
-msgstr ""
+msgstr "Информация о файле"
 
 #: app/templates/file_detail.html:33
 msgid "MD5 Hash:"
-msgstr ""
+msgstr "MD5-хеш:"
 
 #: app/templates/file_detail.html:41
 msgid "Uploaded:"
-msgstr ""
+msgstr "Дата загрузки:"
 
 #: app/templates/file_detail.html:51
 msgid "Original Links"
-msgstr ""
+msgstr "Оригинальные ссылки"
 
 #: app/templates/file_detail.html:60
 msgid "XDA Thread"
-msgstr ""
+msgstr "Тема на XDA"
 
 #: app/templates/file_detail.html:71
 msgid "Notes"
-msgstr ""
+msgstr "Примечания"
 
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
-msgstr ""
+msgstr "Назад к обзору"
 
 #: app/templates/file_detail.html:86
 msgid "Download File"
-msgstr ""
+msgstr "Скачать файл"
 
 #: app/templates/file_detail.html:96 app/templates/index.html:76
 msgid "Support AFHArchive"
-msgstr ""
+msgstr "Поддержите AFHArchive"
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
 msgid "Help keep this archive running!"
-msgstr ""
+msgstr "Помогите поддерживать работу этого архива!"
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr ""
+msgstr "Ваша поддержка поможет покрыть расходы на хостинг и поддерживать сохранение информации."
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
 msgid "Buy me a coffee"
-msgstr ""
+msgstr "Buy Me a Coffee"
 
 #: app/templates/file_detail.html:109
 msgid "Download Information"
-msgstr ""
+msgstr "Информация о загрузке"
 
 #: app/templates/file_detail.html:113
 msgid "File Verification"
-msgstr ""
+msgstr "Проверка файла"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
-msgstr ""
+msgstr "Вы можете проверить целостность файла с помощью хеша MD5:"
 
 #: app/templates/file_detail.html:119
 msgid "Important"
-msgstr ""
+msgstr "Важно"
 
 #: app/templates/file_detail.html:121
 msgid "This file was originally hosted on AndroidFileHost"
-msgstr ""
+msgstr "Файл изначально был размещен на AndroidFileHost"
 
 #: app/templates/file_detail.html:122
 msgid "Files are provided as-is for preservation purposes"
-msgstr ""
+msgstr "Файлы предоставляются как есть для целей сохранения"
 
 #: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
-msgstr ""
+msgstr "Используйте на свой страх и риск и убедитесь в совместимости"
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
-msgstr ""
+msgstr "Скорость загрузки ограничена для сохранения пропускной способности"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr ""
+msgstr "Добавлено"
 
 #: app/templates/index.html:10
 #, python-format
@@ -310,51 +310,51 @@ msgstr "Новые сборки и прошивки не принимаются"
 
 #: app/templates/my_uploads.html:9
 msgid "Upload New File"
-msgstr ""
+msgstr "Загрузить файл"
 
 #: app/templates/my_uploads.html:18
 msgid "Filename"
-msgstr ""
+msgstr "Имя файла"
 
 #: app/templates/my_uploads.html:19
 msgid "Device"
-msgstr ""
+msgstr "Устройство"
 
 #: app/templates/my_uploads.html:20
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 #: app/templates/my_uploads.html:21
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: app/templates/my_uploads.html:23
 msgid "Downloads"
-msgstr ""
+msgstr "Дата загрузки"
 
 #: app/templates/admin/dashboard.html:16 app/templates/my_uploads.html:37
 msgid "Pending"
-msgstr ""
+msgstr "В ожидании"
 
 #: app/templates/admin/dashboard.html:35 app/templates/my_uploads.html:39
 msgid "Approved"
-msgstr ""
+msgstr "Одобрено"
 
 #: app/templates/admin/dashboard.html:54 app/templates/my_uploads.html:41
 msgid "Rejected"
-msgstr ""
+msgstr "Отклонено"
 
 #: app/templates/my_uploads.html:60
 msgid "No uploads yet"
-msgstr ""
+msgstr "Пока загрузок нет"
 
 #: app/templates/my_uploads.html:61
 msgid "Start contributing to the archive by uploading your first file!"
-msgstr ""
+msgstr "Начните вносить свой вклад в архив, загрузив свой первый файл!"
 
 #: app/templates/my_uploads.html:63
 msgid "Upload First File"
-msgstr ""
+msgstr "Загрузить первый файл"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
@@ -406,69 +406,69 @@ msgstr "Подготовка к загрузке..."
 
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
-msgstr ""
+msgstr "Панель администратора"
 
 #: app/templates/admin/dashboard.html:73
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #: app/templates/admin/dashboard.html:92
 msgid "Quick Actions"
-msgstr ""
+msgstr "Быстрые действия"
 
 #: app/templates/admin/dashboard.html:99
 msgid "Review Pending Uploads"
-msgstr ""
+msgstr "Проверить ожидающие загрузки"
 
 #: app/templates/admin/dashboard.html:105
 msgid "Manage All Uploads"
-msgstr ""
+msgstr "Управление всеми загрузками"
 
 #: app/templates/admin/dashboard.html:111
 msgid "Manage Users"
-msgstr ""
+msgstr "Управление пользователями"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
-msgstr ""
+msgstr "Создать новость"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
-msgstr ""
+msgstr "Вход в AFHArchive"
 
 #: app/templates/auth/login.html:13
 msgid "Sign in with your Google account to start contributing to the archive."
-msgstr ""
+msgstr "Войдите через Google-аккаунт, чтобы начать вносить вклад в архив."
 
 #: app/templates/auth/login.html:16
 msgid "Sign in with Google"
-msgstr ""
+msgstr "Войти через Google"
 
 #: app/templates/auth/login.html:21
 msgid "By signing in, you agree to help preserve AndroidFileHost content responsibly. Only files that were previously hosted on AFH will be approved."
-msgstr ""
+msgstr "Регистрируясь, вы соглашаетесь ответственно относиться к сохранению контента AndroidFileHost. Будут одобрены только те файлы, которые ранее были размещены на AFH."
 
 #: app/templates/errors/404.html:3 app/templates/errors/404.html:11
 msgid "Page Not Found"
-msgstr ""
+msgstr "Страница не найдена"
 
 #: app/templates/errors/404.html:13
 msgid "The page you're looking for doesn't exist or has been moved."
-msgstr ""
+msgstr "Страница, которую вы ищете, не существует или была перемещена."
 
 #: app/templates/errors/404.html:16
 msgid "This could be due to a broken link, mistyped URL, or the file may have been removed from our archive."
-msgstr ""
+msgstr "Это может быть связано с неправильным URL-адресом или удалением файла из нашего архива."
 
 #: app/templates/errors/404.html:20
 msgid "Search for files..."
-msgstr ""
+msgstr "Поиск файлов..."
 
 #: app/templates/errors/404.html:28
 msgid "Go Home"
-msgstr ""
+msgstr "Главная"
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
-msgstr ""
+msgstr "Вернуться назад"
 
