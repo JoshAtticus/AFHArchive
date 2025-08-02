@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-02 07:16\n"
+"PO-Revision-Date: 2025-08-02 14:25\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -470,5 +470,177 @@ msgstr ""
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
+msgstr ""
+
+#: app/templates/upload.html:49
+msgid "Device Manufacturer"
+msgstr ""
+
+#: app/templates/upload.html:51
+msgid "e.g., Samsung, Google, OnePlus"
+msgstr ""
+
+#: app/templates/upload.html:57
+msgid "Device Model"
+msgstr ""
+
+#: app/templates/upload.html:59
+msgid "e.g., Galaxy S21, Pixel 6, Generic"
+msgstr ""
+
+#: app/templates/upload.html:66
+msgid "Original AndroidFileHost Link"
+msgstr ""
+
+#: app/templates/upload.html:68
+msgid "https://androidfilehost.com/?fid=..."
+msgstr ""
+
+#: app/templates/upload.html:69
+msgid "If you have the original AFH link, please provide it"
+msgstr ""
+
+#: app/templates/upload.html:74
+msgid "XDA Thread Link"
+msgstr ""
+
+#: app/templates/upload.html:76
+msgid "https://forum.xda-developers.com/..."
+msgstr ""
+
+#: app/templates/upload.html:77
+msgid "Link to the XDA thread where this file was discussed"
+msgstr ""
+
+#: app/templates/upload.html:82
+msgid "Additional Notes"
+msgstr ""
+
+#: app/templates/upload.html:84
+msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
+msgstr ""
+
+#: app/templates/upload.html:88
+msgid "Cancel Upload"
+msgstr ""
+
+#: app/templates/upload.html:95
+msgid "Upload Process"
+msgstr ""
+
+#: app/templates/upload.html:99
+msgid "Select your file (max 5GB)"
+msgstr ""
+
+#: app/templates/upload.html:100
+msgid "Fill in required metadata"
+msgstr ""
+
+#: app/templates/upload.html:101
+msgid "Admin reviews for AFH authenticity"
+msgstr ""
+
+#: app/templates/upload.html:102
+msgid "Approved files become available"
+msgstr ""
+
+#: app/templates/upload.html:105
+msgid "Note:"
+msgstr ""
+
+#: app/templates/upload.html:105
+msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
+msgstr ""
+
+#: app/templates/upload.html:112
+msgid "File is too large. Maximum size is 5GB."
+msgstr ""
+
+#: app/templates/upload.html:113
+msgid "Please select a file to upload."
+msgstr ""
+
+#: app/templates/upload.html:114
+msgid "Device manufacturer is required."
+msgstr ""
+
+#: app/templates/upload.html:115
+msgid "Device model is required."
+msgstr ""
+
+#: app/templates/upload.html:116
+msgid "Initializing upload..."
+msgstr ""
+
+#: app/templates/upload.html:117
+msgid "Failed to initialize upload"
+msgstr ""
+
+#: app/templates/upload.html:118
+msgid "Starting chunk upload..."
+msgstr ""
+
+#: app/templates/upload.html:119
+msgid "Upload cancelled"
+msgstr ""
+
+#: app/templates/upload.html:120
+msgid "Chunk upload failed"
+msgstr ""
+
+#: app/templates/upload.html:121
+msgid "Invalid response from server"
+msgstr ""
+
+#: app/templates/upload.html:122
+msgid "Network error during chunk upload"
+msgstr ""
+
+#: app/templates/upload.html:123
+msgid "Chunk upload cancelled"
+msgstr ""
+
+#: app/templates/upload.html:124
+msgid "Assembling file..."
+msgstr ""
+
+#: app/templates/upload.html:125
+msgid "Failed to complete upload"
+msgstr ""
+
+#: app/templates/upload.html:126
+msgid "Upload completed successfully!"
+msgstr ""
+
+#: app/templates/upload.html:127
+msgid "Uploading chunk"
+msgstr ""
+
+#: app/templates/upload.html:128
+msgid "of"
+msgstr ""
+
+#: app/templates/upload.html:129
+msgid "MB/s"
+msgstr ""
+
+#: app/templates/upload.html:130
+msgid "Bytes"
+msgstr ""
+
+#: app/templates/upload.html:131
+msgid "KB"
+msgstr ""
+
+#: app/templates/upload.html:132
+msgid "MB"
+msgstr ""
+
+#: app/templates/upload.html:133
+msgid "GB"
+msgstr ""
+
+#: app/templates/upload.html:134
+msgid "Upload failed"
 msgstr ""
 
