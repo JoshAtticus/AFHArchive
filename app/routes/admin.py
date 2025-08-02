@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, Response, abort
 from flask_login import login_required, current_user
 from app import db
 from app.models import Upload, User, Announcement
@@ -8,6 +8,7 @@ from app.utils.email_utils import send_email, render_email_template
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
+import os
 pending_email_batches = defaultdict(lambda: {'approved': [], 'rejected': [], 'timer': None})
 def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     """Batch notifications for 5 minutes before sending approval/rejection emails"""
@@ -280,3 +281,52 @@ def delete_user(user_id):
     
     flash(f'User "{user.name}" and all their uploads have been deleted', 'info')
     return redirect(url_for('admin.users'))
+
+@admin_bp.route('/download/<int:upload_id>')
+@login_required
+@admin_required
+def download_file(upload_id):
+    """Admin download route that can download any file regardless of status"""
+    upload = Upload.query.get_or_404(upload_id)
+    
+    # Convert relative path to absolute path
+    if not os.path.isabs(upload.file_path):
+        # Make path relative to application root directory
+        app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        file_path = os.path.join(app_root, upload.file_path)
+    else:
+        file_path = upload.file_path
+    
+    # Check if file exists
+    if not os.path.exists(file_path):
+        flash('File not found on disk', 'error')
+        return redirect(url_for('admin.view_upload', upload_id=upload_id))
+    
+    # For admin downloads, we don't apply rate limiting but we do increment download count
+    upload.download_count += 1
+    db.session.commit()
+    
+    def generate():
+        """Stream file without rate limiting for admin downloads"""
+        try:
+            with open(file_path, 'rb') as f:
+                while True:
+                    chunk = f.read(65536)  # 64KB chunks
+                    if not chunk:
+                        break
+                    yield chunk
+        except Exception as e:
+            current_app.logger.error(f'Admin download streaming error: {str(e)}')
+    
+    # Create response with proper headers
+    response = Response(
+        generate(),
+        mimetype='application/octet-stream',
+        headers={
+            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
+            'Content-Length': str(upload.file_size),
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive'
+        }
+    )
+    return response
