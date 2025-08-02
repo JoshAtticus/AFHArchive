@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}Browse Files - AFHArchive{% endblock %}
+{% block title %}{{ _('Browse Files') }} - AFHArchive{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-search"></i> Browse Archive</h2>
+    <h2><i class="fas fa-search"></i> {{ _('Browse Archive') }}</h2>
 </div>
 
 <div class="search-filters">
     <form method="GET" class="row g-3">
         <div class="col-md-3">
-            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <label for="manufacturer" class="form-label">{{ _('Manufacturer') }}</label>
             <select class="form-select" id="manufacturer" name="manufacturer">
-                <option value="">All Manufacturers</option>
+                <option value="">{{ _('All Manufacturers') }}</option>
                 {% for manufacturer in manufacturers %}
                 <option value="{{ manufacturer }}" {% if manufacturer == current_manufacturer %}selected{% endif %}>
                     {{ manufacturer }}
@@ -21,19 +21,19 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label for="model" class="form-label">Model</label>
+            <label for="model" class="form-label">{{ _('Model') }}</label>
             <input type="text" class="form-control" id="model" name="model" 
-                   value="{{ current_model }}" placeholder="Device model">
+                   value="{{ current_model }}" placeholder="{{ _('Device model') }}">
         </div>
         <div class="col-md-4">
-            <label for="search" class="form-label">Search</label>
+            <label for="search" class="form-label">{{ _('Search') }}</label>
             <input type="text" class="form-control" id="search" name="search" 
-                   value="{{ current_search }}" placeholder="Filename search">
+                   value="{{ current_search }}" placeholder="{{ _('Filename search') }}">
         </div>
         <div class="col-md-2">
             <label class="form-label">&nbsp;</label>
             <button type="submit" class="btn btn-primary w-100">
-                <i class="fas fa-search"></i> Filter
+                <i class="fas fa-search"></i> {{ _('Filter') }}
             </button>
         </div>
     </form>
@@ -50,25 +50,25 @@
                     {{ upload.original_filename }}
                 </h5>
                 <p class="card-text">
-                    <strong>Device:</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
-                    <strong>Size:</strong> {{ upload.file_size_mb }} MB<br>
-                    <strong>Downloads:</strong> {{ upload.download_count }}<br>
-                    <strong>MD5:</strong> <code>{{ upload.md5_hash }}</code>
+                    <strong>{{ _('Device:') }}</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
+                    <strong>{{ _('Size:') }}</strong> {{ upload.file_size_mb }} MB<br>
+                    <strong>{{ _('Downloads:') }}</strong> {{ upload.download_count }}<br>
+                    <strong>{{ _('MD5:') }}</strong> <code>{{ upload.md5_hash }}</code>
                 </p>
                 {% if upload.afh_link %}
                 <p class="card-text">
                     <small class="text-muted">
                         <i class="fas fa-link"></i> 
-                        <a href="{{ upload.afh_link }}" target="_blank">Original AFH Link</a>
+                        <a href="{{ upload.afh_link }}" target="_blank">{{ _('Original AFH Link') }}</a>
                     </small>
                 </p>
                 {% endif %}
                 <div class="d-flex justify-content-between">
                     <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary">
-                        <i class="fas fa-info-circle"></i> View Details
+                        <i class="fas fa-info-circle"></i> {{ _('View Details') }}
                     </a>
                     <small class="text-muted align-self-center">
-                        Uploaded {{ upload.uploaded_at.strftime('%Y-%m-%d') }}
+                        {{ _('Uploaded') }} {{ upload.uploaded_at.strftime('%Y-%m-%d') }}
                     </small>
                 </div>
             </div>
@@ -84,7 +84,7 @@
         <li class="page-item">
             <a class="page-link" href="{{ url_for('main.browse', page=uploads.prev_num, 
                 manufacturer=current_manufacturer, model=current_model, search=current_search) }}">
-                Previous
+                {{ _('Previous') }}
             </a>
         </li>
         {% endif %}
@@ -114,7 +114,7 @@
         <li class="page-item">
             <a class="page-link" href="{{ url_for('main.browse', page=uploads.next_num,
                 manufacturer=current_manufacturer, model=current_model, search=current_search) }}">
-                Next
+                {{ _('Next') }}
             </a>
         </li>
         {% endif %}
@@ -123,8 +123,8 @@
 {% else %}
 <div class="text-center py-5">
     <i class="fas fa-search fa-4x text-muted mb-3"></i>
-    <h4>No files found</h4>
-    <p class="text-muted">Try adjusting your search filters or browse all files.</p>
+    <h4>{{ _('No files found') }}</h4>
+    <p class="text-muted">{{ _('Try adjusting your search filters or browse all files.') }}</p>
 </div>
 {% endif %}
 {% endblock %}

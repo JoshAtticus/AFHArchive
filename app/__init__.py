@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_babel import Babel, _
 from decouple import config
 import os
+import glob
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -29,6 +30,86 @@ def get_locale():
     # Check if Accept-Language header provides a supported language
     # Update this list as you add more languages to Crowdin
     return request.accept_languages.best_match(['en', 'ru', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh']) or 'en'
+
+def compile_translations():
+    """Automatically compile .po files to .mo files from Crowdin directories"""
+    from babel.messages import pofile, mofile
+    import io
+    
+    # Get all language directories created by Crowdin
+    lang_dirs = glob.glob(os.path.join(os.path.dirname(__file__), '..', '*', 'app', 'translations', '*', 'LC_MESSAGES', 'messages.po'))
+    
+    for po_path in lang_dirs:
+        mo_path = po_path.replace('.po', '.mo')
+        
+        # Check if .mo file needs updating
+        if not os.path.exists(mo_path) or os.path.getmtime(po_path) > os.path.getmtime(mo_path):
+            try:
+                with open(po_path, 'rb') as po_file:
+                    catalog = pofile.read_po(po_file)
+                
+                with open(mo_path, 'wb') as mo_file:
+                    mofile.write_mo(mo_file, catalog)
+                    
+                print(f"Compiled {po_path} -> {mo_path}")
+            except Exception as e:
+                print(f"Error compiling {po_path}: {e}")
+
+def setup_babel_directories(app):
+    """Setup Babel to use Crowdin directory structure"""
+    import babel.support
+    from babel.core import Locale
+    
+    # Override Babel's default translation loading
+    original_load = babel.support.Translations.load
+    
+    def load_crowdin_translations(dirname=None, locales=None, domain='messages'):
+        if dirname is None:
+            dirname = os.path.join(app.root_path, 'translations')
+        
+        catalog = babel.support.Translations()
+        
+        if locales is None:
+            locales = [get_locale()]
+        elif isinstance(locales, str):
+            locales = [locales]
+            
+        for locale in locales:
+            # Convert locale to string if it's a Locale object
+            locale_str = str(locale) if hasattr(locale, 'language') else locale
+            
+            # Try Crowdin directory structure first
+            crowdin_paths = [
+                os.path.join(app.root_path, '..', locale_str, 'app', 'translations', locale_str, 'LC_MESSAGES', f'{domain}.mo'),
+                os.path.join(app.root_path, '..', f'{locale_str}-{locale_str.upper()}', 'app', 'translations', locale_str, 'LC_MESSAGES', f'{domain}.mo'),
+                os.path.join(app.root_path, '..', f'{locale_str}-ES', 'app', 'translations', locale_str, 'LC_MESSAGES', f'{domain}.mo'),
+                os.path.join(app.root_path, '..', f'{locale_str}-CN', 'app', 'translations', locale_str, 'LC_MESSAGES', f'{domain}.mo'),
+                os.path.join(app.root_path, '..', f'{locale_str}-PT', 'app', 'translations', locale_str, 'LC_MESSAGES', f'{domain}.mo'),
+            ]
+            
+            for mo_path in crowdin_paths:
+                if os.path.exists(mo_path):
+                    try:
+                        with open(mo_path, 'rb') as mo_file:
+                            trans = babel.support.Translations(mo_file)
+                            catalog.merge(trans)
+                        break
+                    except Exception as e:
+                        print(f"Error loading translation {mo_path}: {e}")
+            else:
+                # Fallback to standard directory structure
+                try:
+                    standard_path = os.path.join(dirname, locale_str, 'LC_MESSAGES', f'{domain}.mo')
+                    if os.path.exists(standard_path):
+                        with open(standard_path, 'rb') as mo_file:
+                            trans = babel.support.Translations(mo_file)
+                            catalog.merge(trans)
+                except Exception:
+                    pass
+        
+        return catalog
+    
+    babel.support.Translations.load = staticmethod(load_crowdin_translations)
 
 def create_app():
     app = Flask(__name__)
@@ -60,6 +141,10 @@ def create_app():
     # Initialize Babel
     babel.init_app(app, locale_selector=get_locale)
     
+    # Auto-compile translations and setup Crowdin directory support
+    compile_translations()
+    setup_babel_directories(app)
+    
     # Make translation functions available in templates
     @app.context_processor
     def inject_conf_vars():
@@ -72,8 +157,7 @@ def create_app():
     # Set supported languages (add more as they become available from Crowdin)
     app.config['LANGUAGES'] = {
         'en': 'English',
-        # Add these as translations become available:
-        # 'ru': 'Русский',
+        'ru': 'Русский',
         # 'es': 'Español', 
         # 'fr': 'Français',
         # 'de': 'Deutsch',

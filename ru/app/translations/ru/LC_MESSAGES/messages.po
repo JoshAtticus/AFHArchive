@@ -191,3 +191,247 @@ msgstr "Ход загрузки"
 msgid "Preparing upload..."
 msgstr "Подготовка к загрузке..."
 
+#: app/templates/my_uploads.html:3
+msgid "My Uploads"
+msgstr ""
+
+#: app/templates/my_uploads.html:9
+msgid "Upload New File"
+msgstr ""
+
+#: app/templates/my_uploads.html:17
+msgid "Filename"
+msgstr ""
+
+#: app/templates/my_uploads.html:18
+msgid "Device"
+msgstr ""
+
+#: app/templates/my_uploads.html:19
+msgid "Size"
+msgstr ""
+
+#: app/templates/my_uploads.html:20
+msgid "Status"
+msgstr ""
+
+#: app/templates/my_uploads.html:21
+msgid "Uploaded"
+msgstr ""
+
+#: app/templates/my_uploads.html:35
+msgid "Pending"
+msgstr ""
+
+#: app/templates/my_uploads.html:37
+msgid "Approved"
+msgstr ""
+
+#: app/templates/my_uploads.html:39
+msgid "Rejected"
+msgstr ""
+
+#: app/templates/my_uploads.html:60
+msgid "No uploads yet"
+msgstr ""
+
+#: app/templates/my_uploads.html:61
+msgid "Start contributing to the archive by uploading your first file!"
+msgstr ""
+
+#: app/templates/my_uploads.html:63
+msgid "Upload First File"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:3
+msgid "Admin Dashboard"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:73
+msgid "Quick Actions"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:76
+msgid "Review Pending Uploads"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:81
+msgid "Manage All Uploads"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:86
+msgid "Manage Users"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:91
+msgid "Make Announcement"
+msgstr ""
+
+#: app/templates/index.html:76
+msgid "Support AFHArchive"
+msgstr ""
+
+#: app/templates/index.html:79
+msgid "Help keep this archive running!"
+msgstr ""
+
+#: app/templates/index.html:80
+msgid "Your support helps cover hosting costs and keeps this preservation project alive."
+msgstr ""
+
+#: app/templates/index.html:82
+msgid "Buy me a coffee"
+msgstr ""
+
+#: app/templates/file_detail.html:13
+msgid "Device Information"
+msgstr ""
+
+#: app/templates/file_detail.html:16
+msgid "Manufacturer:"
+msgstr ""
+
+#: app/templates/file_detail.html:21
+msgid "Model:"
+msgstr ""
+
+#: app/templates/file_detail.html:27
+msgid "File Information"
+msgstr ""
+
+#: app/templates/file_detail.html:30
+msgid "MD5 Hash:"
+msgstr ""
+
+#: app/templates/file_detail.html:36
+msgid "Uploaded:"
+msgstr ""
+
+#: app/templates/file_detail.html:44
+msgid "Original Links"
+msgstr ""
+
+#: app/templates/file_detail.html:48
+msgid "Original AFH Link"
+msgstr ""
+
+#: app/templates/file_detail.html:52
+msgid "XDA Thread"
+msgstr ""
+
+#: app/templates/file_detail.html:60
+msgid "Notes"
+msgstr ""
+
+#: app/templates/file_detail.html:70
+msgid "Back to Browse"
+msgstr ""
+
+#: app/templates/file_detail.html:73
+msgid "Download File"
+msgstr ""
+
+#: app/templates/file_detail.html:81
+msgid "Download Information"
+msgstr ""
+
+#: app/templates/file_detail.html:84
+msgid "File Verification"
+msgstr ""
+
+#: app/templates/file_detail.html:85
+msgid "You can verify the file integrity using the MD5 hash:"
+msgstr ""
+
+#: app/templates/file_detail.html:89
+msgid "Important"
+msgstr ""
+
+#: app/templates/file_detail.html:91
+msgid "This file was originally hosted on AndroidFileHost"
+msgstr ""
+
+#: app/templates/file_detail.html:92
+msgid "Files are provided as-is for preservation purposes"
+msgstr ""
+
+#: app/templates/file_detail.html:93
+msgid "Use at your own risk and ensure compatibility"
+msgstr ""
+
+#: app/templates/file_detail.html:94
+msgid "Downloads are rate-limited to preserve bandwidth"
+msgstr ""
+
+#: app/templates/file_detail.html:102
+msgid "Contributed by"
+msgstr ""
+
+#: app/templates/browse.html:3
+msgid "Browse Files"
+msgstr ""
+
+#: app/templates/browse.html:7
+msgid "Browse Archive"
+msgstr ""
+
+#: app/templates/browse.html:12
+msgid "Manufacturer"
+msgstr ""
+
+#: app/templates/browse.html:14
+msgid "All Manufacturers"
+msgstr ""
+
+#: app/templates/browse.html:22
+msgid "Model"
+msgstr ""
+
+#: app/templates/browse.html:24
+msgid "Device model"
+msgstr ""
+
+#: app/templates/browse.html:27
+msgid "Search"
+msgstr ""
+
+#: app/templates/browse.html:29
+msgid "Filename search"
+msgstr ""
+
+#: app/templates/browse.html:33
+msgid "Filter"
+msgstr ""
+
+#: app/templates/browse.html:82
+msgid "Previous"
+msgstr ""
+
+#: app/templates/browse.html:113
+msgid "Next"
+msgstr ""
+
+#: app/templates/browse.html:120
+msgid "No files found"
+msgstr ""
+
+#: app/templates/browse.html:121
+msgid "Try adjusting your search filters or browse all files."
+msgstr ""
+
+#: app/templates/auth/login.html:3
+msgid "Sign In to AFHArchive"
+msgstr ""
+
+#: app/templates/auth/login.html:12
+msgid "Sign in with your Google account to start contributing to the archive."
+msgstr ""
+
+#: app/templates/auth/login.html:15
+msgid "Sign in with Google"
+msgstr ""
+
+#: app/templates/auth/login.html:19
+msgid "By signing in, you agree to help preserve AndroidFileHost content responsibly. Only files that were previously hosted on AFH will be approved."
+msgstr ""
+

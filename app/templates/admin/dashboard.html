@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard - AFHArchive{% endblock %}
+{% block title %}{{ _('Admin Dashboard') }} - AFHArchive{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+    <h2><i class="fas fa-tachometer-alt"></i> {{ _('Admin Dashboard') }}</h2>
 </div>
 
 <div class="row mb-4">
@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Pending</h5>
+                        <h5 class="card-title">{{ _('Pending') }}</h5>
                         <h2>{{ stats.pending }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('admin.uploads', status='pending') }}" class="text-white">View Details</a>
+                <a href="{{ url_for('admin.uploads', status='pending') }}" class="text-white">{{ _('View Details') }}</a>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Approved</h5>
+                        <h5 class="card-title">{{ _('Approved') }}</h5>
                         <h2>{{ stats.approved }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('admin.uploads', status='approved') }}" class="text-white">View Details</a>
+                <a href="{{ url_for('admin.uploads', status='approved') }}" class="text-white">{{ _('View Details') }}</a>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Rejected</h5>
+                        <h5 class="card-title">{{ _('Rejected') }}</h5>
                         <h2>{{ stats.rejected }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('admin.uploads', status='rejected') }}" class="text-white">View Details</a>
+                <a href="{{ url_for('admin.uploads', status='rejected') }}" class="text-white">{{ _('View Details') }}</a>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Users</h5>
+                        <h5 class="card-title">{{ _('Users') }}</h5>
                         <h2>{{ stats.total_users }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('admin.users') }}" class="text-white">View Details</a>
+                <a href="{{ url_for('admin.users') }}" class="text-white">{{ _('View Details') }}</a>
             </div>
         </div>
     </div>
@@ -89,32 +89,32 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h5><i class="fas fa-tasks"></i> Quick Actions</h5>
+                <h5><i class="fas fa-tasks"></i> {{ _('Quick Actions') }}</h5>
             </div>
             <div class="card-body">
                 <div class="row flex-nowrap overflow-auto">
                     <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.uploads', status='pending') }}" class="btn btn-warning btn-lg w-100 mb-3">
                             <i class="fas fa-clock"></i><br>
-                            Review Pending Uploads
+                            {{ _('Review Pending Uploads') }}
                         </a>
                     </div>
                     <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.uploads', status='all') }}" class="btn btn-primary btn-lg w-100 mb-3">
                             <i class="fas fa-list"></i><br>
-                            Manage All Uploads
+                            {{ _('Manage All Uploads') }}
                         </a>
                     </div>
                     <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.users') }}" class="btn btn-info btn-lg w-100 mb-3">
                             <i class="fas fa-users"></i><br>
-                            Manage Users
+                            {{ _('Manage Users') }}
                         </a>
                     </div>
                     <div class="col-md-3 col-6 col-lg-3 px-1">
                         <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-danger btn-lg w-100 mb-3">
                             <i class="fas fa-bullhorn"></i><br>
-                            Make Announcement
+                            {{ _('Make Announcement') }}
                         </a>
                     </div>
                 </div>

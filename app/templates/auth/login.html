@@ -1,25 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Login - AFHArchive{% endblock %}
+{% block title %}{{ _('Login') }} - AFHArchive{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-center">
-                <h3><i class="fas fa-sign-in-alt"></i> Sign In to AFHArchive</h3>
+                <h3><i class="fas fa-sign-in-alt"></i> {{ _('Sign In to AFHArchive') }}</h3>
             </div>
             <div class="card-body text-center">
-                <p class="mb-4">Sign in with your Google account to start contributing to the archive.</p>
+                <p class="mb-4">{{ _('Sign in with your Google account to start contributing to the archive.') }}</p>
                 
                 <a href="{{ url_for('auth.google_auth') }}" class="btn btn-danger btn-lg">
-                    <i class="fab fa-google"></i> Sign in with Google
+                    <i class="fab fa-google"></i> {{ _('Sign in with Google') }}
                 </a>
                 
                 <div class="mt-4">
                     <small class="text-muted">
-                        By signing in, you agree to help preserve AndroidFileHost content responsibly.
-                        Only files that were previously hosted on AFH will be approved.
+                        {{ _('By signing in, you agree to help preserve AndroidFileHost content responsibly. Only files that were previously hosted on AFH will be approved.') }}
                     </small>
                 </div>
             </div>

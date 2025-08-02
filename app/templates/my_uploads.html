@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}My Uploads - AFHArchive{% endblock %}
+{% block title %}{{ _('My Uploads') }} - AFHArchive{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-cloud-upload-alt"></i> My Uploads</h2>
+    <h2><i class="fas fa-cloud-upload-alt"></i> {{ _('My Uploads') }}</h2>
     <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Upload New File
+        <i class="fas fa-plus"></i> {{ _('Upload New File') }}
     </a>
 </div>
 
@@ -15,12 +15,12 @@
     <table class="table table-striped">
         <thead class="table-dark">
             <tr>
-                <th>Filename</th>
-                <th>Device</th>
-                <th>Size</th>
-                <th>Status</th>
-                <th>Uploaded</th>
-                <th>Downloads</th>
+                <th>{{ _('Filename') }}</th>
+                <th>{{ _('Device') }}</th>
+                <th>{{ _('Size') }}</th>
+                <th>{{ _('Status') }}</th>
+                <th>{{ _('Uploaded') }}</th>
+                <th>{{ _('Downloads') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -34,11 +34,11 @@
                 <td>{{ upload.file_size_mb }} MB</td>
                 <td>
                     {% if upload.is_pending %}
-                        <span class="badge status-badge status-pending">Pending</span>
+                        <span class="badge status-badge status-pending">{{ _('Pending') }}</span>
                     {% elif upload.is_approved %}
-                        <span class="badge status-badge status-approved">Approved</span>
+                        <span class="badge status-badge status-approved">{{ _('Approved') }}</span>
                     {% else %}
-                        <span class="badge status-badge status-rejected" title="{{ upload.rejection_reason }}">Rejected</span>
+                        <span class="badge status-badge status-rejected" title="{{ upload.rejection_reason }}">{{ _('Rejected') }}</span>
                     {% endif %}
                 </td>
                 <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -57,10 +57,10 @@
 {% else %}
 <div class="text-center py-5">
     <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
-    <h4>No uploads yet</h4>
-    <p class="text-muted">Start contributing to the archive by uploading your first file!</p>
+    <h4>{{ _('No uploads yet') }}</h4>
+    <p class="text-muted">{{ _('Start contributing to the archive by uploading your first file!') }}</p>
     <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-lg">
-        <i class="fas fa-upload"></i> Upload First File
+        <i class="fas fa-upload"></i> {{ _('Upload First File') }}
     </a>
 </div>
 {% endif %}
