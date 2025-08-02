@@ -50,45 +50,45 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="device_manufacturer" class="form-label">Device Manufacturer *</label>
+                                <label for="device_manufacturer" class="form-label">{{ _('Device Manufacturer') }} *</label>
                                 <input type="text" class="form-control" id="device_manufacturer" name="device_manufacturer" 
-                                       placeholder="e.g., Samsung, Google, OnePlus" required>
+                                       placeholder="{{ _('e.g., Samsung, Google, OnePlus') }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="device_model" class="form-label">Device Model *</label>
+                                <label for="device_model" class="form-label">{{ _('Device Model') }} *</label>
                                 <input type="text" class="form-control" id="device_model" name="device_model" 
-                                       placeholder="e.g., Galaxy S21, Pixel 6, Generic" required>
+                                       placeholder="{{ _('e.g., Galaxy S21, Pixel 6, Generic') }}" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="afh_link" class="form-label">Original AndroidFileHost Link</label>
+                        <label for="afh_link" class="form-label">{{ _('Original AndroidFileHost Link') }}</label>
                         <input type="url" class="form-control" id="afh_link" name="afh_link" 
-                               placeholder="https://androidfilehost.com/?fid=...">
-                        <div class="form-text">If you have the original AFH link, please provide it</div>
+                               placeholder="{{ _('https://androidfilehost.com/?fid=...') }}">
+                        <div class="form-text">{{ _('If you have the original AFH link, please provide it') }}</div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="xda_thread" class="form-label">XDA Thread Link</label>
+                        <label for="xda_thread" class="form-label">{{ _('XDA Thread Link') }}</label>
                         <input type="url" class="form-control" id="xda_thread" name="xda_thread" 
-                               placeholder="https://forum.xda-developers.com/...">
-                        <div class="form-text">Link to the XDA thread where this file was discussed</div>
+                               placeholder="{{ _('https://forum.xda-developers.com/...') }}">
+                        <div class="form-text">{{ _('Link to the XDA thread where this file was discussed') }}</div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Additional Notes</label>
+                        <label for="notes" class="form-label">{{ _('Additional Notes') }}</label>
                         <textarea class="form-control" id="notes" name="notes" rows="4" 
-                                  placeholder="Any additional information about this file, ROM version, build date, etc."></textarea>
+                                  placeholder="{{ _('Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately.') }}"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg" id="upload-btn">
-                        <i class="fas fa-upload"></i> Upload File
+                        <i class="fas fa-upload"></i> {{ _('Upload File') }}
                     </button>
                     <button type="button" class="btn btn-secondary btn-lg" id="cancel-btn" style="display: none;">
-                        <i class="fas fa-times"></i> Cancel Upload
+                        <i class="fas fa-times"></i> {{ _('Cancel Upload') }}
                     </button>
                 </form>
             </div>
@@ -98,17 +98,17 @@
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h5><i class="fas fa-info-circle"></i> Upload Process</h5>
+                <h5><i class="fas fa-info-circle"></i> {{ _('Upload Process') }}</h5>
             </div>
             <div class="card-body">
                 <ol>
-                    <li>Select your file (max 5GB)</li>
-                    <li>Fill in required metadata</li>
-                    <li>Admin reviews for AFH authenticity</li>
-                    <li>Approved files become available</li>
+                    <li>{{ _('Select your file (max 5GB)') }}</li>
+                    <li>{{ _('Fill in required metadata') }}</li>
+                    <li>{{ _('Admin reviews for AFH authenticity') }}</li>
+                    <li>{{ _('Approved files become available') }}</li>
                 </ol>
                 <div class="alert alert-info mt-3">
-                    <small><strong>Note:</strong> Only files that were previously on AndroidFileHost will be approved for preservation.</small>
+                    <small><strong>{{ _('Note:') }}</strong> {{ _('Only files that were previously on AndroidFileHost will be approved for preservation.') }}</small>
                 </div>
             </div>
         </div>
@@ -118,6 +118,33 @@
 
 {% block scripts %}
 <script>
+// Translation strings for JavaScript
+const translations = {
+    'file_too_large': "{{ _('File is too large. Maximum size is 5GB.') }}",
+    'select_file': "{{ _('Please select a file to upload.') }}",
+    'manufacturer_required': "{{ _('Device manufacturer is required.') }}",
+    'model_required': "{{ _('Device model is required.') }}",
+    'initializing_upload': "{{ _('Initializing upload...') }}",
+    'failed_initialize': "{{ _('Failed to initialize upload') }}",
+    'starting_chunk': "{{ _('Starting chunk upload...') }}",
+    'upload_cancelled': "{{ _('Upload cancelled') }}",
+    'chunk_upload_failed': "{{ _('Chunk upload failed') }}",
+    'invalid_response': "{{ _('Invalid response from server') }}",
+    'network_error': "{{ _('Network error during chunk upload') }}",
+    'chunk_cancelled': "{{ _('Chunk upload cancelled') }}",
+    'assembling_file': "{{ _('Assembling file...') }}",
+    'failed_complete': "{{ _('Failed to complete upload') }}",
+    'upload_success': "{{ _('Upload completed successfully!') }}",
+    'uploading_chunk': "{{ _('Uploading chunk') }}",
+    'of': "{{ _('of') }}",
+    'mb_per_second': "{{ _('MB/s') }}",
+    'bytes': "{{ _('Bytes') }}",
+    'kb': "{{ _('KB') }}",
+    'mb': "{{ _('MB') }}",
+    'gb': "{{ _('GB') }}",
+    'upload_failed': "{{ _('Upload failed') }}"
+};
+
 let uploadState = {
     uploadId: null,
     file: null,
@@ -136,7 +163,7 @@ document.getElementById('file').addEventListener('change', function(e) {
     if (file) {
         const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
         if (file.size > maxSize) {
-            alert('File is too large. Maximum size is 5GB.');
+            alert(translations.file_too_large);
             e.target.value = '';
         }
     }
@@ -148,7 +175,7 @@ document.getElementById('upload-form').addEventListener('submit', function(e) {
     const file = document.getElementById('file').files[0];
     
     if (!file) {
-        alert('Please select a file to upload.');
+        alert(translations.select_file);
         return;
     }
     
@@ -157,12 +184,12 @@ document.getElementById('upload-form').addEventListener('submit', function(e) {
     const model = document.getElementById('device_model').value.trim();
     
     if (!manufacturer) {
-        alert('Device manufacturer is required.');
+        alert(translations.manufacturer_required);
         return;
     }
     
     if (!model) {
-        alert('Device model is required.');
+        alert(translations.model_required);
         return;
     }
     
@@ -187,7 +214,7 @@ async function startChunkedUpload(file, metadata) {
         
         // Show progress UI
         showUploadProgress();
-        updateStatus('Initializing upload...');
+        updateStatus(translations.initializing_upload);
         
         // Initialize upload session
         const initResponse = await fetch('/api/upload-init', {
@@ -204,7 +231,7 @@ async function startChunkedUpload(file, metadata) {
         const initData = await initResponse.json();
         
         if (!initData.success) {
-            throw new Error(initData.error || 'Failed to initialize upload');
+            throw new Error(initData.error || translations.failed_initialize);
         }
         
         uploadState.uploadId = initData.uploadId;
@@ -212,12 +239,12 @@ async function startChunkedUpload(file, metadata) {
         uploadState.totalChunks = initData.totalChunks;
         
         // Start uploading chunks
-        updateStatus('Starting chunk upload...');
+        updateStatus(translations.starting_chunk);
         await uploadChunks(metadata);
         
     } catch (error) {
         console.error('Upload error:', error);
-        handleUploadError(error.message || 'Upload failed');
+        handleUploadError(error.message || translations.upload_failed);
     }
 }
 
@@ -226,7 +253,7 @@ async function uploadChunks(metadata) {
     
     for (let i = 0; i < uploadState.totalChunks; i++) {
         if (uploadState.cancelled) {
-            throw new Error('Upload cancelled');
+            throw new Error(translations.upload_cancelled);
         }
         
         uploadState.currentChunk = i;
@@ -266,10 +293,10 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
                     if (response.success) {
                         resolve(response);
                     } else {
-                        reject(new Error(response.error || 'Chunk upload failed'));
+                        reject(new Error(response.error || translations.chunk_upload_failed));
                     }
                 } catch (e) {
-                    reject(new Error('Invalid response from server'));
+                    reject(new Error(translations.invalid_response));
                 }
             } else {
                 reject(new Error(`Chunk upload failed with status: ${this.status}`));
@@ -277,11 +304,11 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
         };
         
         xhr.onerror = function() {
-            reject(new Error('Network error during chunk upload'));
+            reject(new Error(translations.network_error));
         };
         
         xhr.onabort = function() {
-            reject(new Error('Chunk upload cancelled'));
+            reject(new Error(translations.chunk_cancelled));
         };
         
         xhr.open('POST', '/api/upload-chunk');
@@ -290,7 +317,7 @@ async function uploadSingleChunk(chunk, chunkIndex, totalChunks) {
 }
 
 async function completeUpload(metadata) {
-    updateStatus('Assembling file...');
+    updateStatus(translations.assembling_file);
     
     const completeData = {
         uploadId: uploadState.uploadId,
@@ -314,11 +341,11 @@ async function completeUpload(metadata) {
     const result = await response.json();
     
     if (!result.success) {
-        throw new Error(result.error || 'Failed to complete upload');
+        throw new Error(result.error || translations.failed_complete);
     }
     
     // Success!
-    updateStatus('Upload completed successfully!');
+    updateStatus(translations.upload_success);
     document.getElementById('progress-bar').className = 'progress-bar bg-success';
     
     setTimeout(function() {
@@ -341,8 +368,8 @@ function updateProgress() {
     const mbPerSecond = bytesPerSecond / (1024 * 1024);
     
     if (percentComplete < 100) {
-        uploadSpeed.textContent = `${mbPerSecond.toFixed(1)} MB/s`;
-        updateStatus(`Uploading chunk ${uploadState.currentChunk + 1} of ${uploadState.totalChunks}... ${formatBytes(uploadState.uploadedBytes)} of ${formatBytes(uploadState.file.size)}`);
+        uploadSpeed.textContent = `${mbPerSecond.toFixed(1)} ${translations.mb_per_second}`;
+        updateStatus(`${translations.uploading_chunk} ${uploadState.currentChunk + 1} ${translations.of} ${uploadState.totalChunks}... ${formatBytes(uploadState.uploadedBytes)} ${translations.of} ${formatBytes(uploadState.file.size)}`);
     } else {
         uploadSpeed.textContent = '';
     }
@@ -421,9 +448,9 @@ function resetUploadForm() {
 }
 
 function formatBytes(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return `0 ${translations.bytes}`;
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = [translations.bytes, translations.kb, translations.mb, translations.gb];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
