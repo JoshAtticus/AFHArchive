@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-02 07:16\n"
+"PO-Revision-Date: 2025-08-02 12:27\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -69,35 +69,35 @@ msgstr "Помогите перевести AFHArchive"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
-msgstr ""
+msgstr "Просмотр файлов"
 
 #: app/templates/browse.html:7
 msgid "Browse Archive"
-msgstr ""
+msgstr "Просмотр архива"
 
 #: app/templates/browse.html:13
 msgid "Manufacturer"
-msgstr ""
+msgstr "Производитель"
 
 #: app/templates/browse.html:15
 msgid "All Manufacturers"
-msgstr ""
+msgstr "Все"
 
 #: app/templates/browse.html:24
 msgid "Model"
-msgstr ""
+msgstr "Модель"
 
 #: app/templates/browse.html:26
 msgid "Device model"
-msgstr ""
+msgstr "Модель устройства"
 
 #: app/templates/browse.html:29 app/templates/errors/404.html:22
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: app/templates/browse.html:31
 msgid "Filename search"
-msgstr ""
+msgstr "Поиск по имени файла"
 
 #: app/templates/browse.html:36
 msgid "Filter"
