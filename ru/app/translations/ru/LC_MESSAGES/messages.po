@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-02 15:33\n"
+"PO-Revision-Date: 2025-08-02 17:01\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,7 @@ msgstr "Подробнее"
 
 #: app/templates/browse.html:71 app/templates/my_uploads.html:22
 msgid "Uploaded"
-msgstr "Загружено"
+msgstr "Дата загрузки"
 
 #: app/templates/browse.html:87
 msgid "Previous"
@@ -330,7 +330,7 @@ msgstr "Статус"
 
 #: app/templates/my_uploads.html:23
 msgid "Downloads"
-msgstr "Дата загрузки"
+msgstr "Скачиваний"
 
 #: app/templates/admin/dashboard.html:16 app/templates/my_uploads.html:37
 msgid "Pending"
