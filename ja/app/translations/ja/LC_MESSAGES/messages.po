@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-01 17:34+0800\n"
-"PO-Revision-Date: 2025-08-01 10:02\n"
+"PO-Revision-Date: 2025-08-01 11:42\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -60,6 +60,10 @@ msgstr ""
 
 #: app/templates/base.html:101
 msgid "Terms of Service"
+msgstr ""
+
+#: app/templates/base.html:101
+msgid "Help translate AFHArchive"
 msgstr ""
 
 #: app/templates/index.html:10
