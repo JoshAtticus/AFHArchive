@@ -59,7 +59,21 @@ def delete_upload_file(file_path):
     try:
         if os.path.exists(file_path):
             os.remove(file_path)
-            return True
+            current_app.logger.info(f"Successfully deleted file: {file_path}")
+        else:
+            current_app.logger.info(f"File not found (already deleted): {file_path}")
+        return True
     except Exception as e:
         current_app.logger.error(f"Error deleting file {file_path}: {str(e)}")
-    return False
+        return False
+
+def safe_remove_file(file_path):
+    """Safely remove a file, logging but not failing if file doesn't exist"""
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            current_app.logger.debug(f"Removed file: {file_path}")
+        else:
+            current_app.logger.debug(f"File not found for removal: {file_path}")
+    except Exception as e:
+        current_app.logger.warning(f"Failed to remove file {file_path}: {str(e)}")

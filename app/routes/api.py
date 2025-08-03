@@ -9,7 +9,7 @@ import threading
 from app.models import Upload, User
 from app import db
 from app.utils.rate_limiter import RateLimiter
-from app.utils.file_handler import allowed_file, calculate_md5
+from app.utils.file_handler import allowed_file, calculate_md5, safe_remove_file
 from werkzeug.utils import secure_filename
 
 api_bp = Blueprint('api', __name__)
@@ -125,7 +125,7 @@ def complete_chunked_upload():
                     duplicate = Upload.query.filter_by(md5_hash=md5_hash).first()
                     if duplicate:
                         # Auto-reject: do not save file, but record rejected upload for user
-                        os.remove(final_path)
+                        safe_remove_file(final_path)
                         cleanup_chunks_dir(chunks_dir)
                         upload = Upload(
                             filename=unique_filename,
@@ -146,7 +146,7 @@ def complete_chunked_upload():
                         db.session.commit()
                         status = {'error': 'Duplicate file. Auto-rejected.', 'rejected': True}
                     elif file_hash and md5_hash != file_hash:
-                        os.remove(final_path)
+                        safe_remove_file(final_path)
                         cleanup_chunks_dir(chunks_dir)
                         status = {'error': 'File integrity check failed'}
                     else:
@@ -197,7 +197,7 @@ def upload_status(upload_id):
     with open(status_path, 'r') as f:
         status = json.load(f)
     # Optionally, delete status file after reading
-    os.remove(status_path)
+    safe_remove_file(status_path)
     return jsonify(status)
 
 
@@ -322,7 +322,7 @@ def complete_chunked_upload():
         # Verify file hash if provided
         if file_hash and md5_hash != file_hash:
             # Clean up files
-            os.remove(final_path)
+            safe_remove_file(final_path)
             cleanup_chunks_dir(chunks_dir)
             return jsonify({'error': 'File integrity check failed'}), 400
         

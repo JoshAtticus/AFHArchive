@@ -213,14 +213,17 @@ def edit_upload(upload_id):
 def delete_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
     
-    # Delete the file from disk
-    if delete_upload_file(upload.file_path):
-        # Delete from database
-        db.session.delete(upload)
-        db.session.commit()
+    # Try to delete the file from disk
+    file_deleted = delete_upload_file(upload.file_path)
+    
+    # Always delete from database (even if file deletion failed or file was missing)
+    db.session.delete(upload)
+    db.session.commit()
+    
+    if file_deleted:
         flash(f'Upload "{upload.original_filename}" deleted', 'info')
     else:
-        flash('Error deleting file from disk', 'error')
+        flash(f'Upload "{upload.original_filename}" deleted from database (file was already missing from disk)', 'warning')
     
     return redirect(url_for('admin.uploads'))
 
