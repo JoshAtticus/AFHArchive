@@ -13,8 +13,8 @@ resend.api_key = config('RESEND_API_KEY', default=None)
 
 # Always use AFHArchive as sender name
 DEFAULT_FROM = 'AFHArchive <afh@emails.joshattic.us>'
-DEFAULT_REPLY_TO = 'afh@joshattic.us'
-PROD_BASE_URL = 'https://afh.joshattic.us'
+DEFAULT_REPLY_TO = 'support@afharchive.xyz'
+PROD_BASE_URL = 'https://afharchive.xyz'
 
 
 def send_email(to, subject, html, from_addr=None):
