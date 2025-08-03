@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-03 02:30\n"
+"POT-Creation-Date: 2025-08-03 10:34+0800\n"
+"PO-Revision-Date: 2025-08-03 02:52\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -18,52 +18,53 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: ru_RU\n"
 
-#: app/templates/base.html:28
+#: app/templates/base.html:30
 msgid "Home"
 msgstr "Главная"
 
-#: app/templates/base.html:31
+#: app/templates/base.html:33
 msgid "Browse"
 msgstr "Обзор"
 
-#: app/templates/base.html:61
+#: app/templates/base.html:63
 msgid "Avatar"
 msgstr "Аватар"
 
-#: app/templates/base.html:66 app/templates/upload.html:3
+#: app/templates/base.html:68 app/templates/upload.html:3
+#: app/templates/upload.html:88
 msgid "Upload File"
 msgstr "Загрузить файл"
 
-#: app/templates/base.html:67 app/templates/my_uploads.html:3
+#: app/templates/base.html:69 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr "Мои загрузки"
 
-#: app/templates/base.html:70
+#: app/templates/base.html:72
 msgid "Admin Panel"
 msgstr "Админ-панель"
 
-#: app/templates/base.html:73
+#: app/templates/base.html:75
 msgid "Logout"
 msgstr "Выйти"
 
-#: app/templates/auth/login.html:3 app/templates/base.html:78
+#: app/templates/auth/login.html:3 app/templates/base.html:80
 msgid "Login"
 msgstr "Войти"
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Source on"
 msgstr "Исходный код на"
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Our Privacy Policy"
 msgstr "Политика конфиденциальности"
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Terms of Service"
 msgstr "Условия использования"
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Help translate AFHArchive"
 msgstr "Помогите перевести AFHArchive"
 
@@ -191,59 +192,75 @@ msgstr "Примечания"
 msgid "Back to Browse"
 msgstr "Назад к обзору"
 
-#: app/templates/file_detail.html:86
+#: app/templates/file_detail.html:90 app/templates/file_detail.html:107
 msgid "Download File"
 msgstr "Скачать файл"
 
-#: app/templates/file_detail.html:96 app/templates/index.html:76
+#: app/templates/file_detail.html:93
+msgid "Choose Download Mirror"
+msgstr ""
+
+#: app/templates/file_detail.html:112
+msgid "File Temporarily Unavailable"
+msgstr ""
+
+#: app/templates/file_detail.html:124
+msgid "Available Mirrors"
+msgstr ""
+
+#: app/templates/file_detail.html:127
+msgid "This file is available from multiple locations for faster downloads."
+msgstr ""
+
+#: app/templates/file_detail.html:145 app/templates/index.html:76
 msgid "Support AFHArchive"
 msgstr "Поддержите AFHArchive"
 
-#: app/templates/file_detail.html:99 app/templates/index.html:79
+#: app/templates/file_detail.html:148 app/templates/index.html:79
 msgid "Help keep this archive running!"
 msgstr "Поддержите работу архива!"
 
-#: app/templates/file_detail.html:100 app/templates/index.html:80
+#: app/templates/file_detail.html:149 app/templates/index.html:80
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
 msgstr "Благодаря вашей поддержке, мы сможем оплачивать хостинг и продолжать сохранять информацию."
 
-#: app/templates/file_detail.html:102 app/templates/index.html:82
+#: app/templates/file_detail.html:151 app/templates/index.html:82
 msgid "Buy me a coffee"
 msgstr "Buy Me a Coffee"
 
-#: app/templates/file_detail.html:109
+#: app/templates/file_detail.html:158
 msgid "Download Information"
 msgstr "Информация о загрузке"
 
-#: app/templates/file_detail.html:113
+#: app/templates/file_detail.html:162
 msgid "File Verification"
 msgstr "Проверка файла"
 
-#: app/templates/file_detail.html:114
+#: app/templates/file_detail.html:163
 msgid "You can verify the file integrity using the MD5 hash:"
 msgstr "Вы можете проверить целостность файла с помощью хеша MD5:"
 
-#: app/templates/file_detail.html:119
+#: app/templates/file_detail.html:168
 msgid "Important"
 msgstr "Важная информация"
 
-#: app/templates/file_detail.html:121
+#: app/templates/file_detail.html:170
 msgid "This file was originally hosted on AndroidFileHost"
 msgstr "Файл изначально был размещен на AndroidFileHost"
 
-#: app/templates/file_detail.html:122
+#: app/templates/file_detail.html:171
 msgid "Files are provided as-is for preservation purposes"
 msgstr "Файлы предоставляются как есть для целей сохранения"
 
-#: app/templates/file_detail.html:123
+#: app/templates/file_detail.html:172
 msgid "Use at your own risk and ensure compatibility"
 msgstr "Используйте на свой страх и риск и убедитесь в совместимости"
 
-#: app/templates/file_detail.html:124
+#: app/templates/file_detail.html:173
 msgid "Downloads are rate-limited to preserve bandwidth"
 msgstr "Скорость скачивания ограничена для сохранения пропускной способности"
 
-#: app/templates/file_detail.html:133
+#: app/templates/file_detail.html:182
 msgid "Contributed by"
 msgstr "Добавлено"
 
@@ -404,6 +421,178 @@ msgstr "Ход загрузки"
 msgid "Preparing upload..."
 msgstr "Подготовка к загрузке..."
 
+#: app/templates/upload.html:53
+msgid "Device Manufacturer"
+msgstr "Производитель устройства"
+
+#: app/templates/upload.html:55
+msgid "e.g., Samsung, Google, OnePlus"
+msgstr "например: Samsung, Google, OnePlus"
+
+#: app/templates/upload.html:60
+msgid "Device Model"
+msgstr "Модель устройства"
+
+#: app/templates/upload.html:62
+msgid "e.g., Galaxy S21, Pixel 6, Generic"
+msgstr "например: Galaxy S21, Pixel 6, Generic"
+
+#: app/templates/upload.html:68
+msgid "Original AndroidFileHost Link"
+msgstr "Ссылка на AndroidFileHost"
+
+#: app/templates/upload.html:70
+msgid "https://androidfilehost.com/?fid=..."
+msgstr "https://androidfilehost.com/?fid=..."
+
+#: app/templates/upload.html:71
+msgid "If you have the original AFH link, please provide it"
+msgstr "Если имеется, укажите оригинальную ссылку AFH"
+
+#: app/templates/upload.html:75
+msgid "XDA Thread Link"
+msgstr "Ссылка на тему XDA"
+
+#: app/templates/upload.html:77
+msgid "https://forum.xda-developers.com/..."
+msgstr "https://forum.xda-developers.com/..."
+
+#: app/templates/upload.html:78
+msgid "Link to the XDA thread where this file was discussed"
+msgstr "Ссылка на тему XDA, где обсуждался этот файл"
+
+#: app/templates/upload.html:82
+msgid "Additional Notes"
+msgstr "Примечания к файлу"
+
+#: app/templates/upload.html:84
+msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
+msgstr "Пожалуйста, пишите на английском. Примечания видны всем — указывайте версию прошивки, дату сборки и другие важные детали. Не включайте личную информацию, названия файлов или MD5-хеши — они уже отображаются отдельно."
+
+#: app/templates/upload.html:91
+msgid "Cancel Upload"
+msgstr "Отменить"
+
+#: app/templates/upload.html:101
+msgid "Upload Process"
+msgstr "Как проходит загрузка"
+
+#: app/templates/upload.html:105
+msgid "Select your file (max 5GB)"
+msgstr "Выберите файл (макс. 5 ГБ)"
+
+#: app/templates/upload.html:106
+msgid "Fill in required metadata"
+msgstr "Укажите необходимые метаданные"
+
+#: app/templates/upload.html:107
+msgid "Admin reviews for AFH authenticity"
+msgstr "Админ проверяет подлинность AFH"
+
+#: app/templates/upload.html:108
+msgid "Approved files become available"
+msgstr "После одобрения файлы становятся доступными"
+
+#: app/templates/upload.html:111
+msgid "Note:"
+msgstr "Обратите внимание:"
+
+#: app/templates/upload.html:111
+msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
+msgstr "одобряются только файлы, которые когда-то были на AndroidFileHost."
+
+#: app/templates/upload.html:123
+msgid "File is too large. Maximum size is 5GB."
+msgstr "Файл слишком большой. Максимум — 5 ГБ."
+
+#: app/templates/upload.html:124
+msgid "Please select a file to upload."
+msgstr "Выберите файл для загрузки."
+
+#: app/templates/upload.html:125
+msgid "Device manufacturer is required."
+msgstr "Требуется указать производителя устройства."
+
+#: app/templates/upload.html:126
+msgid "Device model is required."
+msgstr "Требуется указать модель устройства."
+
+#: app/templates/upload.html:127
+msgid "Initializing upload..."
+msgstr "Инициализация загрузки..."
+
+#: app/templates/upload.html:128
+msgid "Failed to initialize upload"
+msgstr "Не удалось начать загрузку"
+
+#: app/templates/upload.html:129
+msgid "Starting chunk upload..."
+msgstr "Начата загрузка чанков..."
+
+#: app/templates/upload.html:130
+msgid "Upload cancelled"
+msgstr "Загрузка отменена"
+
+#: app/templates/upload.html:131
+msgid "Chunk upload failed"
+msgstr "Ошибка загрузки чанков"
+
+#: app/templates/upload.html:132
+msgid "Invalid response from server"
+msgstr "Недопустимый ответ от сервера"
+
+#: app/templates/upload.html:133
+msgid "Network error during chunk upload"
+msgstr "Сетевая ошибка при загрузке чанков"
+
+#: app/templates/upload.html:134
+msgid "Chunk upload cancelled"
+msgstr "Загрузка чанков отменена"
+
+#: app/templates/upload.html:135
+msgid "Assembling file..."
+msgstr "Сборка файла..."
+
+#: app/templates/upload.html:136
+msgid "Failed to complete upload"
+msgstr "Не удалось завершить загрузку"
+
+#: app/templates/upload.html:137
+msgid "Upload completed successfully!"
+msgstr "Загрузка завершена успешно!"
+
+#: app/templates/upload.html:138
+msgid "Uploading chunk"
+msgstr "Загрузка чанка"
+
+#: app/templates/upload.html:139
+msgid "of"
+msgstr "из"
+
+#: app/templates/upload.html:140
+msgid "MB/s"
+msgstr "МБ/с"
+
+#: app/templates/upload.html:141
+msgid "Bytes"
+msgstr "Б"
+
+#: app/templates/upload.html:142
+msgid "KB"
+msgstr "КБ"
+
+#: app/templates/upload.html:143
+msgid "MB"
+msgstr "МБ"
+
+#: app/templates/upload.html:144
+msgid "GB"
+msgstr "ГБ"
+
+#: app/templates/upload.html:145
+msgid "Upload failed"
+msgstr "Загрузка не удалась"
+
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
 msgstr "Панель администратора"
@@ -429,6 +618,10 @@ msgid "Manage Users"
 msgstr "Управление пользователями"
 
 #: app/templates/admin/dashboard.html:117
+msgid "Manage Mirrors"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:123
 msgid "Make Announcement"
 msgstr "Создать новость"
 
@@ -471,176 +664,4 @@ msgstr "Главная"
 #: app/templates/errors/404.html:34
 msgid "Go Back"
 msgstr "Вернуться назад"
-
-#: app/templates/upload.html:49
-msgid "Device Manufacturer"
-msgstr "Производитель устройства"
-
-#: app/templates/upload.html:51
-msgid "e.g., Samsung, Google, OnePlus"
-msgstr "например: Samsung, Google, OnePlus"
-
-#: app/templates/upload.html:57
-msgid "Device Model"
-msgstr "Модель устройства"
-
-#: app/templates/upload.html:59
-msgid "e.g., Galaxy S21, Pixel 6, Generic"
-msgstr "например: Galaxy S21, Pixel 6, Generic"
-
-#: app/templates/upload.html:66
-msgid "Original AndroidFileHost Link"
-msgstr "Ссылка на AndroidFileHost"
-
-#: app/templates/upload.html:68
-msgid "https://androidfilehost.com/?fid=..."
-msgstr "https://androidfilehost.com/?fid=..."
-
-#: app/templates/upload.html:69
-msgid "If you have the original AFH link, please provide it"
-msgstr "Если имеется, укажите оригинальную ссылку AFH"
-
-#: app/templates/upload.html:74
-msgid "XDA Thread Link"
-msgstr "Ссылка на тему XDA"
-
-#: app/templates/upload.html:76
-msgid "https://forum.xda-developers.com/..."
-msgstr "https://forum.xda-developers.com/..."
-
-#: app/templates/upload.html:77
-msgid "Link to the XDA thread where this file was discussed"
-msgstr "Ссылка на тему XDA, где обсуждался этот файл"
-
-#: app/templates/upload.html:82
-msgid "Additional Notes"
-msgstr "Примечания к файлу"
-
-#: app/templates/upload.html:84
-msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
-msgstr "Пожалуйста, пишите на английском. Примечания видны всем — указывайте версию прошивки, дату сборки и другие важные детали. Не включайте личную информацию, названия файлов или MD5-хеши — они уже отображаются отдельно."
-
-#: app/templates/upload.html:88
-msgid "Cancel Upload"
-msgstr "Отменить"
-
-#: app/templates/upload.html:95
-msgid "Upload Process"
-msgstr "Как проходит загрузка"
-
-#: app/templates/upload.html:99
-msgid "Select your file (max 5GB)"
-msgstr "Выберите файл (макс. 5 ГБ)"
-
-#: app/templates/upload.html:100
-msgid "Fill in required metadata"
-msgstr "Укажите необходимые метаданные"
-
-#: app/templates/upload.html:101
-msgid "Admin reviews for AFH authenticity"
-msgstr "Админ проверяет подлинность AFH"
-
-#: app/templates/upload.html:102
-msgid "Approved files become available"
-msgstr "После одобрения файлы становятся доступными"
-
-#: app/templates/upload.html:105
-msgid "Note:"
-msgstr "Обратите внимание:"
-
-#: app/templates/upload.html:105
-msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
-msgstr "одобряются только файлы, которые когда-то были на AndroidFileHost."
-
-#: app/templates/upload.html:112
-msgid "File is too large. Maximum size is 5GB."
-msgstr "Файл слишком большой. Максимум — 5 ГБ."
-
-#: app/templates/upload.html:113
-msgid "Please select a file to upload."
-msgstr "Выберите файл для загрузки."
-
-#: app/templates/upload.html:114
-msgid "Device manufacturer is required."
-msgstr "Требуется указать производителя устройства."
-
-#: app/templates/upload.html:115
-msgid "Device model is required."
-msgstr "Требуется указать модель устройства."
-
-#: app/templates/upload.html:116
-msgid "Initializing upload..."
-msgstr "Инициализация загрузки..."
-
-#: app/templates/upload.html:117
-msgid "Failed to initialize upload"
-msgstr "Не удалось начать загрузку"
-
-#: app/templates/upload.html:118
-msgid "Starting chunk upload..."
-msgstr "Начата загрузка чанков..."
-
-#: app/templates/upload.html:119
-msgid "Upload cancelled"
-msgstr "Загрузка отменена"
-
-#: app/templates/upload.html:120
-msgid "Chunk upload failed"
-msgstr "Ошибка загрузки чанков"
-
-#: app/templates/upload.html:121
-msgid "Invalid response from server"
-msgstr "Недопустимый ответ от сервера"
-
-#: app/templates/upload.html:122
-msgid "Network error during chunk upload"
-msgstr "Сетевая ошибка при загрузке чанков"
-
-#: app/templates/upload.html:123
-msgid "Chunk upload cancelled"
-msgstr "Загрузка чанков отменена"
-
-#: app/templates/upload.html:124
-msgid "Assembling file..."
-msgstr "Сборка файла..."
-
-#: app/templates/upload.html:125
-msgid "Failed to complete upload"
-msgstr "Не удалось завершить загрузку"
-
-#: app/templates/upload.html:126
-msgid "Upload completed successfully!"
-msgstr "Загрузка завершена успешно!"
-
-#: app/templates/upload.html:127
-msgid "Uploading chunk"
-msgstr "Загрузка чанка"
-
-#: app/templates/upload.html:128
-msgid "of"
-msgstr "из"
-
-#: app/templates/upload.html:129
-msgid "MB/s"
-msgstr "МБ/с"
-
-#: app/templates/upload.html:130
-msgid "Bytes"
-msgstr "Б"
-
-#: app/templates/upload.html:131
-msgid "KB"
-msgstr "КБ"
-
-#: app/templates/upload.html:132
-msgid "MB"
-msgstr "МБ"
-
-#: app/templates/upload.html:133
-msgid "GB"
-msgstr "ГБ"
-
-#: app/templates/upload.html:134
-msgid "Upload failed"
-msgstr "Загрузка не удалась"
 
