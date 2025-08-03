@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-03 10:34+0800\n"
-"PO-Revision-Date: 2025-08-03 02:52\n"
+"POT-Creation-Date: 2025-08-03 12:47+0800\n"
+"PO-Revision-Date: 2025-08-03 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: app/templates/base.html:63
+#: app/templates/admin/users.html:18 app/templates/base.html:63
 msgid "Avatar"
 msgstr ""
 
@@ -76,11 +76,11 @@ msgstr ""
 msgid "Browse Archive"
 msgstr ""
 
-#: app/templates/browse.html:13
+#: app/templates/admin/uploads.html:25 app/templates/browse.html:13
 msgid "Manufacturer"
 msgstr ""
 
-#: app/templates/browse.html:15
+#: app/templates/admin/uploads.html:27 app/templates/browse.html:15
 msgid "All Manufacturers"
 msgstr ""
 
@@ -92,15 +92,16 @@ msgstr ""
 msgid "Device model"
 msgstr ""
 
-#: app/templates/browse.html:29 app/templates/errors/404.html:22
+#: app/templates/admin/uploads.html:36 app/templates/browse.html:29
+#: app/templates/errors/404.html:22
 msgid "Search"
 msgstr ""
 
-#: app/templates/browse.html:31
+#: app/templates/admin/uploads.html:38 app/templates/browse.html:31
 msgid "Filename search"
 msgstr ""
 
-#: app/templates/browse.html:36
+#: app/templates/admin/uploads.html:43 app/templates/browse.html:36
 msgid "Filter"
 msgstr ""
 
@@ -132,15 +133,16 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: app/templates/browse.html:71 app/templates/my_uploads.html:22
+#: app/templates/admin/uploads.html:59 app/templates/browse.html:71
+#: app/templates/my_uploads.html:22
 msgid "Uploaded"
 msgstr ""
 
-#: app/templates/browse.html:87
+#: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
 msgstr ""
 
-#: app/templates/browse.html:117
+#: app/templates/admin/uploads.html:148 app/templates/browse.html:117
 msgid "Next"
 msgstr ""
 
@@ -192,75 +194,59 @@ msgstr ""
 msgid "Back to Browse"
 msgstr ""
 
-#: app/templates/file_detail.html:90 app/templates/file_detail.html:107
+#: app/templates/file_detail.html:86
 msgid "Download File"
 msgstr ""
 
-#: app/templates/file_detail.html:93
-msgid "Choose Download Mirror"
-msgstr ""
-
-#: app/templates/file_detail.html:112
-msgid "File Temporarily Unavailable"
-msgstr ""
-
-#: app/templates/file_detail.html:124
-msgid "Available Mirrors"
-msgstr ""
-
-#: app/templates/file_detail.html:127
-msgid "This file is available from multiple locations for faster downloads."
-msgstr ""
-
-#: app/templates/file_detail.html:145 app/templates/index.html:76
+#: app/templates/file_detail.html:96 app/templates/index.html:76
 msgid "Support AFHArchive"
 msgstr ""
 
-#: app/templates/file_detail.html:148 app/templates/index.html:79
+#: app/templates/file_detail.html:99 app/templates/index.html:79
 msgid "Help keep this archive running!"
 msgstr ""
 
-#: app/templates/file_detail.html:149 app/templates/index.html:80
+#: app/templates/file_detail.html:100 app/templates/index.html:80
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
 msgstr ""
 
-#: app/templates/file_detail.html:151 app/templates/index.html:82
+#: app/templates/file_detail.html:102 app/templates/index.html:82
 msgid "Buy me a coffee"
 msgstr ""
 
-#: app/templates/file_detail.html:158
+#: app/templates/file_detail.html:109
 msgid "Download Information"
 msgstr ""
 
-#: app/templates/file_detail.html:162
+#: app/templates/file_detail.html:113
 msgid "File Verification"
 msgstr ""
 
-#: app/templates/file_detail.html:163
+#: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
 msgstr ""
 
-#: app/templates/file_detail.html:168
+#: app/templates/file_detail.html:119
 msgid "Important"
 msgstr ""
 
-#: app/templates/file_detail.html:170
+#: app/templates/file_detail.html:121
 msgid "This file was originally hosted on AndroidFileHost"
 msgstr ""
 
-#: app/templates/file_detail.html:171
+#: app/templates/file_detail.html:122
 msgid "Files are provided as-is for preservation purposes"
 msgstr ""
 
-#: app/templates/file_detail.html:172
+#: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
 msgstr ""
 
-#: app/templates/file_detail.html:173
+#: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
 msgstr ""
 
-#: app/templates/file_detail.html:182
+#: app/templates/file_detail.html:133
 msgid "Contributed by"
 msgstr ""
 
@@ -329,18 +315,21 @@ msgstr ""
 msgid "Upload New File"
 msgstr ""
 
-#: app/templates/my_uploads.html:18
+#: app/templates/admin/uploads.html:54 app/templates/my_uploads.html:18
 msgid "Filename"
 msgstr ""
 
-#: app/templates/my_uploads.html:19
+#: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
 msgid "Device"
 msgstr ""
 
-#: app/templates/my_uploads.html:20
+#: app/templates/admin/server_tools.html:128
+#: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
 msgid "Size"
 msgstr ""
 
+#: app/templates/admin/server_tools.html:313
+#: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
 msgstr ""
@@ -349,15 +338,18 @@ msgstr ""
 msgid "Downloads"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:16 app/templates/my_uploads.html:37
+#: app/templates/admin/dashboard.html:16 app/templates/admin/uploads.html:18
+#: app/templates/my_uploads.html:37
 msgid "Pending"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:35 app/templates/my_uploads.html:39
+#: app/templates/admin/dashboard.html:35 app/templates/admin/uploads.html:19
+#: app/templates/my_uploads.html:39
 msgid "Approved"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:54 app/templates/my_uploads.html:41
+#: app/templates/admin/dashboard.html:54 app/templates/admin/uploads.html:20
+#: app/templates/my_uploads.html:41
 msgid "Rejected"
 msgstr ""
 
@@ -593,11 +585,78 @@ msgstr ""
 msgid "Upload failed"
 msgstr ""
 
+#: app/templates/admin/announcement.html:2
+#: app/templates/admin/announcement.html:5
+#: app/templates/admin/announcement.html:45
+msgid "Send Announcement"
+msgstr ""
+
+#: app/templates/admin/announcement.html:2
+#: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
+#: app/templates/admin/users.html:3 app/templates/admin/users.html:46
+msgid "Admin"
+msgstr ""
+
+#: app/templates/admin/announcement.html:7
+#: app/templates/admin/server_tools.html:9 app/templates/admin/uploads.html:9
+#: app/templates/admin/users.html:9
+msgid "Back to Dashboard"
+msgstr ""
+
+#: app/templates/admin/announcement.html:12
+msgid "Subject"
+msgstr ""
+
+#: app/templates/admin/announcement.html:13
+msgid "Announcement subject"
+msgstr ""
+
+#: app/templates/admin/announcement.html:16
+msgid "Message"
+msgstr ""
+
+#: app/templates/admin/announcement.html:16
+msgid "HTML allowed"
+msgstr ""
+
+#: app/templates/admin/announcement.html:17
+msgid "Type your announcement here..."
+msgstr ""
+
+#: app/templates/admin/announcement.html:20
+msgid "Delivery Method"
+msgstr ""
+
+#: app/templates/admin/announcement.html:23
+msgid "Homepage Banner"
+msgstr ""
+
+#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
+msgid "Email"
+msgstr ""
+
+#: app/templates/admin/announcement.html:31
+msgid "Recipients"
+msgstr ""
+
+#: app/templates/admin/announcement.html:34
+msgid "All Users"
+msgstr ""
+
+#: app/templates/admin/announcement.html:38
+msgid "Only Users Who Have Uploaded"
+msgstr ""
+
+#: app/templates/admin/announcement.html:43
+msgid "With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges."
+msgstr ""
+
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:73
+#: app/templates/admin/server_tools.html:240
 msgid "Users"
 msgstr ""
 
@@ -613,16 +672,273 @@ msgstr ""
 msgid "Manage All Uploads"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:111
+#: app/templates/admin/dashboard.html:111 app/templates/admin/users.html:3
+#: app/templates/admin/users.html:7
 msgid "Manage Users"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:117
-msgid "Manage Mirrors"
+msgid "Make Announcement"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:123
-msgid "Make Announcement"
+#: app/templates/admin/server_tools.html:3
+#: app/templates/admin/server_tools.html:7
+msgid "Server Tools"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:18
+#: app/templates/admin/server_tools.html:303
+msgid "System Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:24
+msgid "Uptime"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:27
+msgid "days"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:30
+#: app/templates/admin/server_tools.html:231
+msgid "Unknown"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:35
+#: app/templates/admin/server_tools.html:314
+msgid "CPU Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:40
+msgid "System information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:49
+#: app/templates/admin/server_tools.html:315
+msgid "Memory Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:66
+msgid "Memory information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:78
+msgid "Disk Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:95
+msgid "Disk information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:104
+msgid "Uploads Storage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:109
+msgid "Total Size"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:113
+msgid "Upload storage information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:122
+msgid "Chunk Cache"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:127
+msgid "Files"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:131
+msgid "Chunk cache information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:143
+msgid "Storage Management"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:150
+msgid "Are you sure you want to clear all chunk cache files?"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:152
+msgid "Clear Chunk Cache"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:155
+msgid "Removes all files from the chunks directory to free up space"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:161
+msgid "Are you sure you want to remove orphaned files?"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:163
+msgid "Clean Orphaned Files"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:166
+msgid "Removes upload files that no longer have database entries"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:172
+msgid "Refresh System Info"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:174
+msgid "Updates system information and statistics"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:187
+msgid "Server Management"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:194
+msgid "Are you sure you want to restart the server? This will temporarily interrupt service."
+msgstr ""
+
+#: app/templates/admin/server_tools.html:196
+msgid "Restart Server"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:199
+msgid "Gracefully restarts the server application"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:205
+msgid "Detailed System Info"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:207
+msgid "View detailed system and process information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:220
+msgid "Database Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:226
+msgid "Database Size"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:238
+msgid "Total Records"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
+msgid "Uploads"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:256
+msgid "Detailed System Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:257
+#: app/templates/admin/server_tools.html:269
+msgid "Close"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:263
+#: app/templates/admin/server_tools.html:292
+msgid "Loading..."
+msgstr ""
+
+#: app/templates/admin/server_tools.html:270
+msgid "Refresh"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:304
+msgid "Platform"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:305
+msgid "Python Version"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:306
+msgid "CPU Cores"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:307
+msgid "Load Average"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:311
+msgid "Process Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:312
+msgid "PID"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:316
+msgid "Threads"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:326
+msgid "Network I/O"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:327
+msgid "Bytes Sent"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:328
+msgid "Bytes Received"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:333
+msgid "Disk I/O"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:334
+msgid "Bytes Read"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:335
+msgid "Bytes Written"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:345
+msgid "Error loading system information"
+msgstr ""
+
+#: app/templates/admin/uploads.html:3 app/templates/admin/uploads.html:7
+msgid "Manage Uploads"
+msgstr ""
+
+#: app/templates/admin/uploads.html:21
+msgid "All"
+msgstr ""
+
+#: app/templates/admin/uploads.html:55 app/templates/admin/users.html:50
+msgid "User"
+msgstr ""
+
+#: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
+msgid "Actions"
+msgstr ""
+
+#: app/templates/admin/uploads.html:157
+msgid "No uploads found"
+msgstr ""
+
+#: app/templates/admin/uploads.html:158
+msgid "No uploads match your current filters."
+msgstr ""
+
+#: app/templates/admin/users.html:19
+msgid "Name"
+msgstr ""
+
+#: app/templates/admin/users.html:21
+msgid "Role"
+msgstr ""
+
+#: app/templates/admin/users.html:23
+msgid "Joined"
 msgstr ""
 
 #: app/templates/auth/login.html:10
