@@ -8,9 +8,9 @@ def get_allowed_extensions():
     """Get allowed extensions from config or use default"""
     try:
         from decouple import config
-        return config('ALLOWED_EXTENSIONS', default='zip,apk,img,tar,gz,xz,7z,rar,md5').split(',')
+        return config('ALLOWED_EXTENSIONS', default='zip,apk,img,tar,gz,xz,7z,rar,md5,tgz').split(',')
     except ImportError:
-        return ['zip', 'apk', 'img', 'tar', 'gz', 'xz', '7z', 'rar', 'md5']
+        return ['zip', 'apk', 'img', 'tar', 'gz', 'xz', '7z', 'rar', 'md5', 'tgz']
 
 ALLOWED_EXTENSIONS = get_allowed_extensions()
 

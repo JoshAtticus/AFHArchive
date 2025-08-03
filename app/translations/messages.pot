@@ -398,7 +398,7 @@ msgid "Select File"
 msgstr ""
 
 #: app/templates/upload.html:30
-msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
+msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
 msgstr ""
 
 #: app/templates/upload.html:35
