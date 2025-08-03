@@ -175,6 +175,19 @@ def create_app():
         # 'zh': '中文'
     }
     
+    # Domain redirect handler
+    @app.before_request
+    def redirect_old_domain():
+        """Redirect requests from afh.joshattic.us to afharchive.xyz"""
+        if request.host == 'afh.joshattic.us':
+            from flask import redirect, url_for
+            # Construct the new URL with the same path and query parameters
+            new_url = f"https://afharchive.xyz{request.full_path}"
+            # Remove trailing ? if there are no query parameters
+            if new_url.endswith('?'):
+                new_url = new_url[:-1]
+            return redirect(new_url, code=301)  # Permanent redirect
+    
     # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.main import main_bp
