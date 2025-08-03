@@ -3,12 +3,18 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Upload, User, Announcement
 from app.utils.decorators import admin_required
-from app.utils.file_handler import delete_upload_file
+from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
 import os
+import shutil
+import psutil
+import subprocess
+import signal
+import time
+from datetime import datetime, timedelta
 pending_email_batches = defaultdict(lambda: {'approved': [], 'rejected': [], 'timer': None})
 def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     """Batch notifications for 5 minutes before sending approval/rejection emails"""
@@ -64,12 +70,15 @@ def dashboard():
     approved_count = Upload.query.filter_by(status='approved').count()
     rejected_count = Upload.query.filter_by(status='rejected').count()
     total_users = User.query.count()
+    total_uploads = Upload.query.count()
     
     stats = {
         'pending': pending_count,
         'approved': approved_count,
         'rejected': rejected_count,
-        'total_users': total_users
+        'total_users': total_users,
+        'upload_count': total_uploads,
+        'user_count': total_users
     }
     
     return render_template('admin/dashboard.html', stats=stats)
@@ -333,3 +342,237 @@ def download_file(upload_id):
         }
     )
     return response
+
+# Server Tools Routes
+@admin_bp.route('/server-tools')
+@login_required
+@admin_required
+def server_tools():
+    """Server management tools dashboard"""
+    try:
+        # Get server uptime
+        boot_time = datetime.fromtimestamp(psutil.boot_time())
+        uptime = datetime.now() - boot_time
+        
+        # Get system information
+        memory = psutil.virtual_memory()
+        disk = psutil.disk_usage('/')
+        cpu_percent = psutil.cpu_percent(interval=1)
+        
+        # Get upload directory info
+        upload_dir = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        chunks_dir = os.path.join(upload_dir, 'chunks')
+        
+        # Calculate storage usage
+        total_uploads_size = 0
+        total_chunks_size = 0
+        chunks_count = 0
+        
+        if os.path.exists(upload_dir):
+            for root, dirs, files in os.walk(upload_dir):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    file_size = os.path.getsize(file_path)
+                    if 'chunks' in root:
+                        total_chunks_size += file_size
+                        chunks_count += 1
+                    else:
+                        total_uploads_size += file_size
+        
+        # Calculate database size
+        db_size = 0
+        db_path = current_app.config.get('SQLALCHEMY_DATABASE_URI', '').replace('sqlite:///', '')
+        if db_path and os.path.exists(db_path):
+            db_size = os.path.getsize(db_path)
+        
+        server_stats = {
+            'uptime': uptime,
+            'memory_total': memory.total,
+            'memory_used': memory.used,
+            'memory_percent': memory.percent,
+            'disk_total': disk.total,
+            'disk_used': disk.used,
+            'disk_percent': disk.percent,
+            'cpu_percent': cpu_percent,
+            'uploads_size': total_uploads_size,
+            'chunks_size': total_chunks_size,
+            'chunks_count': chunks_count,
+            'database_size': db_size
+        }
+        
+    except Exception as e:
+        current_app.logger.error(f"Error getting server stats: {str(e)}")
+        server_stats = {}
+        flash(f'Error retrieving server statistics: {str(e)}', 'warning')
+    
+    return render_template('admin/server_tools.html', stats=server_stats)
+
+@admin_bp.route('/server-tools/clear-chunks', methods=['POST'])
+@login_required
+@admin_required
+def clear_chunks():
+    """Clear the chunks cache directory"""
+    try:
+        upload_dir = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        chunks_dir = os.path.join(upload_dir, 'chunks')
+        
+        if not os.path.exists(chunks_dir):
+            flash('Chunks directory does not exist', 'info')
+            return redirect(url_for('admin.server_tools'))
+        
+        # Count files before deletion
+        files_count = 0
+        total_size = 0
+        for root, dirs, files in os.walk(chunks_dir):
+            for file in files:
+                files_count += 1
+                file_path = os.path.join(root, file)
+                total_size += os.path.getsize(file_path)
+        
+        # Clear the chunks directory
+        if files_count > 0:
+            shutil.rmtree(chunks_dir)
+            os.makedirs(chunks_dir, exist_ok=True)
+            flash(f'Cleared {files_count} chunk files ({format_file_size(total_size)} freed)', 'success')
+        else:
+            flash('Chunks directory is already empty', 'info')
+            
+    except Exception as e:
+        current_app.logger.error(f"Error clearing chunks: {str(e)}")
+        flash(f'Error clearing chunks: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.server_tools'))
+
+@admin_bp.route('/server-tools/cleanup-orphaned', methods=['POST'])
+@login_required
+@admin_required
+def cleanup_orphaned_files():
+    """Remove files from disk that don't have corresponding database entries"""
+    try:
+        upload_dir = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        chunks_dir = os.path.join(upload_dir, 'chunks')
+        
+        # Get all file paths from database
+        db_files = set()
+        uploads = Upload.query.all()
+        for upload in uploads:
+            if upload.file_path:
+                # Convert to absolute path if needed
+                if not os.path.isabs(upload.file_path):
+                    db_files.add(os.path.join(upload_dir, os.path.basename(upload.file_path)))
+                else:
+                    db_files.add(upload.file_path)
+        
+        # Check files in upload directory
+        orphaned_count = 0
+        orphaned_size = 0
+        
+        if os.path.exists(upload_dir):
+            for filename in os.listdir(upload_dir):
+                file_path = os.path.join(upload_dir, filename)
+                
+                # Skip directories and chunks directory
+                if os.path.isdir(file_path) or filename == 'chunks':
+                    continue
+                
+                # Check if file is in database
+                if file_path not in db_files:
+                    file_size = os.path.getsize(file_path)
+                    os.remove(file_path)
+                    orphaned_count += 1
+                    orphaned_size += file_size
+        
+        if orphaned_count > 0:
+            flash(f'Removed {orphaned_count} orphaned files ({format_file_size(orphaned_size)} freed)', 'success')
+        else:
+            flash('No orphaned files found', 'info')
+            
+    except Exception as e:
+        current_app.logger.error(f"Error cleaning orphaned files: {str(e)}")
+        flash(f'Error cleaning orphaned files: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.server_tools'))
+
+@admin_bp.route('/server-tools/restart-server', methods=['POST'])
+@login_required
+@admin_required
+def restart_server():
+    """Restart the server (graceful restart)"""
+    try:
+        # Log the restart action
+        current_app.logger.info(f"Server restart initiated by admin user {current_user.name}")
+        
+        # For development/testing, we'll just send SIGTERM to self
+        # In production, this should be handled by the process manager (systemd, supervisor, etc.)
+        flash('Server restart initiated. The server will restart momentarily.', 'info')
+        
+        # Use threading to delay the restart so the response can be sent
+        def delayed_restart():
+            time.sleep(2)  # Give time for response to be sent
+            try:
+                # Try to restart gracefully
+                if hasattr(os, 'kill'):
+                    os.kill(os.getpid(), signal.SIGTERM)
+                else:
+                    # Fallback for Windows
+                    subprocess.run(['taskkill', '/f', '/pid', str(os.getpid())], check=False)
+            except:
+                pass
+        
+        import threading
+        threading.Thread(target=delayed_restart, daemon=True).start()
+        
+    except Exception as e:
+        current_app.logger.error(f"Error restarting server: {str(e)}")
+        flash(f'Error restarting server: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.server_tools'))
+
+@admin_bp.route('/server-tools/system-info')
+@login_required
+@admin_required
+def system_info():
+    """Get detailed system information as JSON"""
+    try:
+        # Get detailed system info
+        info = {
+            'platform': psutil.platform,
+            'python_version': f"{psutil.version_info.major}.{psutil.version_info.minor}.{psutil.version_info.micro}",
+            'cpu_count': psutil.cpu_count(),
+            'cpu_freq': psutil.cpu_freq()._asdict() if psutil.cpu_freq() else None,
+            'memory': psutil.virtual_memory()._asdict(),
+            'swap': psutil.swap_memory()._asdict(),
+            'disk_usage': psutil.disk_usage('/')._asdict(),
+            'boot_time': datetime.fromtimestamp(psutil.boot_time()).isoformat(),
+            'load_avg': psutil.getloadavg() if hasattr(psutil, 'getloadavg') else None,
+            'network_io': psutil.net_io_counters()._asdict(),
+            'disk_io': psutil.disk_io_counters()._asdict() if psutil.disk_io_counters() else None
+        }
+        
+        return jsonify(info)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/server-tools/process-info')
+@login_required
+@admin_required
+def process_info():
+    """Get current process information"""
+    try:
+        process = psutil.Process()
+        info = {
+            'pid': process.pid,
+            'name': process.name(),
+            'status': process.status(),
+            'create_time': datetime.fromtimestamp(process.create_time()).isoformat(),
+            'cpu_percent': process.cpu_percent(),
+            'memory_info': process.memory_info()._asdict(),
+            'memory_percent': process.memory_percent(),
+            'num_threads': process.num_threads(),
+            'open_files_count': len(process.open_files()) if hasattr(process, 'open_files') else 0,
+            'connections_count': len(process.connections()) if hasattr(process, 'connections') else 0
+        }
+        
+        return jsonify(info)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

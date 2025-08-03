@@ -77,3 +77,15 @@ def safe_remove_file(file_path):
             current_app.logger.debug(f"File not found for removal: {file_path}")
     except Exception as e:
         current_app.logger.warning(f"Failed to remove file {file_path}: {str(e)}")
+
+def format_file_size(size_bytes):
+    """Format file size in human readable format"""
+    if size_bytes == 0:
+        return "0 B"
+    
+    size_names = ["B", "KB", "MB", "GB", "TB"]
+    import math
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return f"{s} {size_names[i]}"

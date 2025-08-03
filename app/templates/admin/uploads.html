@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Manage Uploads - Admin{% endblock %}
+{% block title %}{{ _('Manage Uploads') }} - {{ _('Admin') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-list"></i> Manage Uploads</h2>
+    <h2><i class="fas fa-list"></i> {{ _('Manage Uploads') }}</h2>
     <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
+        <i class="fas fa-arrow-left"></i> {{ _('Back to Dashboard') }}
     </a>
 </div>
 
 <div class="search-filters">
     <form method="GET" class="row g-3">
         <div class="col-md-2">
-            <label for="status" class="form-label">Status</label>
+            <label for="status" class="form-label">{{ _('Status') }}</label>
             <select class="form-select" id="status" name="status">
-                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="approved" {% if current_status == 'approved' %}selected{% endif %}>Approved</option>
-                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>Rejected</option>
-                <option value="all" {% if current_status == 'all' %}selected{% endif %}>All</option>
+                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>{{ _('Pending') }}</option>
+                <option value="approved" {% if current_status == 'approved' %}selected{% endif %}>{{ _('Approved') }}</option>
+                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>{{ _('Rejected') }}</option>
+                <option value="all" {% if current_status == 'all' %}selected{% endif %}>{{ _('All') }}</option>
             </select>
         </div>
         <div class="col-md-3">
-            <label for="manufacturer" class="form-label">Manufacturer</label>
+            <label for="manufacturer" class="form-label">{{ _('Manufacturer') }}</label>
             <select class="form-select" id="manufacturer" name="manufacturer">
-                <option value="">All Manufacturers</option>
+                <option value="">{{ _('All Manufacturers') }}</option>
                 {% for manufacturer in manufacturers %}
                 <option value="{{ manufacturer }}" {% if manufacturer == current_manufacturer %}selected{% endif %}>
                     {{ manufacturer }}
@@ -33,14 +33,14 @@
             </select>
         </div>
         <div class="col-md-5">
-            <label for="search" class="form-label">Search</label>
+            <label for="search" class="form-label">{{ _('Search') }}</label>
             <input type="text" class="form-control" id="search" name="search" 
-                   value="{{ current_search }}" placeholder="Filename search">
+                   value="{{ current_search }}" placeholder="{{ _('Filename search') }}">
         </div>
         <div class="col-md-2">
             <label class="form-label">&nbsp;</label>
             <button type="submit" class="btn btn-primary w-100">
-                <i class="fas fa-search"></i> Filter
+                <i class="fas fa-search"></i> {{ _('Filter') }}
             </button>
         </div>
     </form>
@@ -51,13 +51,13 @@
     <table class="table table-striped">
         <thead class="table-dark">
             <tr>
-                <th>Filename</th>
-                <th>User</th>
-                <th>Device</th>
-                <th>Size</th>
-                <th>Status</th>
-                <th>Uploaded</th>
-                <th>Actions</th>
+                <th>{{ _('Filename') }}</th>
+                <th>{{ _('User') }}</th>
+                <th>{{ _('Device') }}</th>
+                <th>{{ _('Size') }}</th>
+                <th>{{ _('Status') }}</th>
+                <th>{{ _('Uploaded') }}</th>
+                <th>{{ _('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -115,7 +115,7 @@
         <li class="page-item">
             <a class="page-link" href="{{ url_for('admin.uploads', page=uploads.prev_num, 
                 status=current_status, manufacturer=current_manufacturer, search=current_search) }}">
-                Previous
+                {{ _('Previous') }}
             </a>
         </li>
         {% endif %}
@@ -145,7 +145,7 @@
         <li class="page-item">
             <a class="page-link" href="{{ url_for('admin.uploads', page=uploads.next_num,
                 status=current_status, manufacturer=current_manufacturer, search=current_search) }}">
-                Next
+                {{ _('Next') }}
             </a>
         </li>
         {% endif %}
@@ -154,8 +154,8 @@
 {% else %}
 <div class="text-center py-5">
     <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-    <h4>No uploads found</h4>
-    <p class="text-muted">No uploads match your current filters.</p>
+    <h4>{{ _('No uploads found') }}</h4>
+    <p class="text-muted">{{ _('No uploads match your current filters.') }}</p>
 </div>
 {% endif %}
 {% endblock %}

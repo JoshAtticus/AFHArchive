@@ -16,3 +16,4 @@ python-decouple
 rarfile
 py7zr
 resend
+psutil

@@ -149,10 +149,17 @@ def create_app():
     @app.context_processor
     def inject_conf_vars():
         from flask_babel import _ as babel_gettext
+        from app.utils.file_handler import format_file_size
         return {
             'get_locale': get_locale,
             '_': babel_gettext
         }
+    
+    # Add template filters
+    @app.template_filter('format_file_size')
+    def format_file_size_filter(size_bytes):
+        from app.utils.file_handler import format_file_size
+        return format_file_size(size_bytes)
     
     # Set supported languages (add more as they become available from Crowdin)
     app.config['LANGUAGES'] = {

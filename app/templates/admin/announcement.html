@@ -1,47 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Send Announcement - Admin{% endblock %}
+{% block title %}{{ _('Send Announcement') }} - {{ _('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-bullhorn"></i> Send Announcement</h2>
+    <h2><i class="fas fa-bullhorn"></i> {{ _('Send Announcement') }}</h2>
     <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left"></i> Back to Dashboard
+        <i class="fas fa-arrow-left"></i> {{ _('Back to Dashboard') }}
     </a>
 </div>
 <form method="POST">
     <div class="mb-3">
-        <label for="subject" class="form-label">Subject</label>
-        <input type="text" class="form-control" id="subject" name="subject" placeholder="Announcement subject" required>
+        <label for="subject" class="form-label">{{ _('Subject') }}</label>
+        <input type="text" class="form-control" id="subject" name="subject" placeholder="{{ _('Announcement subject') }}" required>
     </div>
     <div class="mb-3">
-        <label for="message" class="form-label">Message (HTML allowed)</label>
-        <textarea class="form-control" id="message" name="message" rows="8" placeholder="Type your announcement here..." required></textarea>
+        <label for="message" class="form-label">{{ _('Message') }} ({{ _('HTML allowed') }})</label>
+        <textarea class="form-control" id="message" name="message" rows="8" placeholder="{{ _('Type your announcement here...') }}" required></textarea>
     </div>
     <div class="mb-3">
-        <label class="form-label">Delivery Method</label><br>
+        <label class="form-label">{{ _('Delivery Method') }}</label><br>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" id="send_homepage" name="send_homepage" value="1" checked>
-            <label class="form-check-label" for="send_homepage">Homepage Banner</label>
+            <label class="form-check-label" for="send_homepage">{{ _('Homepage Banner') }}</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" id="send_email" name="send_email" value="1" checked>
-            <label class="form-check-label" for="send_email">Email</label>
+            <label class="form-check-label" for="send_email">{{ _('Email') }}</label>
         </div>
     </div>
     <div class="mb-3">
-        <label class="form-label">Recipients</label><br>
+        <label class="form-label">{{ _('Recipients') }}</label><br>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" id="recipients_all" name="recipients" value="all" checked>
-            <label class="form-check-label" for="recipients_all">All Users</label>
+            <label class="form-check-label" for="recipients_all">{{ _('All Users') }}</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" id="recipients_uploaders" name="recipients" value="uploaders">
-            <label class="form-check-label" for="recipients_uploaders">Only Users Who Have Uploaded</label>
+            <label class="form-check-label" for="recipients_uploaders">{{ _('Only Users Who Have Uploaded') }}</label>
         </div>
     </div>
     <div class="alert alert-warning" role="alert">
         <i class="fas fa-exclamation-triangle"></i>
-        With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges.
+        {{ _('With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges.') }}
     </div>
-    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Announcement</button>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> {{ _('Send Announcement') }}</button>
 </form>
 {% endblock %}

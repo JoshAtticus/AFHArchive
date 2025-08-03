@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Server Tools') }} - {{ _('Admin') }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-server"></i> {{ _('Server Tools') }}</h2>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> {{ _('Back to Dashboard') }}
+    </a>
+</div>
+
+<!-- System Overview -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> {{ _('System Information') }}</h5>
+            </div>
+            <div class="card-body">
+                {% if stats %}
+                <div class="row">
+                    <div class="col-6">
+                        <strong>{{ _('Uptime') }}:</strong><br>
+                        <span class="text-muted">
+                            {% if stats.uptime %}
+                                {{ stats.uptime.days }} {{ _('days') }}, 
+                                {{ "%02d:%02d:%02d" | format(stats.uptime.seconds // 3600, (stats.uptime.seconds % 3600) // 60, stats.uptime.seconds % 60) }}
+                            {% else %}
+                                {{ _('Unknown') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-6">
+                        <strong>{{ _('CPU Usage') }}:</strong><br>
+                        <span class="text-muted">{{ "%.1f" | format(stats.cpu_percent or 0) }}%</span>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted">{{ _('System information unavailable') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie"></i> {{ _('Memory Usage') }}</h5>
+            </div>
+            <div class="card-body">
+                {% if stats and stats.memory_total %}
+                <div class="progress mb-2">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {{ stats.memory_percent }}%" 
+                         aria-valuenow="{{ stats.memory_percent }}" 
+                         aria-valuemin="0" aria-valuemax="100">
+                        {{ "%.1f" | format(stats.memory_percent) }}%
+                    </div>
+                </div>
+                <small class="text-muted">
+                    {{ stats.memory_used | format_file_size }} / 
+                    {{ stats.memory_total | format_file_size }}
+                </small>
+                {% else %}
+                <p class="text-muted">{{ _('Memory information unavailable') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Storage Information -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-hdd"></i> {{ _('Disk Usage') }}</h6>
+            </div>
+            <div class="card-body">
+                {% if stats and stats.disk_total %}
+                <div class="progress mb-2">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {{ stats.disk_percent }}%" 
+                         aria-valuenow="{{ stats.disk_percent }}" 
+                         aria-valuemin="0" aria-valuemax="100">
+                        {{ "%.1f" | format(stats.disk_percent) }}%
+                    </div>
+                </div>
+                <small class="text-muted">
+                    {{ stats.disk_used | format_file_size }} / 
+                    {{ stats.disk_total | format_file_size }}
+                </small>
+                {% else %}
+                <p class="text-muted">{{ _('Disk information unavailable') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-upload"></i> {{ _('Uploads Storage') }}</h6>
+            </div>
+            <div class="card-body">
+                {% if stats %}
+                <p class="mb-1">
+                    <strong>{{ _('Total Size') }}:</strong><br>
+                    <span class="text-muted">{{ stats.uploads_size | format_file_size }}</span>
+                </p>
+                {% else %}
+                <p class="text-muted">{{ _('Upload storage information unavailable') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-cubes"></i> {{ _('Chunk Cache') }}</h6>
+            </div>
+            <div class="card-body">
+                {% if stats %}
+                <p class="mb-1">
+                    <strong>{{ _('Files') }}:</strong> {{ stats.chunks_count }}<br>
+                    <strong>{{ _('Size') }}:</strong> {{ stats.chunks_size | format_file_size }}
+                </p>
+                {% else %}
+                <p class="text-muted">{{ _('Chunk cache information unavailable') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Storage Management Tools -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tools"></i> {{ _('Storage Management') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form method="POST" action="{{ url_for('admin.clear_chunks') }}" class="d-inline">
+                            <button type="submit" class="btn btn-warning w-100 mb-2" 
+                                    onclick="return confirm('{{ _('Are you sure you want to clear all chunk cache files?') }}')">
+                                <i class="fas fa-broom"></i><br>
+                                {{ _('Clear Chunk Cache') }}
+                            </button>
+                        </form>
+                        <small class="text-muted">{{ _('Removes all files from the chunks directory to free up space') }}</small>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <form method="POST" action="{{ url_for('admin.cleanup_orphaned_files') }}" class="d-inline">
+                            <button type="submit" class="btn btn-info w-100 mb-2" 
+                                    onclick="return confirm('{{ _('Are you sure you want to remove orphaned files?') }}')">
+                                <i class="fas fa-trash-alt"></i><br>
+                                {{ _('Clean Orphaned Files') }}
+                            </button>
+                        </form>
+                        <small class="text-muted">{{ _('Removes upload files that no longer have database entries') }}</small>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-primary w-100 mb-2" onclick="refreshSystemInfo()">
+                            <i class="fas fa-sync-alt"></i><br>
+                            {{ _('Refresh System Info') }}
+                        </button>
+                        <small class="text-muted">{{ _('Updates system information and statistics') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Server Management -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-server"></i> {{ _('Server Management') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form method="POST" action="{{ url_for('admin.restart_server') }}" class="d-inline">
+                            <button type="submit" class="btn btn-danger w-100 mb-2" 
+                                    onclick="return confirm('{{ _('Are you sure you want to restart the server? This will temporarily interrupt service.') }}')">
+                                <i class="fas fa-redo"></i><br>
+                                {{ _('Restart Server') }}
+                            </button>
+                        </form>
+                        <small class="text-muted">{{ _('Gracefully restarts the server application') }}</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-secondary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#systemInfoModal">
+                            <i class="fas fa-info"></i><br>
+                            {{ _('Detailed System Info') }}
+                        </button>
+                        <small class="text-muted">{{ _('View detailed system and process information') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Database Information -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-database"></i> {{ _('Database Information') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1">
+                            <strong>{{ _('Database Size') }}:</strong><br>
+                            <span class="text-muted">
+                                {% if stats and stats.database_size %}
+                                    {{ stats.database_size | format_file_size }}
+                                {% else %}
+                                    {{ _('Unknown') }}
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1">
+                            <strong>{{ _('Total Records') }}:</strong><br>
+                            <span class="text-muted">
+                                {{ _('Users') }}: {{ stats.get('user_count', 0) }}, 
+                                {{ _('Uploads') }}: {{ stats.get('upload_count', 0) }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed System Info Modal -->
+<div class="modal fade" id="systemInfoModal" tabindex="-1" aria-labelledby="systemInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="systemInfoModalLabel">{{ _('Detailed System Information') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('Close') }}"></button>
+            </div>
+            <div class="modal-body">
+                <div id="detailedSystemInfo">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">{{ _('Loading...') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
+                <button type="button" class="btn btn-primary" onclick="loadDetailedSystemInfo()">{{ _('Refresh') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+}
+
+function refreshSystemInfo() {
+    location.reload();
+}
+
+function loadDetailedSystemInfo() {
+    const container = document.getElementById('detailedSystemInfo');
+    container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">{{ _('Loading...') }}</span></div></div>';
+    
+    Promise.all([
+        fetch('{{ url_for("admin.system_info") }}'),
+        fetch('{{ url_for("admin.process_info") }}')
+    ])
+    .then(responses => Promise.all(responses.map(r => r.json())))
+    .then(([systemInfo, processInfo]) => {
+        let html = '<div class="row">';
+        
+        // System Information
+        html += '<div class="col-md-6"><h6>{{ _('System Information') }}</h6><ul class="list-unstyled">';
+        if (systemInfo.platform) html += `<li><strong>{{ _('Platform') }}:</strong> ${systemInfo.platform}</li>`;
+        if (systemInfo.python_version) html += `<li><strong>{{ _('Python Version') }}:</strong> ${systemInfo.python_version}</li>`;
+        if (systemInfo.cpu_count) html += `<li><strong>{{ _('CPU Cores') }}:</strong> ${systemInfo.cpu_count}</li>`;
+        if (systemInfo.load_avg) html += `<li><strong>{{ _('Load Average') }}:</strong> ${systemInfo.load_avg.join(', ')}</li>`;
+        html += '</ul></div>';
+        
+        // Process Information
+        html += '<div class="col-md-6"><h6>{{ _('Process Information') }}</h6><ul class="list-unstyled">';
+        if (processInfo.pid) html += `<li><strong>{{ _('PID') }}:</strong> ${processInfo.pid}</li>`;
+        if (processInfo.status) html += `<li><strong>{{ _('Status') }}:</strong> ${processInfo.status}</li>`;
+        if (processInfo.cpu_percent) html += `<li><strong>{{ _('CPU Usage') }}:</strong> ${processInfo.cpu_percent.toFixed(1)}%</li>`;
+        if (processInfo.memory_percent) html += `<li><strong>{{ _('Memory Usage') }}:</strong> ${processInfo.memory_percent.toFixed(1)}%</li>`;
+        if (processInfo.num_threads) html += `<li><strong>{{ _('Threads') }}:</strong> ${processInfo.num_threads}</li>`;
+        html += '</ul></div>';
+        
+        html += '</div>';
+        
+        // Network and Disk I/O
+        if (systemInfo.network_io || systemInfo.disk_io) {
+            html += '<hr><div class="row">';
+            
+            if (systemInfo.network_io) {
+                html += '<div class="col-md-6"><h6>{{ _('Network I/O') }}</h6><ul class="list-unstyled">';
+                html += `<li><strong>{{ _('Bytes Sent') }}:</strong> ${formatBytes(systemInfo.network_io.bytes_sent)}</li>`;
+                html += `<li><strong>{{ _('Bytes Received') }}:</strong> ${formatBytes(systemInfo.network_io.bytes_recv)}</li>`;
+                html += '</ul></div>';
+            }
+            
+            if (systemInfo.disk_io) {
+                html += '<div class="col-md-6"><h6>{{ _('Disk I/O') }}</h6><ul class="list-unstyled">';
+                html += `<li><strong>{{ _('Bytes Read') }}:</strong> ${formatBytes(systemInfo.disk_io.read_bytes)}</li>`;
+                html += `<li><strong>{{ _('Bytes Written') }}:</strong> ${formatBytes(systemInfo.disk_io.write_bytes)}</li>`;
+                html += '</ul></div>';
+            }
+            
+            html += '</div>';
+        }
+        
+        container.innerHTML = html;
+    })
+    .catch(error => {
+        container.innerHTML = `<div class="alert alert-danger">{{ _('Error loading system information') }}: ${error.message}</div>`;
+    });
+}
+
+// Load detailed info when modal is shown
+document.getElementById('systemInfoModal').addEventListener('shown.bs.modal', function () {
+    loadDetailedSystemInfo();
+});
+</script>
+{% endblock %}
