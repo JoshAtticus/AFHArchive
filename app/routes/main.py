@@ -8,6 +8,7 @@ from app import db
 from app.models import Upload, User, Announcement
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
+from app.utils.autoreviewer import auto_review_upload
 
 main_bp = Blueprint('main', __name__)
 
@@ -113,6 +114,12 @@ def upload():
             
             db.session.add(upload)
             db.session.commit()
+            
+            # Trigger autoreviewer to check for duplicates
+            try:
+                auto_review_upload(upload.id)
+            except Exception as e:
+                current_app.logger.error(f'Autoreviewer error for upload {upload.id}: {str(e)}')
             
             flash('File uploaded successfully and is pending review', 'success')
             return redirect(url_for('main.my_uploads'))

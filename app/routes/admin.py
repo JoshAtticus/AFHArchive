@@ -5,6 +5,7 @@ from app.models import Upload, User, Announcement
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
+from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_all_pending, get_or_create_autoreviewer
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -576,3 +577,37 @@ def process_info():
         return jsonify(info)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Autoreviewer Management Routes
+@admin_bp.route('/autoreviewer')
+@login_required
+@admin_required
+def autoreviewer_dashboard():
+    """Autoreviewer management dashboard"""
+    stats = get_autoreviewer_stats()
+    autoreviewer_user = get_or_create_autoreviewer()
+    
+    return render_template('admin/autoreviewer.html', 
+                         stats=stats, 
+                         autoreviewer=autoreviewer_user)
+
+@admin_bp.route('/autoreviewer/run-batch', methods=['POST'])
+@login_required
+@admin_required
+def run_autoreviewer_batch():
+    """Run autoreviewer on all pending uploads"""
+    try:
+        rejected_count = run_autoreviewer_on_all_pending()
+        flash(f'Autoreviewer batch completed: {rejected_count} duplicate files rejected', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Autoreviewer batch error: {str(e)}')
+        flash(f'Autoreviewer batch failed: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.autoreviewer_dashboard'))
+
+@admin_bp.route('/autoreviewer/stats')
+@login_required
+@admin_required
+def autoreviewer_stats_api():
+    """API endpoint for autoreviewer statistics"""
+    return jsonify(get_autoreviewer_stats())

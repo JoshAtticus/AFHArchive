@@ -80,7 +80,18 @@
                     </tr>
                     <tr>
                         <td>Reviewed By</td>
-                        <td>{{ upload.reviewer.name if upload.reviewer else 'Unknown' }}</td>
+                        <td>
+                            {% if upload.reviewer %}
+                                {{ upload.reviewer.name }}
+                                {% if upload.reviewer.email == 'autoreviewer@afharchive.system' %}
+                                    <span class="badge badge-info ml-2">
+                                        <i class="fas fa-robot"></i> Automated
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                Unknown
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endif %}
                     <tr>
