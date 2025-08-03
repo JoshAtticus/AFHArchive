@@ -2,6 +2,9 @@
 
 A web application designed to preserve content from the now-defunct AndroidFileHost platform.
 
+## Translators Needed!
+We need your help to translate AFHArchive into more languages. If you're fluent in English and another language other than English, please help translate by clicking [here](https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288)
+
 ## Features
 
 - **User Authentication**: Google OAuth2 sign-in

@@ -17,6 +17,20 @@
     border-bottom-right-radius: 0.5rem;
 }
 
+/* Flag emoji font support */
+.flag-emoji {
+    font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Emoji", sans-serif;
+    font-size: 1.1em;
+    margin-right: 0.5rem;
+}
+
+/* Language dropdown flag support */
+.dropdown-item .flag-emoji,
+.nav-link .flag-emoji {
+    font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Emoji", sans-serif;
+    margin-right: 0.5rem;
+}
+
 
 /* Make the random device image match the hero-section height and hide on mobile */
 .random-device-img {
