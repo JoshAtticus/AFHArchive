@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-03 01:19\n"
+"POT-Creation-Date: 2025-08-03 12:47+0800\n"
+"PO-Revision-Date: 2025-08-03 05:00\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -18,52 +18,53 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: de_DE\n"
 
-#: app/templates/base.html:28
+#: app/templates/base.html:30
 msgid "Home"
 msgstr ""
 
-#: app/templates/base.html:31
+#: app/templates/base.html:33
 msgid "Browse"
 msgstr ""
 
-#: app/templates/base.html:61
+#: app/templates/admin/users.html:18 app/templates/base.html:63
 msgid "Avatar"
 msgstr ""
 
-#: app/templates/base.html:66 app/templates/upload.html:3
+#: app/templates/base.html:68 app/templates/upload.html:3
+#: app/templates/upload.html:88
 msgid "Upload File"
 msgstr ""
 
-#: app/templates/base.html:67 app/templates/my_uploads.html:3
+#: app/templates/base.html:69 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr ""
 
-#: app/templates/base.html:70
+#: app/templates/base.html:72
 msgid "Admin Panel"
 msgstr ""
 
-#: app/templates/base.html:73
+#: app/templates/base.html:75
 msgid "Logout"
 msgstr ""
 
-#: app/templates/auth/login.html:3 app/templates/base.html:78
+#: app/templates/auth/login.html:3 app/templates/base.html:80
 msgid "Login"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Source on"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Our Privacy Policy"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Terms of Service"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:105
 msgid "Help translate AFHArchive"
 msgstr ""
 
@@ -75,11 +76,11 @@ msgstr ""
 msgid "Browse Archive"
 msgstr ""
 
-#: app/templates/browse.html:13
+#: app/templates/admin/uploads.html:25 app/templates/browse.html:13
 msgid "Manufacturer"
 msgstr ""
 
-#: app/templates/browse.html:15
+#: app/templates/admin/uploads.html:27 app/templates/browse.html:15
 msgid "All Manufacturers"
 msgstr ""
 
@@ -91,15 +92,16 @@ msgstr ""
 msgid "Device model"
 msgstr ""
 
-#: app/templates/browse.html:29 app/templates/errors/404.html:22
+#: app/templates/admin/uploads.html:36 app/templates/browse.html:29
+#: app/templates/errors/404.html:22
 msgid "Search"
 msgstr ""
 
-#: app/templates/browse.html:31
+#: app/templates/admin/uploads.html:38 app/templates/browse.html:31
 msgid "Filename search"
 msgstr ""
 
-#: app/templates/browse.html:36
+#: app/templates/admin/uploads.html:43 app/templates/browse.html:36
 msgid "Filter"
 msgstr ""
 
@@ -131,15 +133,16 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: app/templates/browse.html:71 app/templates/my_uploads.html:22
+#: app/templates/admin/uploads.html:59 app/templates/browse.html:71
+#: app/templates/my_uploads.html:22
 msgid "Uploaded"
 msgstr ""
 
-#: app/templates/browse.html:87
+#: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
 msgstr ""
 
-#: app/templates/browse.html:117
+#: app/templates/admin/uploads.html:148 app/templates/browse.html:117
 msgid "Next"
 msgstr ""
 
@@ -312,18 +315,21 @@ msgstr ""
 msgid "Upload New File"
 msgstr ""
 
-#: app/templates/my_uploads.html:18
+#: app/templates/admin/uploads.html:54 app/templates/my_uploads.html:18
 msgid "Filename"
 msgstr ""
 
-#: app/templates/my_uploads.html:19
+#: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
 msgid "Device"
 msgstr ""
 
-#: app/templates/my_uploads.html:20
+#: app/templates/admin/server_tools.html:128
+#: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
 msgid "Size"
 msgstr ""
 
+#: app/templates/admin/server_tools.html:313
+#: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
 msgstr ""
@@ -332,15 +338,18 @@ msgstr ""
 msgid "Downloads"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:16 app/templates/my_uploads.html:37
+#: app/templates/admin/dashboard.html:16 app/templates/admin/uploads.html:18
+#: app/templates/my_uploads.html:37
 msgid "Pending"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:35 app/templates/my_uploads.html:39
+#: app/templates/admin/dashboard.html:35 app/templates/admin/uploads.html:19
+#: app/templates/my_uploads.html:39
 msgid "Approved"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:54 app/templates/my_uploads.html:41
+#: app/templates/admin/dashboard.html:54 app/templates/admin/uploads.html:20
+#: app/templates/my_uploads.html:41
 msgid "Rejected"
 msgstr ""
 
@@ -404,11 +413,250 @@ msgstr ""
 msgid "Preparing upload..."
 msgstr ""
 
+#: app/templates/upload.html:53
+msgid "Device Manufacturer"
+msgstr ""
+
+#: app/templates/upload.html:55
+msgid "e.g., Samsung, Google, OnePlus"
+msgstr ""
+
+#: app/templates/upload.html:60
+msgid "Device Model"
+msgstr ""
+
+#: app/templates/upload.html:62
+msgid "e.g., Galaxy S21, Pixel 6, Generic"
+msgstr ""
+
+#: app/templates/upload.html:68
+msgid "Original AndroidFileHost Link"
+msgstr ""
+
+#: app/templates/upload.html:70
+msgid "https://androidfilehost.com/?fid=..."
+msgstr ""
+
+#: app/templates/upload.html:71
+msgid "If you have the original AFH link, please provide it"
+msgstr ""
+
+#: app/templates/upload.html:75
+msgid "XDA Thread Link"
+msgstr ""
+
+#: app/templates/upload.html:77
+msgid "https://forum.xda-developers.com/..."
+msgstr ""
+
+#: app/templates/upload.html:78
+msgid "Link to the XDA thread where this file was discussed"
+msgstr ""
+
+#: app/templates/upload.html:82
+msgid "Additional Notes"
+msgstr ""
+
+#: app/templates/upload.html:84
+msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
+msgstr ""
+
+#: app/templates/upload.html:91
+msgid "Cancel Upload"
+msgstr ""
+
+#: app/templates/upload.html:101
+msgid "Upload Process"
+msgstr ""
+
+#: app/templates/upload.html:105
+msgid "Select your file (max 5GB)"
+msgstr ""
+
+#: app/templates/upload.html:106
+msgid "Fill in required metadata"
+msgstr ""
+
+#: app/templates/upload.html:107
+msgid "Admin reviews for AFH authenticity"
+msgstr ""
+
+#: app/templates/upload.html:108
+msgid "Approved files become available"
+msgstr ""
+
+#: app/templates/upload.html:111
+msgid "Note:"
+msgstr ""
+
+#: app/templates/upload.html:111
+msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
+msgstr ""
+
+#: app/templates/upload.html:123
+msgid "File is too large. Maximum size is 5GB."
+msgstr ""
+
+#: app/templates/upload.html:124
+msgid "Please select a file to upload."
+msgstr ""
+
+#: app/templates/upload.html:125
+msgid "Device manufacturer is required."
+msgstr ""
+
+#: app/templates/upload.html:126
+msgid "Device model is required."
+msgstr ""
+
+#: app/templates/upload.html:127
+msgid "Initializing upload..."
+msgstr ""
+
+#: app/templates/upload.html:128
+msgid "Failed to initialize upload"
+msgstr ""
+
+#: app/templates/upload.html:129
+msgid "Starting chunk upload..."
+msgstr ""
+
+#: app/templates/upload.html:130
+msgid "Upload cancelled"
+msgstr ""
+
+#: app/templates/upload.html:131
+msgid "Chunk upload failed"
+msgstr ""
+
+#: app/templates/upload.html:132
+msgid "Invalid response from server"
+msgstr ""
+
+#: app/templates/upload.html:133
+msgid "Network error during chunk upload"
+msgstr ""
+
+#: app/templates/upload.html:134
+msgid "Chunk upload cancelled"
+msgstr ""
+
+#: app/templates/upload.html:135
+msgid "Assembling file..."
+msgstr ""
+
+#: app/templates/upload.html:136
+msgid "Failed to complete upload"
+msgstr ""
+
+#: app/templates/upload.html:137
+msgid "Upload completed successfully!"
+msgstr ""
+
+#: app/templates/upload.html:138
+msgid "Uploading chunk"
+msgstr ""
+
+#: app/templates/upload.html:139
+msgid "of"
+msgstr ""
+
+#: app/templates/upload.html:140
+msgid "MB/s"
+msgstr ""
+
+#: app/templates/upload.html:141
+msgid "Bytes"
+msgstr ""
+
+#: app/templates/upload.html:142
+msgid "KB"
+msgstr ""
+
+#: app/templates/upload.html:143
+msgid "MB"
+msgstr ""
+
+#: app/templates/upload.html:144
+msgid "GB"
+msgstr ""
+
+#: app/templates/upload.html:145
+msgid "Upload failed"
+msgstr ""
+
+#: app/templates/admin/announcement.html:2
+#: app/templates/admin/announcement.html:5
+#: app/templates/admin/announcement.html:45
+msgid "Send Announcement"
+msgstr ""
+
+#: app/templates/admin/announcement.html:2
+#: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
+#: app/templates/admin/users.html:3 app/templates/admin/users.html:46
+msgid "Admin"
+msgstr ""
+
+#: app/templates/admin/announcement.html:7
+#: app/templates/admin/server_tools.html:9 app/templates/admin/uploads.html:9
+#: app/templates/admin/users.html:9
+msgid "Back to Dashboard"
+msgstr ""
+
+#: app/templates/admin/announcement.html:12
+msgid "Subject"
+msgstr ""
+
+#: app/templates/admin/announcement.html:13
+msgid "Announcement subject"
+msgstr ""
+
+#: app/templates/admin/announcement.html:16
+msgid "Message"
+msgstr ""
+
+#: app/templates/admin/announcement.html:16
+msgid "HTML allowed"
+msgstr ""
+
+#: app/templates/admin/announcement.html:17
+msgid "Type your announcement here..."
+msgstr ""
+
+#: app/templates/admin/announcement.html:20
+msgid "Delivery Method"
+msgstr ""
+
+#: app/templates/admin/announcement.html:23
+msgid "Homepage Banner"
+msgstr ""
+
+#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
+msgid "Email"
+msgstr ""
+
+#: app/templates/admin/announcement.html:31
+msgid "Recipients"
+msgstr ""
+
+#: app/templates/admin/announcement.html:34
+msgid "All Users"
+msgstr ""
+
+#: app/templates/admin/announcement.html:38
+msgid "Only Users Who Have Uploaded"
+msgstr ""
+
+#: app/templates/admin/announcement.html:43
+msgid "With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges."
+msgstr ""
+
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:73
+#: app/templates/admin/server_tools.html:240
 msgid "Users"
 msgstr ""
 
@@ -424,12 +672,273 @@ msgstr ""
 msgid "Manage All Uploads"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:111
+#: app/templates/admin/dashboard.html:111 app/templates/admin/users.html:3
+#: app/templates/admin/users.html:7
 msgid "Manage Users"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:123
+#: app/templates/admin/server_tools.html:3
+#: app/templates/admin/server_tools.html:7
+msgid "Server Tools"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:18
+#: app/templates/admin/server_tools.html:303
+msgid "System Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:24
+msgid "Uptime"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:27
+msgid "days"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:30
+#: app/templates/admin/server_tools.html:231
+msgid "Unknown"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:35
+#: app/templates/admin/server_tools.html:314
+msgid "CPU Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:40
+msgid "System information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:49
+#: app/templates/admin/server_tools.html:315
+msgid "Memory Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:66
+msgid "Memory information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:78
+msgid "Disk Usage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:95
+msgid "Disk information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:104
+msgid "Uploads Storage"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:109
+msgid "Total Size"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:113
+msgid "Upload storage information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:122
+msgid "Chunk Cache"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:127
+msgid "Files"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:131
+msgid "Chunk cache information unavailable"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:143
+msgid "Storage Management"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:150
+msgid "Are you sure you want to clear all chunk cache files?"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:152
+msgid "Clear Chunk Cache"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:155
+msgid "Removes all files from the chunks directory to free up space"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:161
+msgid "Are you sure you want to remove orphaned files?"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:163
+msgid "Clean Orphaned Files"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:166
+msgid "Removes upload files that no longer have database entries"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:172
+msgid "Refresh System Info"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:174
+msgid "Updates system information and statistics"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:187
+msgid "Server Management"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:194
+msgid "Are you sure you want to restart the server? This will temporarily interrupt service."
+msgstr ""
+
+#: app/templates/admin/server_tools.html:196
+msgid "Restart Server"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:199
+msgid "Gracefully restarts the server application"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:205
+msgid "Detailed System Info"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:207
+msgid "View detailed system and process information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:220
+msgid "Database Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:226
+msgid "Database Size"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:238
+msgid "Total Records"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
+msgid "Uploads"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:256
+msgid "Detailed System Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:257
+#: app/templates/admin/server_tools.html:269
+msgid "Close"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:263
+#: app/templates/admin/server_tools.html:292
+msgid "Loading..."
+msgstr ""
+
+#: app/templates/admin/server_tools.html:270
+msgid "Refresh"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:304
+msgid "Platform"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:305
+msgid "Python Version"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:306
+msgid "CPU Cores"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:307
+msgid "Load Average"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:311
+msgid "Process Information"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:312
+msgid "PID"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:316
+msgid "Threads"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:326
+msgid "Network I/O"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:327
+msgid "Bytes Sent"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:328
+msgid "Bytes Received"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:333
+msgid "Disk I/O"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:334
+msgid "Bytes Read"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:335
+msgid "Bytes Written"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:345
+msgid "Error loading system information"
+msgstr ""
+
+#: app/templates/admin/uploads.html:3 app/templates/admin/uploads.html:7
+msgid "Manage Uploads"
+msgstr ""
+
+#: app/templates/admin/uploads.html:21
+msgid "All"
+msgstr ""
+
+#: app/templates/admin/uploads.html:55 app/templates/admin/users.html:50
+msgid "User"
+msgstr ""
+
+#: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
+msgid "Actions"
+msgstr ""
+
+#: app/templates/admin/uploads.html:157
+msgid "No uploads found"
+msgstr ""
+
+#: app/templates/admin/uploads.html:158
+msgid "No uploads match your current filters."
+msgstr ""
+
+#: app/templates/admin/users.html:19
+msgid "Name"
+msgstr ""
+
+#: app/templates/admin/users.html:21
+msgid "Role"
+msgstr ""
+
+#: app/templates/admin/users.html:23
+msgid "Joined"
 msgstr ""
 
 #: app/templates/auth/login.html:10
@@ -470,177 +979,5 @@ msgstr ""
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
-msgstr ""
-
-#: app/templates/upload.html:49
-msgid "Device Manufacturer"
-msgstr ""
-
-#: app/templates/upload.html:51
-msgid "e.g., Samsung, Google, OnePlus"
-msgstr ""
-
-#: app/templates/upload.html:57
-msgid "Device Model"
-msgstr ""
-
-#: app/templates/upload.html:59
-msgid "e.g., Galaxy S21, Pixel 6, Generic"
-msgstr ""
-
-#: app/templates/upload.html:66
-msgid "Original AndroidFileHost Link"
-msgstr ""
-
-#: app/templates/upload.html:68
-msgid "https://androidfilehost.com/?fid=..."
-msgstr ""
-
-#: app/templates/upload.html:69
-msgid "If you have the original AFH link, please provide it"
-msgstr ""
-
-#: app/templates/upload.html:74
-msgid "XDA Thread Link"
-msgstr ""
-
-#: app/templates/upload.html:76
-msgid "https://forum.xda-developers.com/..."
-msgstr ""
-
-#: app/templates/upload.html:77
-msgid "Link to the XDA thread where this file was discussed"
-msgstr ""
-
-#: app/templates/upload.html:82
-msgid "Additional Notes"
-msgstr ""
-
-#: app/templates/upload.html:84
-msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
-msgstr ""
-
-#: app/templates/upload.html:88
-msgid "Cancel Upload"
-msgstr ""
-
-#: app/templates/upload.html:95
-msgid "Upload Process"
-msgstr ""
-
-#: app/templates/upload.html:99
-msgid "Select your file (max 5GB)"
-msgstr ""
-
-#: app/templates/upload.html:100
-msgid "Fill in required metadata"
-msgstr ""
-
-#: app/templates/upload.html:101
-msgid "Admin reviews for AFH authenticity"
-msgstr ""
-
-#: app/templates/upload.html:102
-msgid "Approved files become available"
-msgstr ""
-
-#: app/templates/upload.html:105
-msgid "Note:"
-msgstr ""
-
-#: app/templates/upload.html:105
-msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
-msgstr ""
-
-#: app/templates/upload.html:112
-msgid "File is too large. Maximum size is 5GB."
-msgstr ""
-
-#: app/templates/upload.html:113
-msgid "Please select a file to upload."
-msgstr ""
-
-#: app/templates/upload.html:114
-msgid "Device manufacturer is required."
-msgstr ""
-
-#: app/templates/upload.html:115
-msgid "Device model is required."
-msgstr ""
-
-#: app/templates/upload.html:116
-msgid "Initializing upload..."
-msgstr ""
-
-#: app/templates/upload.html:117
-msgid "Failed to initialize upload"
-msgstr ""
-
-#: app/templates/upload.html:118
-msgid "Starting chunk upload..."
-msgstr ""
-
-#: app/templates/upload.html:119
-msgid "Upload cancelled"
-msgstr ""
-
-#: app/templates/upload.html:120
-msgid "Chunk upload failed"
-msgstr ""
-
-#: app/templates/upload.html:121
-msgid "Invalid response from server"
-msgstr ""
-
-#: app/templates/upload.html:122
-msgid "Network error during chunk upload"
-msgstr ""
-
-#: app/templates/upload.html:123
-msgid "Chunk upload cancelled"
-msgstr ""
-
-#: app/templates/upload.html:124
-msgid "Assembling file..."
-msgstr ""
-
-#: app/templates/upload.html:125
-msgid "Failed to complete upload"
-msgstr ""
-
-#: app/templates/upload.html:126
-msgid "Upload completed successfully!"
-msgstr ""
-
-#: app/templates/upload.html:127
-msgid "Uploading chunk"
-msgstr ""
-
-#: app/templates/upload.html:128
-msgid "of"
-msgstr ""
-
-#: app/templates/upload.html:129
-msgid "MB/s"
-msgstr ""
-
-#: app/templates/upload.html:130
-msgid "Bytes"
-msgstr ""
-
-#: app/templates/upload.html:131
-msgid "KB"
-msgstr ""
-
-#: app/templates/upload.html:132
-msgid "MB"
-msgstr ""
-
-#: app/templates/upload.html:133
-msgid "GB"
-msgstr ""
-
-#: app/templates/upload.html:134
-msgid "Upload failed"
 msgstr ""
 
