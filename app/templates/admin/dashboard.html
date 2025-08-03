@@ -92,39 +92,39 @@
                 <h5><i class="fas fa-tasks"></i> {{ _('Quick Actions') }}</h5>
             </div>
             <div class="card-body">
-                <div class="row flex-nowrap overflow-auto">
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.uploads', status='pending') }}" class="btn btn-warning btn-lg w-100 mb-3">
+                <div class="row">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.uploads', status='pending') }}" class="btn btn-warning btn-lg w-100">
                             <i class="fas fa-clock"></i><br>
                             {{ _('Review Pending Uploads') }}
                         </a>
                     </div>
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.uploads', status='all') }}" class="btn btn-primary btn-lg w-100 mb-3">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.uploads', status='all') }}" class="btn btn-primary btn-lg w-100">
                             <i class="fas fa-list"></i><br>
                             {{ _('Manage All Uploads') }}
                         </a>
                     </div>
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.users') }}" class="btn btn-info btn-lg w-100 mb-3">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.users') }}" class="btn btn-info btn-lg w-100">
                             <i class="fas fa-users"></i><br>
                             {{ _('Manage Users') }}
                         </a>
                     </div>
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-danger btn-lg w-100 mb-3">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-danger btn-lg w-100">
                             <i class="fas fa-bullhorn"></i><br>
                             {{ _('Make Announcement') }}
                         </a>
                     </div>
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.server_tools') }}" class="btn btn-success btn-lg w-100 mb-3">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.server_tools') }}" class="btn btn-success btn-lg w-100">
                             <i class="fas fa-server"></i><br>
                             {{ _('Server Tools') }}
                         </a>
                     </div>
-                    <div class="col-md-3 col-6 col-lg-3 px-1">
-                        <a href="{{ url_for('admin.autoreviewer_dashboard') }}" class="btn btn-secondary btn-lg w-100 mb-3">
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.autoreviewer_dashboard') }}" class="btn btn-secondary btn-lg w-100">
                             <i class="fas fa-robot"></i><br>
                             {{ _('Autoreviewer') }}
                         </a>

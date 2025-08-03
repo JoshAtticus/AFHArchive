@@ -17,13 +17,13 @@ pending_autoreviewer_notifications = defaultdict(lambda: {'rejected': [], 'timer
 
 def get_or_create_autoreviewer():
     """Get or create the autoreviewer user"""
-    autoreviewer = User.query.filter_by(email='autoreviewer@afharchive.system').first()
+    autoreviewer = User.query.filter_by(email='autoreviewer@afh.joshattic.us').first()
     
     if not autoreviewer:
         autoreviewer = User(
             google_id='autoreviewer_system',
-            email='autoreviewer@afharchive.system',
-            name='AFH Autoreviewer',
+            email='autoreviewer@afh.joshattic.us',
+            name='Autoreviewer',
             avatar_url=None,
             is_admin=True,
             created_at=datetime.utcnow()
@@ -34,18 +34,44 @@ def get_or_create_autoreviewer():
     
     return autoreviewer
 
+def check_for_duplicates_by_hash(md5_hash):
+    """
+    Check if a file with the given MD5 hash already exists.
+    Returns tuple (is_duplicate, existing_upload)
+    """
+    current_app.logger.info(f"Checking for duplicates by MD5 hash: {md5_hash}")
+    
+    existing_upload = Upload.query.filter(
+        Upload.md5_hash == md5_hash,
+        Upload.status.in_(['approved', 'pending'])
+    ).first()
+    
+    if existing_upload:
+        current_app.logger.info(f"Found duplicate: Upload {existing_upload.id} ({existing_upload.original_filename})")
+        return True, existing_upload
+    else:
+        current_app.logger.info("No duplicates found for this hash")
+        return False, None
+
 def check_for_duplicates(upload):
     """
     Check if an upload is a duplicate based on MD5 hash.
     Returns tuple (is_duplicate, existing_upload)
     """
+    current_app.logger.info(f"Checking for duplicates of upload {upload.id} with MD5 {upload.md5_hash}")
+    
     existing_upload = Upload.query.filter(
         Upload.md5_hash == upload.md5_hash,
         Upload.id != upload.id,
         Upload.status.in_(['approved', 'pending'])
     ).first()
     
-    return existing_upload is not None, existing_upload
+    if existing_upload:
+        current_app.logger.info(f"Found duplicate: Upload {existing_upload.id} ({existing_upload.original_filename})")
+        return True, existing_upload
+    else:
+        current_app.logger.info("No duplicates found")
+        return False, None
 
 def schedule_autoreviewer_notification(user, rejected_uploads):
     """Batch autoreviewer notifications for 5 minutes before sending rejection emails"""
@@ -85,19 +111,26 @@ def auto_review_upload(upload_id):
     This function should be called after an upload is created.
     """
     try:
+        current_app.logger.info(f"Starting autoreviewer for upload {upload_id}")
+        
         upload = Upload.query.get(upload_id)
         if not upload:
             current_app.logger.error(f"Upload {upload_id} not found for auto-review")
             return False
         
+        current_app.logger.info(f"Found upload {upload_id}: {upload.original_filename} (status: {upload.status})")
+        
         # Only auto-review pending uploads
         if upload.status != 'pending':
+            current_app.logger.info(f"Skipping auto-review for upload {upload_id} - status is {upload.status}")
             return False
         
         # Get autoreviewer user
         autoreviewer = get_or_create_autoreviewer()
+        current_app.logger.info(f"Using autoreviewer user: {autoreviewer.name} (ID: {autoreviewer.id})")
         
         # Check for duplicates
+        current_app.logger.info(f"Checking for duplicates of MD5: {upload.md5_hash}")
         is_duplicate, existing_upload = check_for_duplicates(upload)
         
         if is_duplicate:
@@ -106,17 +139,30 @@ def auto_review_upload(upload_id):
             existing_id = existing_upload.id
             existing_filename = existing_upload.original_filename
             
+            current_app.logger.info(f"Duplicate found! Upload {upload_id} matches upload {existing_id}")
+            
             rejection_reason = (
                 f"Duplicate file detected. This file already exists in the archive "
                 f"(Upload ID: {existing_id}, Status: {existing_status}, "
                 f"Filename: {existing_filename}). "
-                f"Automatically rejected by AFH Autoreviewer."
+                f"Automatically rejected by Autoreviewer."
             )
             
             upload.status = 'rejected'
             upload.rejection_reason = rejection_reason
             upload.reviewed_at = datetime.utcnow()
             upload.reviewed_by = autoreviewer.id
+            
+            # Delete the duplicate file since it's rejected
+            try:
+                from app.utils.file_handler import delete_upload_file
+                file_deleted = delete_upload_file(upload.file_path)
+                if file_deleted:
+                    current_app.logger.info(f"Deleted duplicate file: {upload.file_path}")
+                else:
+                    current_app.logger.warning(f"Failed to delete duplicate file: {upload.file_path}")
+            except Exception as e:
+                current_app.logger.error(f"Error deleting duplicate file {upload.file_path}: {str(e)}")
             
             db.session.commit()
             
@@ -137,6 +183,8 @@ def auto_review_upload(upload_id):
         
     except Exception as e:
         current_app.logger.error(f"Autoreviewer error for upload {upload_id}: {str(e)}")
+        import traceback
+        current_app.logger.error(f"Autoreviewer traceback: {traceback.format_exc()}")
         return False
 
 def run_autoreviewer_on_all_pending():
@@ -156,7 +204,7 @@ def run_autoreviewer_on_all_pending():
 
 def get_autoreviewer_stats():
     """Get statistics about autoreviewer activity"""
-    autoreviewer = User.query.filter_by(email='autoreviewer@afharchive.system').first()
+    autoreviewer = User.query.filter_by(email='autoreviewer@afh.joshattic.us').first()
     if not autoreviewer:
         return {
             'total_reviewed': 0,

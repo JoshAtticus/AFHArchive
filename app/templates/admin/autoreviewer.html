@@ -5,9 +5,9 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1><i class="fas fa-robot"></i> Autoreviewer Management</h1>
+                <h1><i class="fas fa-robot"></i> {{ _('Autoreviewer Management') }}</h1>
                 <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    <i class="fas fa-arrow-left"></i> {{ _('Back to Dashboard') }}
                 </a>
             </div>
         </div>
@@ -18,32 +18,32 @@
         <div class="col-md-6">
             <div class="card border-info">
                 <div class="card-header bg-info text-white">
-                    <h5><i class="fas fa-robot"></i> Autoreviewer System Info</h5>
+                    <h5><i class="fas fa-robot"></i> {{ _('Autoreviewer System Info') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>System User ID:</strong><br>
+                            <strong>{{ _('System User ID:') }}</strong><br>
                             {{ autoreviewer.id }}
                         </div>
                         <div class="col-sm-6">
-                            <strong>Name:</strong><br>
+                            <strong>{{ _('Name:') }}</strong><br>
                             {{ autoreviewer.name }}
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-sm-6">
-                            <strong>Email:</strong><br>
+                            <strong>{{ _('Email:') }}</strong><br>
                             {{ autoreviewer.email }}
                         </div>
                         <div class="col-sm-6">
-                            <strong>Admin Status:</strong><br>
-                            <span class="badge badge-success">{{ 'Yes' if autoreviewer.is_admin else 'No' }}</span>
+                            <strong>{{ _('Admin Status:') }}</strong><br>
+                            <span class="badge badge-success">{{ _('Yes') if autoreviewer.is_admin else _('No') }}</span>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-12">
-                            <strong>Created:</strong><br>
+                            <strong>{{ _('Created:') }}</strong><br>
                             {{ autoreviewer.created_at.strftime('%Y-%m-%d %H:%M UTC') }}
                         </div>
                     </div>
@@ -55,27 +55,27 @@
         <div class="col-md-6">
             <div class="card border-warning">
                 <div class="card-header bg-warning text-dark">
-                    <h5><i class="fas fa-chart-bar"></i> Autoreviewer Statistics</h5>
+                    <h5><i class="fas fa-chart-bar"></i> {{ _('Autoreviewer Statistics') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
                             <div class="text-center">
                                 <h3 class="text-primary">{{ stats.total_reviewed }}</h3>
-                                <small class="text-muted">Total Reviewed</small>
+                                <small class="text-muted">{{ _('Total Reviewed') }}</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="text-center">
                                 <h3 class="text-danger">{{ stats.total_rejected }}</h3>
-                                <small class="text-muted">Duplicates Rejected</small>
+                                <small class="text-muted">{{ _('Duplicates Rejected') }}</small>
                             </div>
                         </div>
                     </div>
                     {% if stats.total_reviewed > 0 %}
                     <div class="mt-3">
                         <div class="text-center">
-                            <strong>Rejection Rate:</strong> 
+                            <strong>{{ _('Rejection Rate:') }}</strong> 
                             {{ "%.1f"|format((stats.total_rejected / stats.total_reviewed * 100)) }}%
                         </div>
                         <div class="progress mt-2">
@@ -98,31 +98,30 @@
         <div class="col-12">
             <div class="card border-primary">
                 <div class="card-header bg-primary text-white">
-                    <h5><i class="fas fa-cogs"></i> Autoreviewer Actions</h5>
+                    <h5><i class="fas fa-cogs"></i> {{ _('Autoreviewer Actions') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="fas fa-play"></i> Run Batch Processing</h6>
+                            <h6><i class="fas fa-play"></i> {{ _('Run Batch Processing') }}</h6>
                             <p class="text-muted">
-                                Run the autoreviewer on all pending uploads to check for duplicates.
-                                This will automatically reject any uploads that have duplicate MD5 hashes.
+                                {{ _('Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes.') }}
                             </p>
                             <form method="POST" action="{{ url_for('admin.run_autoreviewer_batch') }}" 
                                   onsubmit="return confirm('Are you sure you want to run autoreviewer on all pending uploads? This may reject multiple files.')">
                                 <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-play"></i> Run Batch Autoreviewer
+                                    <i class="fas fa-play"></i> {{ _('Run Batch Autoreviewer') }}
                                 </button>
                             </form>
                         </div>
                         <div class="col-md-6">
-                            <h6><i class="fas fa-info-circle"></i> How It Works</h6>
+                            <h6><i class="fas fa-info-circle"></i> {{ _('How It Works') }}</h6>
                             <ul class="text-muted">
-                                <li>Automatically runs after each file upload</li>
-                                <li>Compares MD5 hashes to detect exact duplicates</li>
-                                <li>Rejects uploads that match existing approved or pending files</li>
-                                <li>Sends notification emails to uploaders</li>
-                                <li>Appears as "AFH Autoreviewer" in the system</li>
+                                <li>{{ _('Automatically runs after each file upload') }}</li>
+                                <li>{{ _('Compares MD5 hashes to detect exact duplicates') }}</li>
+                                <li>{{ _('Rejects uploads that match existing approved or pending files') }}</li>
+                                <li>{{ _('Sends notification emails to uploaders') }}</li>
+                                <li>{{ _('Appears as "Autoreviewer" in the system') }}</li>
                             </ul>
                         </div>
                     </div>
@@ -137,19 +136,19 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5><i class="fas fa-times-circle"></i> Recent Duplicate Rejections</h5>
+                    <h5><i class="fas fa-times-circle"></i> {{ _('Recent Duplicate Rejections') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>Upload ID</th>
-                                    <th>Filename</th>
-                                    <th>Device</th>
-                                    <th>Uploader</th>
-                                    <th>Rejected Date</th>
-                                    <th>Reason</th>
+                                    <th>{{ _('Upload ID') }}</th>
+                                    <th>{{ _('Filename') }}</th>
+                                    <th>{{ _('Device') }}</th>
+                                    <th>{{ _('Uploader') }}</th>
+                                    <th>{{ _('Rejected Date') }}</th>
+                                    <th>{{ _('Reason') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,8 +161,8 @@
                                         </a>
                                     </td>
                                     <td>{{ upload.device_manufacturer }} {{ upload.device_model }}</td>
-                                    <td>{{ upload.uploader.name if upload.uploader else 'Unknown' }}</td>
-                                    <td>{{ upload.reviewed_at.strftime('%Y-%m-%d %H:%M') if upload.reviewed_at else 'N/A' }}</td>
+                                    <td>{{ upload.uploader.name if upload.uploader else _('Unknown') }}</td>
+                                    <td>{{ upload.reviewed_at.strftime('%Y-%m-%d %H:%M') if upload.reviewed_at else _('N/A') }}</td>
                                     <td>
                                         <small class="text-muted">
                                             {{ upload.rejection_reason[:100] }}{% if upload.rejection_reason and upload.rejection_reason|length > 100 %}...{% endif %}

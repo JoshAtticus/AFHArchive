@@ -116,10 +116,17 @@ def upload():
             db.session.commit()
             
             # Trigger autoreviewer to check for duplicates
+            # This must happen after the commit so the upload ID exists
             try:
-                auto_review_upload(upload.id)
+                current_app.logger.info(f"Running autoreviewer for upload {upload.id}")
+                duplicate_rejected = auto_review_upload(upload.id)
+                if duplicate_rejected:
+                    current_app.logger.info(f"Autoreviewer rejected upload {upload.id} as duplicate")
+                else:
+                    current_app.logger.info(f"Autoreviewer passed upload {upload.id} - no duplicates found")
             except Exception as e:
                 current_app.logger.error(f'Autoreviewer error for upload {upload.id}: {str(e)}')
+                # Don't fail the upload if autoreviewer fails
             
             flash('File uploaded successfully and is pending review', 'success')
             return redirect(url_for('main.my_uploads'))

@@ -30,6 +30,7 @@ def calculate_md5(file_path):
 def save_upload_file(file):
     """
     Save uploaded file and return filename, path, size, and MD5 hash
+    Checks for duplicates but doesn't prevent saving - lets autoreviewer handle rejection
     """
     if not file or not allowed_file(file.filename):
         raise ValueError("Invalid file")
@@ -51,6 +52,28 @@ def save_upload_file(file):
     
     # Calculate MD5 hash
     md5_hash = calculate_md5(file_path)
+    
+    # Check for duplicates and log, but don't prevent saving
+    # The autoreviewer will handle rejection after the upload record is created
+    try:
+        from app.utils.autoreviewer import check_for_duplicates_by_hash
+        is_duplicate, existing_upload = check_for_duplicates_by_hash(md5_hash)
+        
+        if is_duplicate:
+            current_app.logger.info(
+                f"Duplicate detected for {original_filename} (MD5: {md5_hash}) - "
+                f"matches upload {existing_upload.id} ({existing_upload.original_filename}). "
+                f"File saved, autoreviewer will handle rejection."
+            )
+        else:
+            current_app.logger.info(f"No duplicates found for {original_filename} (MD5: {md5_hash})")
+            
+    except ImportError:
+        # If autoreviewer is not available, continue without duplicate checking
+        current_app.logger.warning("Autoreviewer not available for duplicate checking")
+    except Exception as e:
+        # Don't fail the upload if duplicate checking fails
+        current_app.logger.error(f"Error during duplicate checking: {str(e)}")
     
     return unique_filename, file_path, file_size, md5_hash
 
