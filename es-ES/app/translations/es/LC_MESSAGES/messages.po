@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-03 12:47+0800\n"
-"PO-Revision-Date: 2025-08-03 05:00\n"
+"POT-Creation-Date: 2025-08-03 13:19+0800\n"
+"PO-Revision-Date: 2025-08-03 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -18,54 +18,54 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: es_ES\n"
 
-#: app/templates/base.html:30
+#: app/templates/base.html:31
 msgid "Home"
 msgstr ""
 
-#: app/templates/base.html:33
+#: app/templates/base.html:34
 msgid "Browse"
 msgstr ""
 
-#: app/templates/admin/users.html:18 app/templates/base.html:63
+#: app/templates/base.html:83 app/templates/base.html:136
+msgid "Help translate AFHArchive"
+msgstr ""
+
+#: app/templates/admin/users.html:18 app/templates/base.html:94
 msgid "Avatar"
 msgstr ""
 
-#: app/templates/base.html:68 app/templates/upload.html:3
+#: app/templates/base.html:99 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
 msgstr ""
 
-#: app/templates/base.html:69 app/templates/my_uploads.html:3
+#: app/templates/base.html:100 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr ""
 
-#: app/templates/base.html:72
+#: app/templates/base.html:103
 msgid "Admin Panel"
 msgstr ""
 
-#: app/templates/base.html:75
+#: app/templates/base.html:106
 msgid "Logout"
 msgstr ""
 
-#: app/templates/auth/login.html:3 app/templates/base.html:80
+#: app/templates/auth/login.html:3 app/templates/base.html:111
 msgid "Login"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Source on"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Our Privacy Policy"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Terms of Service"
-msgstr ""
-
-#: app/templates/base.html:105
-msgid "Help translate AFHArchive"
 msgstr ""
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
@@ -211,7 +211,7 @@ msgid "Your support helps cover hosting costs and keeps this preservation projec
 msgstr ""
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
-msgid "Buy me a coffee"
+msgid "Buy Me A Coffee"
 msgstr ""
 
 #: app/templates/file_detail.html:109
