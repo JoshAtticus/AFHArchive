@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-02 15:13+0800\n"
-"PO-Revision-Date: 2025-08-02 17:01\n"
+"PO-Revision-Date: 2025-08-03 01:19\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -393,8 +393,8 @@ msgid "Select File"
 msgstr "Выбрать файл"
 
 #: app/templates/upload.html:30
-msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
-msgstr "Разрешённые форматы: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5"
+msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
+msgstr ""
 
 #: app/templates/upload.html:35
 msgid "Upload Progress"
