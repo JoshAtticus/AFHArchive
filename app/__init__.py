@@ -165,12 +165,12 @@ def create_app():
     app.config['LANGUAGES'] = {
         'en': 'English',
         'ru': 'Русский',
+        'ja': '日本語',
         # 'es': 'Español', 
         # 'fr': 'Français',
         # 'de': 'Deutsch',
         # 'it': 'Italiano',
         # 'pt': 'Português',
-        # 'ja': '日本語',
         # 'ko': '한국어',
         # 'zh': '中文'
     }
