@@ -208,6 +208,16 @@ def privacy():
 def terms():
     return render_template('terms.html')
 
+# About Page
+@main_bp.route('/about')
+def about():
+    return render_template('about.html')
+
+# Contact Page
+@main_bp.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 # Language selection
 @main_bp.route('/set_language/<language>')
 def set_language(language):

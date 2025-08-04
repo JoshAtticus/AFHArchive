@@ -33,6 +33,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.browse') }}">{{ _('Browse') }}</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.about') }}">{{ _('About') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a>
+                    </li>
                 </ul>
                 
                 <ul class="navbar-nav">
@@ -133,7 +139,7 @@
 
     <footer class="bg-light mt-5 py-4">
         <div class="container text-center">
-            <p class="mb-0">&copy; 2025 JoshAtticus | {{ _('Source on') }} <a href="https://github.com/JoshAtticus/AFHArchive">GitHub</a> | <a href="privacy">{{ _('Our Privacy Policy') }}</a> | <a href="terms">{{ _('Terms of Service') }} | <a href="https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288">{{ _('Help translate AFHArchive') }}</a></p>
+            <p class="mb-0">&copy; 2025 JoshAtticus | {{ _('Source on') }} <a href="https://github.com/JoshAtticus/AFHArchive">GitHub</a> | <a href="{{ url_for('main.privacy') }}">{{ _('Our Privacy Policy') }}</a> | <a href="{{ url_for('main.terms') }}">{{ _('Terms of Service') }}</a></p>
         </div>
     </footer>
 

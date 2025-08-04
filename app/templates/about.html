@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('About') }} - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> {{ _('About AFHArchive') }}
+                </h1>
+            </div>
+            <div class="card-body">
+                <h2>{{ _('What is AFHArchive?') }}</h2>
+                <p>{{ _('AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files.') }}</p>
+
+                <h3>{{ _('Community Guidelines') }}</h3>
+                <p>{{ _('AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:') }}</p>
+                <ul>
+                    <li>{{ _('Share legitimate, useful Android development files') }}</li>
+                    <li>{{ _('Provide accurate descriptions and information') }}</li>
+                    <li>{{ _('Respect intellectual property rights') }}</li>
+                </ul>
+
+                <h3>{{ _('Open Source') }}</h3>
+                <p>{{ _('AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome.') }}</p>
+                <a href="https://github.com/JoshAtticus/AFHArchive" class="btn btn-outline-primary" target="_blank">
+                    <i class="fab fa-github"></i> {{ _('View on GitHub') }}
+                </a>
+
+                <h3 class="mt-4">{{ _('Contact Information') }}</h3>
+                <p>{{ _('For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository.') }}</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i> {{ _('Contact Us') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Contact') }} - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title mb-0">
+                    <i class="fas fa-envelope"></i> {{ _('Contact Us') }}
+                </h1>
+            </div>
+            <div class="card-body">
+                <p class="lead">{{ _('We\'d love to hear from you! Get in touch with the AFHArchive team through any of the following methods:') }}</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fab fa-github fa-3x text-primary mb-3"></i>
+                                <h4>{{ _('GitHub') }}</h4>
+                                <p>{{ _('Report issues, suggest features, or contribute to the project on our GitHub repository.') }}</p>
+                                <a href="https://github.com/JoshAtticus/AFHArchive/issues" class="btn btn-outline-primary" target="_blank">
+                                    {{ _('Open an Issue') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+                                <h4>{{ _('Email') }}</h4>
+                                <p>{{ _('For general inquiries, business matters, or urgent support requests.') }}</p>
+                                <a href="mailto:contact@afharchive.xyz" class="btn btn-primary">
+                                    {{ _('Send Email') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-language fa-3x text-primary mb-3"></i>
+                                <h4>{{ _('Translation Help') }}</h4>
+                                <p>{{ _('Help us make AFHArchive available in more languages by joining our translation project.') }}</p>
+                                <a href="https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288" 
+                                   class="btn btn-outline-primary" target="_blank">
+                                    {{ _('Join Translation Project') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-bug fa-3x text-primary mb-3"></i>
+                                <h4>{{ _('Bug Reports') }}</h4>
+                                <p>{{ _('Found a bug or experiencing technical issues? Let us know so we can fix it quickly.') }}</p>
+                                <a href="https://github.com/JoshAtticus/AFHArchive/issues/new" 
+                                   class="btn btn-outline-danger" target="_blank">
+                                    {{ _('Report Bug') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <h5><i class="fas fa-info-circle"></i> {{ _('Before Contacting Us') }}</h5>
+                    <ul class="mb-0">
+                        <li>{{ _('Check our') }} <a href="{{ url_for('main.terms') }}">{{ _('Terms of Service') }}</a> {{ _('and') }} <a href="{{ url_for('main.privacy') }}">{{ _('Privacy Policy') }}</a></li>
+                        <li>{{ _('Search existing') }} <a href="https://github.com/JoshAtticus/AFHArchive/issues" target="_blank">{{ _('GitHub issues') }}</a> {{ _('to see if your question has been answered') }}</li>
+                        <li>{{ _('For upload issues, make sure your files meet our guidelines') }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
