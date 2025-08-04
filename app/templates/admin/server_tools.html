@@ -210,6 +210,28 @@
             </div>
         </div>
     </div>
+    
+    <!-- Mirror Management -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-globe"></i> {{ _('Mirror Management') }}</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">{{ _('Manage mirror servers for file distribution') }}</p>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('admin.mirrors') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-server"></i> {{ _('Manage Mirrors') }}
+                    </a>
+                    <a href="{{ url_for('admin.pairing_codes') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-key"></i> {{ _('Pairing Codes') }}
+                    </a>
+                </div>
+                <hr>
+                <small class="text-muted">{{ _('Set up and monitor mirror servers for global file distribution') }}</small>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Database Information -->

@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import hashlib
 from app import db
-from app.models import Upload, User, Announcement
+from app.models import Upload, User, Announcement, Mirror, MirrorFile
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
@@ -185,6 +185,87 @@ def file_detail(upload_id):
 
 @main_bp.route('/download/<int:upload_id>')
 def download(upload_id):
+    from app.utils.mirror_picker import mirror_picker
+    
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        flash('File not available for download', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Check if this is a direct download request
+    if request.args.get('direct') == '1':
+        return download_direct(upload_id)
+    
+    # Get user's IP for geo-routing
+    user_ip = request.remote_addr
+    if request.headers.get('X-Forwarded-For'):
+        user_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+    
+    # Get the best mirror for this download
+    mirror_info = mirror_picker.get_best_mirror_for_download(upload_id, user_ip)
+    
+    if not mirror_info:
+        flash('File not available for download', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Get available mirrors for user choice
+    available_mirrors = mirror_picker._get_available_mirrors_for_file(upload_id)
+    main_server = mirror_picker._get_main_server_mirror()
+    available_mirrors.append(main_server)
+    
+    # Filter healthy mirrors
+    healthy_mirrors = mirror_picker._filter_healthy_mirrors(available_mirrors)
+    
+    # Show download page with mirror options
+    return render_template('download.html', 
+                         upload=upload, 
+                         recommended_mirror=mirror_info,
+                         available_mirrors=healthy_mirrors,
+                         user_ip=user_ip)
+
+
+@main_bp.route('/download/<int:upload_id>/direct')
+def download_direct(upload_id):
+    """Direct download without mirror selection page"""
+    from app.utils.mirror_picker import mirror_picker
+    
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        flash('File not available for download', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Get user's IP for geo-routing
+    user_ip = request.remote_addr
+    if request.headers.get('X-Forwarded-For'):
+        user_ip = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+    
+    # Get the best mirror for this download
+    mirror_info = mirror_picker.get_best_mirror_for_download(upload_id, user_ip)
+    
+    if not mirror_info:
+        flash('File not available for download', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Increment download count
+    upload.download_count += 1
+    db.session.commit()
+    
+    # Log the mirror selection for debugging
+    current_app.logger.info(f"Download {upload_id} routed to {mirror_info['server_name']} (IP: {user_ip})")
+    
+    # If it's the main server, use the local download route
+    if mirror_info['mirror_type'] == 'main':
+        return redirect(url_for('api.download_file', upload_id=upload_id))
+    else:
+        # Redirect to mirror
+        return redirect(mirror_info['download_url'])
+
+
+@main_bp.route('/download/<int:upload_id>/from/<mirror_id>')
+def download_from_mirror(upload_id, mirror_id):
+    """Download from a specific mirror"""
     upload = Upload.query.get_or_404(upload_id)
     
     if upload.status != 'approved':
@@ -195,8 +276,30 @@ def download(upload_id):
     upload.download_count += 1
     db.session.commit()
     
-    # Use a route that handles rate-limited downloads
-    return redirect(url_for('api.download_file', upload_id=upload_id))
+    if mirror_id == 'main':
+        # Download from main server
+        return redirect(url_for('api.download_file', upload_id=upload_id))
+    else:
+        # Download from specific mirror
+        mirror = Mirror.query.get_or_404(mirror_id)
+        
+        # Check if mirror has the file
+        mirror_file = MirrorFile.query.filter_by(
+            mirror_id=mirror_id, 
+            upload_id=upload_id
+        ).first()
+        
+        if not mirror_file:
+            flash('File not available on this mirror', 'error')
+            return redirect(url_for('main.download', upload_id=upload_id))
+        
+        # Construct download URL
+        if mirror.cloudflare_url:
+            download_url = f"{mirror.cloudflare_url}/download/{upload_id}"
+        else:
+            download_url = f"http://{mirror.direct_url}/download/{upload_id}"
+        
+        return redirect(download_url)
 
 # Privacy Policy
 @main_bp.route('/privacy')
