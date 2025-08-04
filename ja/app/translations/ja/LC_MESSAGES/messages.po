@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-03 14:24+0800\n"
-"PO-Revision-Date: 2025-08-04 07:14\n"
+"POT-Creation-Date: 2025-08-04 16:40+0800\n"
+"PO-Revision-Date: 2025-08-04 08:41\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -18,53 +18,117 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: ja_JP\n"
 
+#: app/templates/about.html:3 app/templates/base.html:37
+msgid "About"
+msgstr ""
+
+#: app/templates/about.html:11
+msgid "About AFHArchive"
+msgstr ""
+
+#: app/templates/about.html:15
+msgid "What is AFHArchive?"
+msgstr ""
+
+#: app/templates/about.html:16
+msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
+msgstr ""
+
+#: app/templates/about.html:18
+msgid "Community Guidelines"
+msgstr ""
+
+#: app/templates/about.html:19
+msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
+msgstr ""
+
+#: app/templates/about.html:21
+msgid "Share legitimate, useful Android development files"
+msgstr ""
+
+#: app/templates/about.html:22
+msgid "Provide accurate descriptions and information"
+msgstr ""
+
+#: app/templates/about.html:23
+msgid "Respect intellectual property rights"
+msgstr ""
+
+#: app/templates/about.html:26
+msgid "Open Source"
+msgstr ""
+
+#: app/templates/about.html:27
+msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
+msgstr ""
+
+#: app/templates/about.html:29
+msgid "View on GitHub"
+msgstr ""
+
+#: app/templates/about.html:32
+msgid "Contact Information"
+msgstr ""
+
+#: app/templates/about.html:33
+msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
+msgstr ""
+
+#: app/templates/about.html:35 app/templates/contact.html:11
+msgid "Contact Us"
+msgstr ""
+
 #: app/templates/base.html:31
 msgid "Home"
-msgstr ""
+msgstr "ホーム"
 
 #: app/templates/base.html:34
 msgid "Browse"
 msgstr ""
 
-#: app/templates/base.html:83 app/templates/base.html:136
+#: app/templates/base.html:40 app/templates/contact.html:3
+msgid "Contact"
+msgstr ""
+
+#: app/templates/base.html:89
 msgid "Help translate AFHArchive"
 msgstr "AFHArchiveの翻訳を手伝う"
 
-#: app/templates/admin/users.html:18 app/templates/base.html:94
+#: app/templates/admin/users.html:18 app/templates/base.html:100
 msgid "Avatar"
 msgstr "アバター"
 
-#: app/templates/base.html:99 app/templates/upload.html:3
+#: app/templates/base.html:105 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
 msgstr ""
 
-#: app/templates/base.html:100 app/templates/my_uploads.html:3
+#: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:109
 msgid "Admin Panel"
 msgstr ""
 
-#: app/templates/base.html:106
+#: app/templates/base.html:112
 msgid "Logout"
 msgstr "ログアウト"
 
-#: app/templates/auth/login.html:3 app/templates/base.html:111
+#: app/templates/auth/login.html:3 app/templates/base.html:117
 msgid "Login"
 msgstr "ログイン"
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142
 msgid "Source on"
 msgstr ""
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142
 msgid "Our Privacy Policy"
-msgstr ""
+msgstr "当社のプライバシーポリシー"
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142 app/templates/contact.html:78
 msgid "Terms of Service"
 msgstr "利用規約"
 
@@ -112,7 +176,7 @@ msgstr "デバイス："
 #: app/templates/browse.html:54 app/templates/file_detail.html:29
 #: app/templates/index.html:43
 msgid "Size:"
-msgstr ""
+msgstr "サイズ："
 
 #: app/templates/browse.html:55 app/templates/file_detail.html:37
 #: app/templates/index.html:44
@@ -125,7 +189,7 @@ msgstr "MD5："
 
 #: app/templates/browse.html:62 app/templates/file_detail.html:55
 msgid "Original AFH Link"
-msgstr ""
+msgstr "元のAndroid File Hostのリンク"
 
 #: app/templates/admin/dashboard.html:25 app/templates/admin/dashboard.html:44
 #: app/templates/admin/dashboard.html:63 app/templates/admin/dashboard.html:82
@@ -152,6 +216,91 @@ msgstr "ファイルが見つかりません"
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
+msgstr ""
+
+#: app/templates/contact.html:15
+msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
+msgstr ""
+
+#: app/templates/contact.html:22
+msgid "GitHub"
+msgstr ""
+
+#: app/templates/contact.html:23
+msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
+msgstr ""
+
+#: app/templates/contact.html:25
+msgid "Open an Issue"
+msgstr ""
+
+#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
+#: app/templates/contact.html:35
+msgid "Email"
+msgstr "メールアドレス"
+
+#: app/templates/contact.html:36
+msgid "For general inquiries, business matters, or urgent support requests."
+msgstr ""
+
+#: app/templates/contact.html:38
+msgid "Send Email"
+msgstr ""
+
+#: app/templates/contact.html:50
+msgid "Translation Help"
+msgstr ""
+
+#: app/templates/contact.html:51
+msgid "Help us make AFHArchive available in more languages by joining our translation project."
+msgstr ""
+
+#: app/templates/contact.html:54
+msgid "Join Translation Project"
+msgstr ""
+
+#: app/templates/contact.html:64
+msgid "Bug Reports"
+msgstr ""
+
+#: app/templates/contact.html:65
+msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
+msgstr ""
+
+#: app/templates/contact.html:68
+msgid "Report Bug"
+msgstr ""
+
+#: app/templates/contact.html:76
+msgid "Before Contacting Us"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "Check our"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "and"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "Privacy Policy"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "Search existing"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "GitHub issues"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "to see if your question has been answered"
+msgstr ""
+
+#: app/templates/contact.html:80
+msgid "For upload issues, make sure your files meet our guidelines"
 msgstr ""
 
 #: app/templates/file_detail.html:13
@@ -204,7 +353,7 @@ msgstr "AFHArchiveを支援する"
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
 msgid "Help keep this archive running!"
-msgstr ""
+msgstr "アーカイブの運営にご協力ください！"
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
@@ -232,11 +381,11 @@ msgstr ""
 
 #: app/templates/file_detail.html:121
 msgid "This file was originally hosted on AndroidFileHost"
-msgstr ""
+msgstr "このファイルは元々AndroidFileHostで公開されていました"
 
 #: app/templates/file_detail.html:122
 msgid "Files are provided as-is for preservation purposes"
-msgstr ""
+msgstr "ファイルは保存の目的のためにそのまま提供されています"
 
 #: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
@@ -244,7 +393,7 @@ msgstr ""
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
-msgstr ""
+msgstr "帯域幅を節約するためにダウンロードがレート制限が掛けられています"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
@@ -289,11 +438,11 @@ msgstr ""
 
 #: app/templates/index.html:63
 msgid "AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "AFHArchiveでは、過去にAndroidFileHostで公開されていたファイルを保存することに専念しています。"
 
 #: app/templates/index.html:65
 msgid "Only upload files that were once on AFH"
-msgstr ""
+msgstr "AFHに一度でも公開されていたファイルのみをアップロードしてください。"
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
@@ -357,7 +506,7 @@ msgstr ""
 
 #: app/templates/my_uploads.html:60
 msgid "No uploads yet"
-msgstr ""
+msgstr "まだ何もアップロードしていません。"
 
 #: app/templates/my_uploads.html:61
 msgid "Start contributing to the archive by uploading your first file!"
@@ -377,7 +526,7 @@ msgstr ""
 
 #: app/templates/upload.html:16
 msgid "Only upload files that were previously hosted on AndroidFileHost"
-msgstr ""
+msgstr "AndroidFileHostに一度でも公開されていたファイルのみをアップロードしてください。"
 
 #: app/templates/upload.html:17
 msgid "Provide as much metadata as possible to help with approval"
@@ -385,7 +534,7 @@ msgstr ""
 
 #: app/templates/upload.html:18
 msgid "Include the original AFH link if you have it"
-msgstr ""
+msgstr "元のAndroidFileHostのリンクがある場合は、それを含めてください。"
 
 #: app/templates/upload.html:19
 msgid "All uploads are pending review - new builds will not be approved"
@@ -397,7 +546,7 @@ msgstr ""
 
 #: app/templates/upload.html:21
 msgid "Maximum file size: 5GB"
-msgstr ""
+msgstr "ファイルの最大サイズ: 5GB"
 
 #: app/templates/upload.html:27
 msgid "Select File"
@@ -414,15 +563,15 @@ msgstr ""
 
 #: app/templates/upload.html:44
 msgid "Preparing upload..."
-msgstr ""
+msgstr "アップロードの準備をしています…"
 
 #: app/templates/upload.html:53
 msgid "Device Manufacturer"
-msgstr ""
+msgstr "デバイスの製造元"
 
 #: app/templates/upload.html:55
 msgid "e.g., Samsung, Google, OnePlus"
-msgstr ""
+msgstr "例: Samsung, Google, OnePlus"
 
 #: app/templates/upload.html:60
 msgid "Device Model"
@@ -430,11 +579,11 @@ msgstr ""
 
 #: app/templates/upload.html:62
 msgid "e.g., Galaxy S21, Pixel 6, Generic"
-msgstr ""
+msgstr "例: Galaxy S21, Pixel 6, Generic"
 
 #: app/templates/upload.html:68
 msgid "Original AndroidFileHost Link"
-msgstr ""
+msgstr "元のAndroidFileHostのリンク"
 
 #: app/templates/upload.html:70
 msgid "https://androidfilehost.com/?fid=..."
@@ -458,7 +607,7 @@ msgstr ""
 
 #: app/templates/upload.html:82
 msgid "Additional Notes"
-msgstr ""
+msgstr "追加の情報"
 
 #: app/templates/upload.html:84
 msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
@@ -474,11 +623,11 @@ msgstr ""
 
 #: app/templates/upload.html:105
 msgid "Select your file (max 5GB)"
-msgstr ""
+msgstr "ファイルを選択してください。(最大5GB)"
 
 #: app/templates/upload.html:106
 msgid "Fill in required metadata"
-msgstr ""
+msgstr "必要なメタデータを入れてください。"
 
 #: app/templates/upload.html:107
 msgid "Admin reviews for AFH authenticity"
@@ -498,11 +647,11 @@ msgstr ""
 
 #: app/templates/upload.html:123
 msgid "File is too large. Maximum size is 5GB."
-msgstr ""
+msgstr "ファイルが大きすぎます。最大容量は5GBです。"
 
 #: app/templates/upload.html:124
 msgid "Please select a file to upload."
-msgstr ""
+msgstr "アップロードするファイルを選択してください。"
 
 #: app/templates/upload.html:125
 msgid "Device manufacturer is required."
@@ -518,19 +667,19 @@ msgstr ""
 
 #: app/templates/upload.html:128
 msgid "Failed to initialize upload"
-msgstr ""
+msgstr "アップロードの初期化に失敗しました。"
 
 #: app/templates/upload.html:129
 msgid "Starting chunk upload..."
-msgstr ""
+msgstr "チャンクのアップロードを開始しています…"
 
 #: app/templates/upload.html:130
 msgid "Upload cancelled"
-msgstr ""
+msgstr "アップロードをキャンセルしました"
 
 #: app/templates/upload.html:131
 msgid "Chunk upload failed"
-msgstr ""
+msgstr "チャンクのアップロードに失敗しました"
 
 #: app/templates/upload.html:132
 msgid "Invalid response from server"
@@ -542,7 +691,7 @@ msgstr ""
 
 #: app/templates/upload.html:134
 msgid "Chunk upload cancelled"
-msgstr ""
+msgstr "チャンクのアップロードがキャンセルされました"
 
 #: app/templates/upload.html:135
 msgid "Assembling file..."
@@ -554,11 +703,11 @@ msgstr ""
 
 #: app/templates/upload.html:137
 msgid "Upload completed successfully!"
-msgstr ""
+msgstr "アップロードが正常に完了しました！"
 
 #: app/templates/upload.html:138
 msgid "Uploading chunk"
-msgstr ""
+msgstr "チャンクをアップロードしています"
 
 #: app/templates/upload.html:139
 msgid "of"
@@ -566,33 +715,33 @@ msgstr ""
 
 #: app/templates/upload.html:140
 msgid "MB/s"
-msgstr ""
+msgstr "MB/s"
 
 #: app/templates/upload.html:141
 msgid "Bytes"
-msgstr ""
+msgstr "バイト"
 
 #: app/templates/upload.html:142
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: app/templates/upload.html:143
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: app/templates/upload.html:144
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: app/templates/upload.html:145
 msgid "Upload failed"
-msgstr ""
+msgstr "アップロードに失敗しました"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/announcement.html:5
 #: app/templates/admin/announcement.html:45
 msgid "Send Announcement"
-msgstr ""
+msgstr "アナウンスを送信する"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
@@ -625,7 +774,7 @@ msgstr ""
 
 #: app/templates/admin/announcement.html:17
 msgid "Type your announcement here..."
-msgstr ""
+msgstr "アナウンスをここに入力してください…"
 
 #: app/templates/admin/announcement.html:20
 msgid "Delivery Method"
@@ -633,11 +782,7 @@ msgstr ""
 
 #: app/templates/admin/announcement.html:23
 msgid "Homepage Banner"
-msgstr ""
-
-#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
-msgid "Email"
-msgstr "メールアドレス"
+msgstr "ホームページのバナー"
 
 #: app/templates/admin/announcement.html:31
 msgid "Recipients"
@@ -765,13 +910,13 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:151
 msgid "Reason"
-msgstr ""
+msgstr "理由"
 
 #: app/templates/admin/autoreviewer.html:164
 #: app/templates/admin/server_tools.html:30
 #: app/templates/admin/server_tools.html:231
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: app/templates/admin/autoreviewer.html:165
 msgid "N/A"
@@ -779,7 +924,7 @@ msgstr "N/A"
 
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
-msgstr ""
+msgstr "管理者用ダッシュボード"
 
 #: app/templates/admin/dashboard.html:73
 #: app/templates/admin/server_tools.html:240
@@ -788,7 +933,7 @@ msgstr "ユーザー"
 
 #: app/templates/admin/dashboard.html:92
 msgid "Quick Actions"
-msgstr ""
+msgstr "クイックアクション"
 
 #: app/templates/admin/dashboard.html:99
 msgid "Review Pending Uploads"
@@ -801,7 +946,7 @@ msgstr ""
 #: app/templates/admin/dashboard.html:111 app/templates/admin/users.html:3
 #: app/templates/admin/users.html:7
 msgid "Manage Users"
-msgstr ""
+msgstr "ユーザー管理"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
@@ -820,7 +965,7 @@ msgstr ""
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
 msgid "System Information"
-msgstr ""
+msgstr "システム情報"
 
 #: app/templates/admin/server_tools.html:24
 msgid "Uptime"
@@ -837,7 +982,7 @@ msgstr "CPUの使用率"
 
 #: app/templates/admin/server_tools.html:40
 msgid "System information unavailable"
-msgstr ""
+msgstr "システム情報は利用できません。"
 
 #: app/templates/admin/server_tools.html:49
 #: app/templates/admin/server_tools.html:315
@@ -862,7 +1007,7 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:109
 msgid "Total Size"
-msgstr ""
+msgstr "合計のサイズ"
 
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
@@ -870,7 +1015,7 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
-msgstr ""
+msgstr "チャンクキャッシュ"
 
 #: app/templates/admin/server_tools.html:127
 msgid "Files"
@@ -882,15 +1027,15 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:143
 msgid "Storage Management"
-msgstr ""
+msgstr "ストレージ管理"
 
 #: app/templates/admin/server_tools.html:150
 msgid "Are you sure you want to clear all chunk cache files?"
-msgstr ""
+msgstr "全てのチャンクキャッシュファイルをクリアしてもよろしいですか？"
 
 #: app/templates/admin/server_tools.html:152
 msgid "Clear Chunk Cache"
-msgstr ""
+msgstr "チャンクキャッシュをクリアする"
 
 #: app/templates/admin/server_tools.html:155
 msgid "Removes all files from the chunks directory to free up space"
@@ -910,7 +1055,7 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:172
 msgid "Refresh System Info"
-msgstr ""
+msgstr "システム情報を更新する"
 
 #: app/templates/admin/server_tools.html:174
 msgid "Updates system information and statistics"
@@ -922,7 +1067,7 @@ msgstr "サーバーの管理"
 
 #: app/templates/admin/server_tools.html:194
 msgid "Are you sure you want to restart the server? This will temporarily interrupt service."
-msgstr ""
+msgstr "サーバーを再起動してもよろしいですか？一時的にサービスが中断されます。"
 
 #: app/templates/admin/server_tools.html:196
 msgid "Restart Server"
@@ -938,7 +1083,7 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:207
 msgid "View detailed system and process information"
-msgstr ""
+msgstr "詳細なシステム情報とプロセス情報を表示"
 
 #: app/templates/admin/server_tools.html:220
 msgid "Database Information"
@@ -1028,11 +1173,11 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:345
 msgid "Error loading system information"
-msgstr ""
+msgstr "システム情報の読み込みに失敗しました。"
 
 #: app/templates/admin/uploads.html:3 app/templates/admin/uploads.html:7
 msgid "Manage Uploads"
-msgstr ""
+msgstr "アップロードの管理"
 
 #: app/templates/admin/uploads.html:21
 msgid "All"
@@ -1100,7 +1245,7 @@ msgstr ""
 
 #: app/templates/errors/404.html:28
 msgid "Go Home"
-msgstr ""
+msgstr "ホームに戻る"
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
