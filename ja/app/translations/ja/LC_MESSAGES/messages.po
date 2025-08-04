@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-04 16:40+0800\n"
-"PO-Revision-Date: 2025-08-04 11:21\n"
+"PO-Revision-Date: 2025-08-04 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -393,7 +393,7 @@ msgstr "自己責任で、互換性を確認したうえで使用してくださ
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
-msgstr "帯域幅を節約するためにダウンロードがレート制限が掛けられています"
+msgstr "帯域幅を節約するためにダウンロードにレート制限が掛けられています"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
