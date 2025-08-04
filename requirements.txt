@@ -17,4 +17,3 @@ rarfile
 py7zr
 resend
 psutil
-geo2ip
