@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-04 16:40+0800\n"
-"PO-Revision-Date: 2025-08-04 08:42\n"
+"PO-Revision-Date: 2025-08-04 14:59\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -20,15 +20,15 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "О проекте"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "О проекте AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "Что такое AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
@@ -36,7 +36,7 @@ msgstr ""
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Правила сообщества"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
