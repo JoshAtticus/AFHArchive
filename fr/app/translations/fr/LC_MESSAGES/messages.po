@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-03 14:24+0800\n"
-"PO-Revision-Date: 2025-08-03 06:44\n"
+"POT-Creation-Date: 2025-08-04 16:40+0800\n"
+"PO-Revision-Date: 2025-08-04 08:41\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,66 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: fr_FR\n"
 
+#: app/templates/about.html:3 app/templates/base.html:37
+msgid "About"
+msgstr ""
+
+#: app/templates/about.html:11
+msgid "About AFHArchive"
+msgstr ""
+
+#: app/templates/about.html:15
+msgid "What is AFHArchive?"
+msgstr ""
+
+#: app/templates/about.html:16
+msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
+msgstr ""
+
+#: app/templates/about.html:18
+msgid "Community Guidelines"
+msgstr ""
+
+#: app/templates/about.html:19
+msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
+msgstr ""
+
+#: app/templates/about.html:21
+msgid "Share legitimate, useful Android development files"
+msgstr ""
+
+#: app/templates/about.html:22
+msgid "Provide accurate descriptions and information"
+msgstr ""
+
+#: app/templates/about.html:23
+msgid "Respect intellectual property rights"
+msgstr ""
+
+#: app/templates/about.html:26
+msgid "Open Source"
+msgstr ""
+
+#: app/templates/about.html:27
+msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
+msgstr ""
+
+#: app/templates/about.html:29
+msgid "View on GitHub"
+msgstr ""
+
+#: app/templates/about.html:32
+msgid "Contact Information"
+msgstr ""
+
+#: app/templates/about.html:33
+msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
+msgstr ""
+
+#: app/templates/about.html:35 app/templates/contact.html:11
+msgid "Contact Us"
+msgstr ""
+
 #: app/templates/base.html:31
 msgid "Home"
 msgstr ""
@@ -26,45 +86,49 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: app/templates/base.html:83 app/templates/base.html:136
+#: app/templates/base.html:40 app/templates/contact.html:3
+msgid "Contact"
+msgstr ""
+
+#: app/templates/base.html:89
 msgid "Help translate AFHArchive"
 msgstr ""
 
-#: app/templates/admin/users.html:18 app/templates/base.html:94
+#: app/templates/admin/users.html:18 app/templates/base.html:100
 msgid "Avatar"
 msgstr ""
 
-#: app/templates/base.html:99 app/templates/upload.html:3
+#: app/templates/base.html:105 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
 msgstr ""
 
-#: app/templates/base.html:100 app/templates/my_uploads.html:3
+#: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr ""
 
-#: app/templates/base.html:103
+#: app/templates/base.html:109
 msgid "Admin Panel"
 msgstr ""
 
-#: app/templates/base.html:106
+#: app/templates/base.html:112
 msgid "Logout"
 msgstr ""
 
-#: app/templates/auth/login.html:3 app/templates/base.html:111
+#: app/templates/auth/login.html:3 app/templates/base.html:117
 msgid "Login"
 msgstr ""
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142
 msgid "Source on"
 msgstr ""
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142
 msgid "Our Privacy Policy"
 msgstr ""
 
-#: app/templates/base.html:136
+#: app/templates/base.html:142 app/templates/contact.html:78
 msgid "Terms of Service"
 msgstr ""
 
@@ -152,6 +216,91 @@ msgstr ""
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
+msgstr ""
+
+#: app/templates/contact.html:15
+msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
+msgstr ""
+
+#: app/templates/contact.html:22
+msgid "GitHub"
+msgstr ""
+
+#: app/templates/contact.html:23
+msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
+msgstr ""
+
+#: app/templates/contact.html:25
+msgid "Open an Issue"
+msgstr ""
+
+#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
+#: app/templates/contact.html:35
+msgid "Email"
+msgstr ""
+
+#: app/templates/contact.html:36
+msgid "For general inquiries, business matters, or urgent support requests."
+msgstr ""
+
+#: app/templates/contact.html:38
+msgid "Send Email"
+msgstr ""
+
+#: app/templates/contact.html:50
+msgid "Translation Help"
+msgstr ""
+
+#: app/templates/contact.html:51
+msgid "Help us make AFHArchive available in more languages by joining our translation project."
+msgstr ""
+
+#: app/templates/contact.html:54
+msgid "Join Translation Project"
+msgstr ""
+
+#: app/templates/contact.html:64
+msgid "Bug Reports"
+msgstr ""
+
+#: app/templates/contact.html:65
+msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
+msgstr ""
+
+#: app/templates/contact.html:68
+msgid "Report Bug"
+msgstr ""
+
+#: app/templates/contact.html:76
+msgid "Before Contacting Us"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "Check our"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "and"
+msgstr ""
+
+#: app/templates/contact.html:78
+msgid "Privacy Policy"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "Search existing"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "GitHub issues"
+msgstr ""
+
+#: app/templates/contact.html:79
+msgid "to see if your question has been answered"
+msgstr ""
+
+#: app/templates/contact.html:80
+msgid "For upload issues, make sure your files meet our guidelines"
 msgstr ""
 
 #: app/templates/file_detail.html:13
@@ -632,10 +781,6 @@ msgstr ""
 
 #: app/templates/admin/announcement.html:23
 msgid "Homepage Banner"
-msgstr ""
-
-#: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
-msgid "Email"
 msgstr ""
 
 #: app/templates/admin/announcement.html:31
