@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-03 12:47+0800\n"
-"PO-Revision-Date: 2025-08-03 05:00\n"
+"POT-Creation-Date: 2025-08-03 14:24+0800\n"
+"PO-Revision-Date: 2025-08-03 06:44\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -18,54 +18,54 @@ msgstr ""
 "X-Crowdin-File-ID: 8\n"
 "Language: ja_JP\n"
 
-#: app/templates/base.html:30
+#: app/templates/base.html:31
 msgid "Home"
 msgstr ""
 
-#: app/templates/base.html:33
+#: app/templates/base.html:34
 msgid "Browse"
 msgstr ""
 
-#: app/templates/admin/users.html:18 app/templates/base.html:63
+#: app/templates/base.html:83 app/templates/base.html:136
+msgid "Help translate AFHArchive"
+msgstr ""
+
+#: app/templates/admin/users.html:18 app/templates/base.html:94
 msgid "Avatar"
 msgstr ""
 
-#: app/templates/base.html:68 app/templates/upload.html:3
+#: app/templates/base.html:99 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
 msgstr ""
 
-#: app/templates/base.html:69 app/templates/my_uploads.html:3
+#: app/templates/base.html:100 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
 msgstr ""
 
-#: app/templates/base.html:72
+#: app/templates/base.html:103
 msgid "Admin Panel"
 msgstr ""
 
-#: app/templates/base.html:75
+#: app/templates/base.html:106
 msgid "Logout"
 msgstr ""
 
-#: app/templates/auth/login.html:3 app/templates/base.html:80
+#: app/templates/auth/login.html:3 app/templates/base.html:111
 msgid "Login"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Source on"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Our Privacy Policy"
 msgstr ""
 
-#: app/templates/base.html:105
+#: app/templates/base.html:136
 msgid "Terms of Service"
-msgstr ""
-
-#: app/templates/base.html:105
-msgid "Help translate AFHArchive"
 msgstr ""
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
@@ -315,10 +315,12 @@ msgstr ""
 msgid "Upload New File"
 msgstr ""
 
+#: app/templates/admin/autoreviewer.html:147
 #: app/templates/admin/uploads.html:54 app/templates/my_uploads.html:18
 msgid "Filename"
 msgstr ""
 
+#: app/templates/admin/autoreviewer.html:148
 #: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
 msgid "Device"
 msgstr ""
@@ -598,6 +600,7 @@ msgid "Admin"
 msgstr ""
 
 #: app/templates/admin/announcement.html:7
+#: app/templates/admin/autoreviewer.html:10
 #: app/templates/admin/server_tools.html:9 app/templates/admin/uploads.html:9
 #: app/templates/admin/users.html:9
 msgid "Back to Dashboard"
@@ -651,6 +654,128 @@ msgstr ""
 msgid "With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges."
 msgstr ""
 
+#: app/templates/admin/autoreviewer.html:8
+msgid "Autoreviewer Management"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:21
+msgid "Autoreviewer System Info"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:26
+msgid "System User ID:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:30
+msgid "Name:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:36
+msgid "Email:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:40
+msgid "Admin Status:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:41
+msgid "Yes"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:41
+msgid "No"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:46
+msgid "Created:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:58
+msgid "Autoreviewer Statistics"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:65
+msgid "Total Reviewed"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:71
+msgid "Duplicates Rejected"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:78
+msgid "Rejection Rate:"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:101
+msgid "Autoreviewer Actions"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:106
+msgid "Run Batch Processing"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:108
+msgid "Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes."
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:113
+msgid "Run Batch Autoreviewer"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:118
+msgid "How It Works"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:120
+msgid "Automatically runs after each file upload"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:121
+msgid "Compares MD5 hashes to detect exact duplicates"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:122
+msgid "Rejects uploads that match existing approved or pending files"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:123
+msgid "Sends notification emails to uploaders"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:124
+msgid "Appears as \"Autoreviewer\" in the system"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:139
+msgid "Recent Duplicate Rejections"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:146
+msgid "Upload ID"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:149
+msgid "Uploader"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:150
+msgid "Rejected Date"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:151
+msgid "Reason"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:164
+#: app/templates/admin/server_tools.html:30
+#: app/templates/admin/server_tools.html:231
+msgid "Unknown"
+msgstr ""
+
+#: app/templates/admin/autoreviewer.html:165
+msgid "N/A"
+msgstr ""
+
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
 msgstr ""
@@ -687,6 +812,10 @@ msgstr ""
 msgid "Server Tools"
 msgstr ""
 
+#: app/templates/admin/dashboard.html:129
+msgid "Autoreviewer"
+msgstr ""
+
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
 msgid "System Information"
@@ -698,11 +827,6 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:27
 msgid "days"
-msgstr ""
-
-#: app/templates/admin/server_tools.html:30
-#: app/templates/admin/server_tools.html:231
-msgid "Unknown"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:35
