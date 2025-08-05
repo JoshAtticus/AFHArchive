@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 16:19\n"
+"PO-Revision-Date: 2025-08-05 17:27\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr ""
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
-msgstr ""
+msgstr "Связаться с нами"
 
 #: app/templates/base.html:31
 msgid "Home"
@@ -88,7 +88,7 @@ msgstr "Обзор"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr ""
+msgstr "Контакты"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
@@ -134,7 +134,7 @@ msgstr "Условия использования"
 
 #: app/templates/base.html:142
 msgid "Status Page"
-msgstr ""
+msgstr "Состояние сервиса"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
