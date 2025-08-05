@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Thank You') }} - {{ upload.original_filename }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Thank You Message -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-check-circle"></i> {{ _('Thank You for Downloading!') }}</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-download fa-3x text-success mb-3"></i>
+                        <h5>{{ upload.original_filename }}</h5>
+                        <p class="text-muted">
+                            {{ _('Your download should start automatically in a few seconds.') }}<br>
+                            {{ _('If it doesn\'t start, click the button below.') }}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <a href="{{ url_for('main.download_direct', upload_id=upload.id) }}" 
+                           class="btn btn-success btn-lg" id="downloadBtn">
+                            <i class="fas fa-download"></i> {{ _('Start Download') }}
+                        </a>
+                    </div>
+                    
+                    <div class="progress mb-3" style="height: 6px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                             role="progressbar" style="width: 0%" id="progressBar"></div>
+                    </div>
+                    <small class="text-muted" id="countdownText">{{ _('Starting download in 3 seconds...') }}</small>
+                </div>
+            </div>
+
+            <!-- File Information and Support -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6><i class="fas fa-info-circle"></i> {{ _('File Information') }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                <strong>{{ _('Device') }}:</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>{{ _('Size') }}:</strong> {{ upload.file_size | format_file_size }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>{{ _('Downloads') }}:</strong> {{ upload.download_count }}
+                            </p>
+                            <p class="mb-2">
+                                <strong>{{ _('Uploaded') }}:</strong> {{ upload.uploaded_at.strftime('%Y-%m-%d') }}
+                            </p>
+                            {% if upload.notes %}
+                            <hr>
+                            <p class="mb-0"><strong>{{ _('Notes') }}:</strong><br>{{ upload.notes }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6><i class="fas fa-coffee"></i> {{ _('Support AFHArchive') }}</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <p><strong>{{ _('Help keep this archive running!') }}</strong></p>
+                            <p class="small text-muted">{{ _('Your support helps cover hosting costs and keeps this preservation project alive.') }}</p>
+                            <a href="https://buymeacoffee.com/joshatticus" target="_blank" class="btn btn-warning shadow">
+                                <i class="fas fa-coffee"></i> {{ _('Buy me a coffee') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> {{ _('Back to File Details') }}
+                </a>
+                <a href="{{ url_for('main.browse') }}" class="btn btn-outline-secondary ms-2">
+                    <i class="fas fa-list"></i> {{ _('Browse More Files') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let countdown = 3;
+const progressBar = document.getElementById('progressBar');
+const countdownText = document.getElementById('countdownText');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// Update countdown and progress bar
+const countdownInterval = setInterval(function() {
+    countdown--;
+    const progress = ((3 - countdown) / 3) * 100;
+    progressBar.style.width = progress + '%';
+    
+    if (countdown > 0) {
+        countdownText.textContent = `{{ _('Starting download in') }} ${countdown} {{ _('seconds...') }}`;
+    } else {
+        countdownText.textContent = '{{ _('Starting download...') }}';
+        clearInterval(countdownInterval);
+        
+        // Start download
+        setTimeout(function() {
+            window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+            
+            // Update UI after download starts
+            setTimeout(function() {
+                progressBar.style.width = '100%';
+                progressBar.classList.remove('progress-bar-animated');
+                countdownText.textContent = '{{ _('Download started! Check your downloads folder.') }}';
+                downloadBtn.innerHTML = '<i class="fas fa-check"></i> {{ _('Download Started') }}';
+                downloadBtn.classList.remove('btn-success');
+                downloadBtn.classList.add('btn-outline-success');
+            }, 500);
+        }, 500);
+    }
+}, 1000);
+
+// Manual download button click
+downloadBtn.addEventListener('click', function(e) {
+    if (countdown > 0) {
+        e.preventDefault();
+        clearInterval(countdownInterval);
+        progressBar.style.width = '100%';
+        progressBar.classList.remove('progress-bar-animated');
+        countdownText.textContent = '{{ _('Download started! Check your downloads folder.') }}';
+        downloadBtn.innerHTML = '<i class="fas fa-check"></i> {{ _('Download Started') }}';
+        downloadBtn.classList.remove('btn-success');
+        downloadBtn.classList.add('btn-outline-success');
+        
+        // Start download immediately
+        window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+    }
+});
+</script>
+{% endblock %}
