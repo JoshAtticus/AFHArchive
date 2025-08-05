@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-05 18:25+0800\n"
-"PO-Revision-Date: 2025-08-05 10:27\n"
+"POT-Creation-Date: 2025-08-05 18:49+0800\n"
+"PO-Revision-Date: 2025-08-05 10:50\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -136,8 +136,7 @@ msgstr ""
 msgid "Status Page"
 msgstr ""
 
-#: app/templates/browse.html:3 app/templates/download.html:161
-#: app/templates/errors/404.html:31
+#: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
 msgstr ""
 
@@ -198,13 +197,12 @@ msgstr ""
 
 #: app/templates/admin/dashboard.html:25 app/templates/admin/dashboard.html:44
 #: app/templates/admin/dashboard.html:63 app/templates/admin/dashboard.html:82
-#: app/templates/admin/mirrors.html:166 app/templates/admin/mirrors.html:280
 #: app/templates/browse.html:68 app/templates/index.html:47
 msgid "View Details"
 msgstr ""
 
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
-#: app/templates/download.html:22 app/templates/my_uploads.html:22
+#: app/templates/my_uploads.html:22 app/templates/thank_you.html:57
 msgid "Uploaded"
 msgstr ""
 
@@ -309,121 +307,6 @@ msgstr ""
 msgid "For upload issues, make sure your files meet our guidelines"
 msgstr ""
 
-#: app/templates/download.html:3 app/templates/download.html:105
-msgid "Download"
-msgstr ""
-
-#: app/templates/download.html:12 app/templates/file_detail.html:86
-msgid "Download File"
-msgstr ""
-
-#: app/templates/admin/autoreviewer.html:148
-#: app/templates/admin/uploads.html:56 app/templates/download.html:19
-#: app/templates/my_uploads.html:19
-msgid "Device"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:158
-#: app/templates/admin/server_tools.html:128
-#: app/templates/admin/uploads.html:57 app/templates/download.html:20
-#: app/templates/my_uploads.html:20
-msgid "Size"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:159 app/templates/download.html:21
-#: app/templates/my_uploads.html:23
-msgid "Downloads"
-msgstr ""
-
-#: app/templates/download.html:25 app/templates/file_detail.html:71
-msgid "Notes"
-msgstr ""
-
-#: app/templates/download.html:33
-msgid "Quick Download"
-msgstr ""
-
-#: app/templates/download.html:35
-msgid "Download from the best available server"
-msgstr ""
-
-#: app/templates/download.html:41
-msgid "Recommended server"
-msgstr ""
-
-#: app/templates/download.html:46
-msgid "Fallback"
-msgstr ""
-
-#: app/templates/download.html:61
-msgid "Choose Download Server"
-msgstr ""
-
-#: app/templates/download.html:62
-msgid "Select a server closer to your location for faster downloads"
-msgstr ""
-
-#: app/templates/download.html:87
-msgid "Main server - Original source"
-msgstr ""
-
-#: app/templates/download.html:89
-msgid "Mirror server"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:37
-#: app/templates/admin/mirrors.html:141 app/templates/download.html:91
-msgid "Online"
-msgstr ""
-
-#: app/templates/download.html:100
-msgid "Recommended"
-msgstr ""
-
-#: app/templates/download.html:123 app/templates/file_detail.html:109
-msgid "Download Information"
-msgstr ""
-
-#: app/templates/download.html:127
-msgid "File verified and approved"
-msgstr ""
-
-#: app/templates/download.html:128
-msgid "Secure download"
-msgstr ""
-
-#: app/templates/download.html:130
-msgid "Multiple download locations"
-msgstr ""
-
-#: app/templates/download.html:132
-msgid "Bandwidth optimized"
-msgstr ""
-
-#: app/templates/download.html:141
-msgid "Having Issues?"
-msgstr ""
-
-#: app/templates/download.html:144
-msgid "If the download fails, try:"
-msgstr ""
-
-#: app/templates/download.html:146
-msgid "Choosing a different server above"
-msgstr ""
-
-#: app/templates/download.html:147
-msgid "Checking your internet connection"
-msgstr ""
-
-#: app/templates/download.html:148
-msgid "Trying again in a few minutes"
-msgstr ""
-
-#: app/templates/download.html:158
-msgid "Back to File Details"
-msgstr ""
-
 #: app/templates/file_detail.html:13
 msgid "Device Information"
 msgstr ""
@@ -436,7 +319,7 @@ msgstr ""
 msgid "Model:"
 msgstr ""
 
-#: app/templates/file_detail.html:26
+#: app/templates/file_detail.html:26 app/templates/thank_you.html:44
 msgid "File Information"
 msgstr ""
 
@@ -456,24 +339,40 @@ msgstr ""
 msgid "XDA Thread"
 msgstr ""
 
+#: app/templates/file_detail.html:71 app/templates/thank_you.html:61
+msgid "Notes"
+msgstr ""
+
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
 msgstr ""
 
+#: app/templates/file_detail.html:86
+msgid "Download File"
+msgstr ""
+
 #: app/templates/file_detail.html:96 app/templates/index.html:76
+#: app/templates/thank_you.html:70
 msgid "Support AFHArchive"
 msgstr ""
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
+#: app/templates/thank_you.html:73
 msgid "Help keep this archive running!"
 msgstr ""
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
+#: app/templates/thank_you.html:74
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
 msgstr ""
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
+#: app/templates/thank_you.html:76
 msgid "Buy me a coffee"
+msgstr ""
+
+#: app/templates/file_detail.html:109
+msgid "Download Information"
 msgstr ""
 
 #: app/templates/file_detail.html:113
@@ -578,18 +477,30 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
-#: app/templates/admin/mirror_detail.html:35
-#: app/templates/admin/mirrors.html:219
-#: app/templates/admin/pairing_codes.html:65
-#: app/templates/admin/server_tools.html:335
+#: app/templates/admin/autoreviewer.html:148
+#: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
+#: app/templates/thank_you.html:48
+msgid "Device"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:128
+#: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
+#: app/templates/thank_you.html:51
+msgid "Size"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:313
 #: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
 msgstr ""
 
-#: app/templates/admin/dashboard.html:16
-#: app/templates/admin/pairing_codes.html:85
-#: app/templates/admin/uploads.html:18 app/templates/my_uploads.html:37
+#: app/templates/my_uploads.html:23 app/templates/thank_you.html:54
+msgid "Downloads"
+msgstr ""
+
+#: app/templates/admin/dashboard.html:16 app/templates/admin/uploads.html:18
+#: app/templates/my_uploads.html:37
 msgid "Pending"
 msgstr ""
 
@@ -613,6 +524,58 @@ msgstr ""
 
 #: app/templates/my_uploads.html:63
 msgid "Upload First File"
+msgstr ""
+
+#: app/templates/thank_you.html:3
+msgid "Thank You"
+msgstr ""
+
+#: app/templates/thank_you.html:12
+msgid "Thank You for Downloading!"
+msgstr ""
+
+#: app/templates/thank_you.html:19
+msgid "Your download should start automatically in a few seconds."
+msgstr ""
+
+#: app/templates/thank_you.html:20
+msgid "If it doesn't start, click the button below."
+msgstr ""
+
+#: app/templates/thank_you.html:27
+msgid "Start Download"
+msgstr ""
+
+#: app/templates/thank_you.html:35
+msgid "Starting download in 3 seconds..."
+msgstr ""
+
+#: app/templates/thank_you.html:86
+msgid "Back to File Details"
+msgstr ""
+
+#: app/templates/thank_you.html:89
+msgid "Browse More Files"
+msgstr ""
+
+#: app/templates/thank_you.html:109
+msgid "Starting download in"
+msgstr ""
+
+#: app/templates/thank_you.html:109
+msgid "seconds..."
+msgstr ""
+
+#: app/templates/thank_you.html:111
+msgid "Starting download..."
+msgstr ""
+
+#: app/templates/thank_you.html:122 app/templates/thank_you.html:138
+msgid "Download started! Check your downloads folder."
+msgstr ""
+
+#: app/templates/thank_you.html:123 app/templates/thank_you.html:139
+msgid "Download Started"
 msgstr ""
 
 #: app/templates/upload.html:10
@@ -842,9 +805,6 @@ msgid "Send Announcement"
 msgstr ""
 
 #: app/templates/admin/announcement.html:2
-#: app/templates/admin/edit_mirror.html:3
-#: app/templates/admin/mirror_detail.html:3 app/templates/admin/mirrors.html:3
-#: app/templates/admin/pairing_codes.html:3
 #: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
 #: app/templates/admin/users.html:3 app/templates/admin/users.html:46
 msgid "Admin"
@@ -866,8 +826,6 @@ msgid "Announcement subject"
 msgstr ""
 
 #: app/templates/admin/announcement.html:16
-#: app/templates/admin/mirror_detail.html:208
-#: app/templates/admin/mirrors.html:325
 msgid "Message"
 msgstr ""
 
@@ -928,12 +886,10 @@ msgid "Admin Status:"
 msgstr ""
 
 #: app/templates/admin/autoreviewer.html:41
-#: app/templates/admin/mirror_detail.html:127
 msgid "Yes"
 msgstr ""
 
 #: app/templates/admin/autoreviewer.html:41
-#: app/templates/admin/mirror_detail.html:129
 msgid "No"
 msgstr ""
 
@@ -1019,7 +975,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:164
 #: app/templates/admin/server_tools.html:30
-#: app/templates/admin/server_tools.html:253
+#: app/templates/admin/server_tools.html:231
 msgid "Unknown"
 msgstr ""
 
@@ -1032,7 +988,7 @@ msgid "Admin Dashboard"
 msgstr ""
 
 #: app/templates/admin/dashboard.html:73
-#: app/templates/admin/server_tools.html:262
+#: app/templates/admin/server_tools.html:240
 msgid "Users"
 msgstr ""
 
@@ -1067,576 +1023,8 @@ msgstr ""
 msgid "Autoreviewer"
 msgstr ""
 
-#: app/templates/admin/edit_mirror.html:3
-#: app/templates/admin/edit_mirror.html:7
-msgid "Edit Mirror"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:9
-msgid "Back to Mirror"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:17
-msgid "Mirror Configuration"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:22 app/templates/admin/mirrors.html:45
-#: app/templates/admin/pairing_codes.html:22
-#: app/templates/admin/pairing_codes.html:64
-msgid "Mirror Name"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:25
-msgid "Descriptive name for this mirror location"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:29
-#: app/templates/admin/edit_mirror.html:87
-msgid "Direct URL/IP"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:33
-msgid "Direct IP/domain and port for server-to-server communication"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:34
-msgid "Examples: 123.123.123.123:5000, afharchive-mirror.duckdns.org:5000"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:39
-msgid "Cloudflare Tunnel URL"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:43
-msgid "Public URL for serving files to users via Cloudflare Tunnel"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:44
-msgid "Optional: Leave empty if not using Cloudflare Tunnel"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:49
-#: app/templates/admin/edit_mirror.html:97
-#: app/templates/admin/mirror_detail.html:93
-msgid "Storage Path"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:53
-msgid "Absolute path for file storage (useful for VM mirrors with block storage)"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:54
-msgid "Optional: Leave empty to use default mirror_uploads directory"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:59
-#: app/templates/admin/edit_mirror.html:102
-msgid "Maximum Files"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:63
-msgid "Maximum number of files this mirror should store"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:64
-msgid "Files are prioritized by download count (most popular first)"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:70
-msgid "Save Changes"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:73 app/templates/admin/mirrors.html:189
-msgid "Cancel"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:84
-msgid "Configuration Help"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:89
-msgid "This is used for communication between the main server and mirror. Should include the port number."
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:92
-#: app/templates/admin/mirror_detail.html:47
-#: app/templates/admin/mirrors.html:221
-msgid "Cloudflare URL"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:94
-msgid "Public-facing URL for file downloads. Use this if you have a Cloudflare Tunnel set up for better performance and security."
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:99
-msgid "Custom storage location. Useful for VMs with mounted block storage. Make sure the path exists and is writable."
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:104
-msgid "Controls how many files this mirror stores. The system automatically selects the most popular files to maximize cache hit rate."
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:111
-msgid "API Information"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:114
-msgid "API Key"
-msgstr ""
-
-#: app/templates/admin/edit_mirror.html:116
-msgid "This key is used for mirror authentication. Keep it secure."
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:3
-msgid "Mirror Detail"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:12
-#: app/templates/admin/mirrors.html:286
-msgid "Trigger Sync"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:16
-#: app/templates/admin/mirrors.html:291
-msgid "Edit"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:19
-#: app/templates/admin/pairing_codes.html:9
-msgid "Back to Mirrors"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:29
-msgid "Mirror Information"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:39
-#: app/templates/admin/mirrors.html:143
-msgid "Offline"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:43
-#: app/templates/admin/mirrors.html:118 app/templates/admin/mirrors.html:220
-msgid "Direct URL"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:54
-#: app/templates/admin/mirrors.html:256
-msgid "Not configured"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:60
-msgid "Storage Usage"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:72
-#: app/templates/admin/mirrors.html:120 app/templates/admin/mirrors.html:223
-msgid "Last Seen"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:76
-#: app/templates/admin/mirror_detail.html:84
-#: app/templates/admin/mirrors.html:146 app/templates/admin/mirrors.html:274
-msgid "Never"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:80
-msgid "Last Sync"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:104
-msgid "Live Status"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:111
-msgid "Mirror Status"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:115
-msgid "Files Stored"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:121
-#: app/templates/admin/server_tools.html:109
-msgid "Total Size"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:125
-msgid "Paired"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:137
-msgid "Unable to connect to mirror server"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:138
-msgid "The mirror may be offline or unreachable"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:149
-msgid "Files on Mirror"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:157
-#: app/templates/admin/mirror_detail.html:209
-msgid "File"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:160
-msgid "Synced"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:161
-#: app/templates/admin/mirrors.html:121 app/templates/admin/mirrors.html:224
-#: app/templates/admin/pairing_codes.html:69
-#: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
-msgid "Actions"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:177
-msgid "View"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:188
-msgid "No files synced yet"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:189
-msgid "Trigger a sync to populate this mirror with files."
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:198
-msgid "Sync Logs"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:206
-#: app/templates/admin/mirrors.html:322
-msgid "Time"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:207
-#: app/templates/admin/mirrors.html:324
-msgid "Action"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:251
-msgid "No sync logs yet"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:261
-msgid "Danger Zone"
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:264
-msgid "Permanently delete this mirror and all associated data."
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:266
-msgid "Are you sure you want to delete this mirror? This action cannot be undone."
-msgstr ""
-
-#: app/templates/admin/mirror_detail.html:268
-msgid "Delete Mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:3 app/templates/admin/mirrors.html:7
-#: app/templates/admin/server_tools.html:218
-msgid "Mirror Management"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:10 app/templates/admin/pairing_codes.html:3
-#: app/templates/admin/pairing_codes.html:55
-#: app/templates/admin/server_tools.html:227
-msgid "Pairing Codes"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:13
-msgid "Back to Server Tools"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:23
-msgid "Add New Mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:28
-msgid "Auto-Registration Enabled!"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:29
-msgid "Mirrors now register automatically when they start up."
-msgstr ""
-
-#: app/templates/admin/mirrors.html:31
-msgid "To add a new mirror:"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:33
-msgid "Deploy the mirror script on your server"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:34
-msgid "Configure the .env file with your main server URL"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:35
-msgid "Run"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:36
-msgid "Approve the mirror in the \"Pending Approval\" section below"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:41
-msgid "Legacy Pairing Code Method"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:50
-#: app/templates/admin/pairing_codes.html:28
-msgid "Generate Pairing Code"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:62
-msgid "Mirror Setup Instructions"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:66
-msgid "Create a pairing code using the form"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:67
-msgid "Download and run the mirror script on your server"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:68
-msgid "Use the pairing code to connect the mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:69
-msgid "Configure Cloudflare tunnel URL for public access"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:73
-msgid "Mirror Script:"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:85 app/templates/admin/mirrors.html:210
-msgid "Active Mirrors"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:88
-msgid "Mirrors will now automatically register when they start up. No pairing codes needed!"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:90
-msgid "Deploy mirror script on your server"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:91
-msgid "Mirror will auto-register and appear in \"Pending Approval\" below"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:92
-msgid "Approve the mirror to activate it for downloads"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:93
-msgid "Configure URLs and settings as needed"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:97
-msgid "The old pairing code system is still available for legacy setups."
-msgstr ""
-
-#: app/templates/admin/mirrors.html:98
-msgid "Manage pairing codes"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:109
-msgid "Pending Approval"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:110
-msgid "These mirrors are waiting for admin approval"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:117
-msgid "Server Name"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:119
-msgid "Registered"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:154
-msgid "Approve this mirror?"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:155
-msgid "Approve Mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:156
-msgid "Approve"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:162 app/templates/admin/mirrors.html:176
-#: app/templates/admin/mirrors.html:190
-msgid "Reject Mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:163
-msgid "Reject"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:181
-msgid "Are you sure you want to reject mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:183
-msgid "Reason (optional)"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:185
-msgid "Enter rejection reason..."
-msgstr ""
-
-#: app/templates/admin/mirrors.html:218 app/templates/admin/users.html:19
-msgid "Name"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:222
-#: app/templates/admin/server_tools.html:127
-msgid "Files"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:236
-msgid "Active & Online"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:238
-msgid "Active & Offline"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:241
-msgid "Inactive"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:304
-msgid "No mirrors configured"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:305
-msgid "Create a pairing code to set up your first mirror server."
-msgstr ""
-
-#: app/templates/admin/mirrors.html:314
-msgid "Recent Sync Activity"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:323
-msgid "Mirror"
-msgstr ""
-
-#: app/templates/admin/mirrors.html:353
-msgid "No sync activity yet"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:7
-msgid "Mirror Pairing Codes"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:17
-msgid "Generate New Pairing Code"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:25
-msgid "This name will be used to identify the mirror once paired"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:38
-msgid "How Pairing Works"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:42
-msgid "Generate a pairing code with a descriptive name"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:43
-msgid "Share the code with the mirror server administrator"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:44
-msgid "Mirror server uses the code to register with main server"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:45
-msgid "Code expires after 24 hours if not used"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:46
-msgid "Once used, the mirror appears in the mirrors list"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:63
-msgid "Code"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:66
-msgid "Created"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:67
-msgid "Expires"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:68
-#: app/templates/admin/pairing_codes.html:81
-msgid "Used"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:83
-msgid "Expired"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:103
-msgid "Not used"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:111
-msgid "Copy to clipboard"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:118
-msgid "Are you sure you want to delete this pairing code?"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:119
-msgid "Delete"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:126
-msgid "View Mirror"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:138
-msgid "No pairing codes created"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:139
-msgid "Generate a pairing code to set up a new mirror server."
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:158
-msgid "Pairing code copied to clipboard!"
-msgstr ""
-
-#: app/templates/admin/pairing_codes.html:167
-msgid "Failed to copy to clipboard"
-msgstr ""
-
 #: app/templates/admin/server_tools.html:18
-#: app/templates/admin/server_tools.html:325
+#: app/templates/admin/server_tools.html:303
 msgid "System Information"
 msgstr ""
 
@@ -1649,7 +1037,7 @@ msgid "days"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:35
-#: app/templates/admin/server_tools.html:336
+#: app/templates/admin/server_tools.html:314
 msgid "CPU Usage"
 msgstr ""
 
@@ -1658,7 +1046,7 @@ msgid "System information unavailable"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:49
-#: app/templates/admin/server_tools.html:337
+#: app/templates/admin/server_tools.html:315
 msgid "Memory Usage"
 msgstr ""
 
@@ -1678,12 +1066,20 @@ msgstr ""
 msgid "Uploads Storage"
 msgstr ""
 
+#: app/templates/admin/server_tools.html:109
+msgid "Total Size"
+msgstr ""
+
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
+msgstr ""
+
+#: app/templates/admin/server_tools.html:127
+msgid "Files"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:131
@@ -1750,105 +1146,93 @@ msgstr ""
 msgid "View detailed system and process information"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:221
-msgid "Manage mirror servers for file distribution"
-msgstr ""
-
-#: app/templates/admin/server_tools.html:224
-msgid "Manage Mirrors"
-msgstr ""
-
-#: app/templates/admin/server_tools.html:231
-msgid "Set up and monitor mirror servers for global file distribution"
-msgstr ""
-
-#: app/templates/admin/server_tools.html:242
+#: app/templates/admin/server_tools.html:220
 msgid "Database Information"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:248
+#: app/templates/admin/server_tools.html:226
 msgid "Database Size"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:260
+#: app/templates/admin/server_tools.html:238
 msgid "Total Records"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:263 app/templates/admin/users.html:22
+#: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
 msgid "Uploads"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:278
+#: app/templates/admin/server_tools.html:256
 msgid "Detailed System Information"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:279
-#: app/templates/admin/server_tools.html:291
+#: app/templates/admin/server_tools.html:257
+#: app/templates/admin/server_tools.html:269
 msgid "Close"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:285
-#: app/templates/admin/server_tools.html:314
+#: app/templates/admin/server_tools.html:263
+#: app/templates/admin/server_tools.html:292
 msgid "Loading..."
 msgstr ""
 
-#: app/templates/admin/server_tools.html:292
+#: app/templates/admin/server_tools.html:270
 msgid "Refresh"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:326
+#: app/templates/admin/server_tools.html:304
 msgid "Platform"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:327
+#: app/templates/admin/server_tools.html:305
 msgid "Python Version"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:328
+#: app/templates/admin/server_tools.html:306
 msgid "CPU Cores"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:329
+#: app/templates/admin/server_tools.html:307
 msgid "Load Average"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:333
+#: app/templates/admin/server_tools.html:311
 msgid "Process Information"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:334
+#: app/templates/admin/server_tools.html:312
 msgid "PID"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:338
+#: app/templates/admin/server_tools.html:316
 msgid "Threads"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:348
+#: app/templates/admin/server_tools.html:326
 msgid "Network I/O"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:349
+#: app/templates/admin/server_tools.html:327
 msgid "Bytes Sent"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:350
+#: app/templates/admin/server_tools.html:328
 msgid "Bytes Received"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:355
+#: app/templates/admin/server_tools.html:333
 msgid "Disk I/O"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:356
+#: app/templates/admin/server_tools.html:334
 msgid "Bytes Read"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:357
+#: app/templates/admin/server_tools.html:335
 msgid "Bytes Written"
 msgstr ""
 
-#: app/templates/admin/server_tools.html:367
+#: app/templates/admin/server_tools.html:345
 msgid "Error loading system information"
 msgstr ""
 
@@ -1864,12 +1248,20 @@ msgstr ""
 msgid "User"
 msgstr ""
 
+#: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
+msgid "Actions"
+msgstr ""
+
 #: app/templates/admin/uploads.html:157
 msgid "No uploads found"
 msgstr ""
 
 #: app/templates/admin/uploads.html:158
 msgid "No uploads match your current filters."
+msgstr ""
+
+#: app/templates/admin/users.html:19
+msgid "Name"
 msgstr ""
 
 #: app/templates/admin/users.html:21
