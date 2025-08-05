@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Mirror Detail') }} - {{ mirror.name }} - {{ _('Admin') }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-server"></i> {{ mirror.name }}</h2>
+    <div>
+        <form method="POST" action="{{ url_for('admin.trigger_mirror_sync', mirror_id=mirror.id) }}" 
+              style="display: inline;">
+            <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-sync"></i> {{ _('Trigger Sync') }}
+            </button>
+        </form>
+        <a href="{{ url_for('admin.edit_mirror', mirror_id=mirror.id) }}" class="btn btn-primary me-2">
+            <i class="fas fa-edit"></i> {{ _('Edit') }}
+        </a>
+        <a href="{{ url_for('admin.mirrors') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> {{ _('Back to Mirrors') }}
+        </a>
+    </div>
+</div>
+
+<!-- Mirror Status -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> {{ _('Mirror Information') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-2">
+                            <strong>{{ _('Status') }}:</strong><br>
+                            {% if mirror.is_online %}
+                                <span class="badge bg-success">{{ _('Online') }}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{{ _('Offline') }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Direct URL') }}:</strong><br>
+                            <small class="text-muted">{{ mirror.direct_url }}</small>
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Cloudflare URL') }}:</strong><br>
+                            {% if mirror.cloudflare_url %}
+                                <a href="{{ mirror.cloudflare_url }}" target="_blank" class="text-decoration-none">
+                                    <small>{{ mirror.cloudflare_url }}</small>
+                                    <i class="fas fa-external-link-alt fa-xs"></i>
+                                </a>
+                            {% else %}
+                                <small class="text-muted">{{ _('Not configured') }}</small>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-2">
+                            <strong>{{ _('Storage Usage') }}:</strong><br>
+                            <div class="progress mb-1">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ mirror.storage_usage_percent }}%" 
+                                     aria-valuenow="{{ mirror.storage_usage_percent }}" 
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    {{ "%.1f"|format(mirror.storage_usage_percent) }}%
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ mirror.current_files }}/{{ mirror.max_files }} files</small>
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Last Seen') }}:</strong><br>
+                            {% if mirror.last_seen %}
+                                <small class="text-muted">{{ mirror.last_seen.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            {% else %}
+                                <small class="text-muted">{{ _('Never') }}</small>
+                            {% endif %}
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Last Sync') }}:</strong><br>
+                            {% if mirror.last_sync %}
+                                <small class="text-muted">{{ mirror.last_sync.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            {% else %}
+                                <small class="text-muted">{{ _('Never') }}</small>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                {% if mirror.storage_path %}
+                <hr>
+                <p class="mb-0">
+                    <strong>{{ _('Storage Path') }}:</strong><br>
+                    <small class="text-muted font-monospace">{{ mirror.storage_path }}</small>
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-heartbeat"></i> {{ _('Live Status') }}</h5>
+            </div>
+            <div class="card-body">
+                {% if live_status %}
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-2">
+                            <strong>{{ _('Mirror Status') }}:</strong><br>
+                            <span class="badge bg-success">{{ live_status.status|title }}</span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Files Stored') }}:</strong><br>
+                            <span class="text-info">{{ live_status.file_count }}</span>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-2">
+                            <strong>{{ _('Total Size') }}:</strong><br>
+                            <span class="text-info">{{ live_status.total_size | format_file_size }}</span>
+                        </p>
+                        <p class="mb-2">
+                            <strong>{{ _('Paired') }}:</strong><br>
+                            {% if live_status.paired %}
+                                <span class="badge bg-success">{{ _('Yes') }}</span>
+                            {% else %}
+                                <span class="badge bg-warning">{{ _('No') }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-exclamation-triangle fa-2x text-muted mb-2"></i>
+                    <p class="text-muted">{{ _('Unable to connect to mirror server') }}</p>
+                    <small class="text-muted">{{ _('The mirror may be offline or unreachable') }}</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mirror Files -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5><i class="fas fa-files"></i> {{ _('Files on Mirror') }} ({{ mirror_files|length }})</h5>
+    </div>
+    <div class="card-body">
+        {% if mirror_files %}
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>{{ _('File') }}</th>
+                        <th>{{ _('Size') }}</th>
+                        <th>{{ _('Downloads') }}</th>
+                        <th>{{ _('Synced') }}</th>
+                        <th>{{ _('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mirror_file in mirror_files %}
+                    <tr>
+                        <td>
+                            <strong>{{ mirror_file.upload.original_filename }}</strong><br>
+                            <small class="text-muted">{{ mirror_file.upload.device_manufacturer }} {{ mirror_file.upload.device_model }}</small>
+                        </td>
+                        <td>{{ mirror_file.upload.file_size | format_file_size }}</td>
+                        <td>{{ mirror_file.upload.download_count }}</td>
+                        <td><small class="text-muted">{{ mirror_file.synced_at.strftime('%Y-%m-%d %H:%M') }}</small></td>
+                        <td>
+                            <a href="{{ url_for('admin.view_upload', upload_id=mirror_file.upload.id) }}" 
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> {{ _('View') }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">{{ _('No files synced yet') }}</h5>
+            <p class="text-muted">{{ _('Trigger a sync to populate this mirror with files.') }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Sync Logs -->
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-history"></i> {{ _('Sync Logs') }}</h5>
+    </div>
+    <div class="card-body">
+        {% if logs %}
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{{ _('Time') }}</th>
+                        <th>{{ _('Action') }}</th>
+                        <th>{{ _('Message') }}</th>
+                        <th>{{ _('File') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td><small>{{ log.created_at.strftime('%m-%d %H:%M:%S') }}</small></td>
+                        <td>
+                            {% if log.action == 'sync_complete' %}
+                                <span class="badge bg-success">{{ log.action }}</span>
+                            {% elif log.action == 'sync_error' %}
+                                <span class="badge bg-danger">{{ log.action }}</span>
+                            {% elif log.action == 'file_downloaded' %}
+                                <span class="badge bg-info">{{ log.action }}</span>
+                            {% elif log.action == 'file_added' %}
+                                <span class="badge bg-success">{{ log.action }}</span>
+                            {% elif log.action == 'file_removed' %}
+                                <span class="badge bg-warning">{{ log.action }}</span>
+                            {% elif log.action == 'paired' %}
+                                <span class="badge bg-primary">{{ log.action }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ log.action }}</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ log.message }}</small></td>
+                        <td>
+                            {% if log.upload %}
+                                <small>
+                                    <a href="{{ url_for('admin.view_upload', upload_id=log.upload.id) }}">
+                                        {{ log.upload.original_filename }}
+                                    </a>
+                                </small>
+                            {% else %}
+                                <small class="text-muted">-</small>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-3">{{ _('No sync logs yet') }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Mirror -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> {{ _('Danger Zone') }}</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{{ _('Permanently delete this mirror and all associated data.') }}</p>
+                <form method="POST" action="{{ url_for('admin.delete_mirror', mirror_id=mirror.id) }}" 
+                      onsubmit="return confirm('{{ _('Are you sure you want to delete this mirror? This action cannot be undone.') }}')">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> {{ _('Delete Mirror') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

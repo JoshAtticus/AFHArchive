@@ -10,7 +10,7 @@ gevent.monkey.patch_all()
 import sys
 import os
 from app import create_app, db
-from app.models import User, Upload, Announcement
+from app.models import User, Upload, Announcement, Mirror, MirrorFile, MirrorPairingCode, MirrorSyncLog
 import shutil
 import datetime
 def backup_database(db_path):
