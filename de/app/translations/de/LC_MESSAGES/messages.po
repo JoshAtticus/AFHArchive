@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"PO-Revision-Date: 2025-08-06 03:15\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -20,39 +20,39 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "Über AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "Was ist AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive ist eine Community-basierte Plattform, die sich der Erhaltung und Weitergabe von Android-Firmware, Custom-ROMs und sonstigen Entwicklungsdateien widmet."
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Community-Richtlinien"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFHArchive setzt sich für die Aufrechterhaltung einer respektvollen und hilfsbereiten Community ein. Wir ermutigen die Nutzer zu Folgendem:"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr ""
+msgstr "Teile legitime, nützliche Android-Entwicklungsdateien"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "Gebe genaue Beschreibungen und Informationen an"
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr ""
+msgstr "Respektiere geistige Eigentumsrechte"
 
 #: app/templates/about.html:26
 msgid "Open Source"
