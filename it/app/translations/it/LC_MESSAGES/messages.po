@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"PO-Revision-Date: 2025-08-07 14:13\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -20,51 +20,51 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "Chi siamo"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "Informazioni su AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "Cos'è AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive è una piattaforma creata dalla community dedicata a preservare e condividere firmware Android, ROM personalizzate e file di sviluppo."
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Linee guida per la community"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFHArchive si impegna a mantenere una community rispettosa e utile. Incoraggiamo gli utenti a:"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr ""
+msgstr "Condividere file di sviluppo Android legittimi e utili"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "Fornire descrizioni e informazioni accurate"
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr ""
+msgstr "Rispettare i diritti di proprietà intellettuale"
 
 #: app/templates/about.html:26
 msgid "Open Source"
-msgstr ""
+msgstr "Open Source"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive è un software open source, sviluppato in maniera trasparente su GitHub. I contributi della community e le opinioni sono sempre accolti."
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
-msgstr ""
+msgstr "Visualizza su GitHub"
 
 #: app/templates/about.html:32
 msgid "Contact Information"
