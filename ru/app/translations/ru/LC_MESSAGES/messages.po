@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"PO-Revision-Date: 2025-08-05 17:27\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Что такое AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive — это созданная сообществом платформа для сохранения и обмена прошивками, кастомными ROM и файлами разработки Android."
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
@@ -60,11 +60,11 @@ msgstr ""
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive — проект с открытым исходным кодом, разрабатываемый прозрачно на GitHub. Мы всегда рады участию и отзывам сообщества."
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
-msgstr ""
+msgstr "Наш GitHub"
 
 #: app/templates/about.html:32
 msgid "Contact Information"
@@ -76,7 +76,7 @@ msgstr ""
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
-msgstr ""
+msgstr "Связаться с нами"
 
 #: app/templates/base.html:31
 msgid "Home"
@@ -88,7 +88,7 @@ msgstr "Обзор"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr ""
+msgstr "Контакты"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
@@ -134,7 +134,7 @@ msgstr "Условия использования"
 
 #: app/templates/base.html:142
 msgid "Status Page"
-msgstr ""
+msgstr "Состояние сервиса"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"

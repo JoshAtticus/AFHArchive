@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"PO-Revision-Date: 2025-08-07 15:42\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -20,655 +20,655 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "Chi siamo"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "Informazioni su AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "Cos'è AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive è una piattaforma creata dalla community dedicata a preservare e condividere firmware Android, ROM personalizzate e file di sviluppo."
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Linee guida per la community"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFHArchive si impegna a mantenere una community rispettosa e utile. Incoraggiamo gli utenti a:"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr ""
+msgstr "Condividere file di sviluppo Android legittimi e utili"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "Fornire descrizioni e informazioni accurate"
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr ""
+msgstr "Rispettare i diritti di proprietà intellettuale"
 
 #: app/templates/about.html:26
 msgid "Open Source"
-msgstr ""
+msgstr "Open Source"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive è un software open source, sviluppato in maniera trasparente su GitHub. I contributi della community e le opinioni sono sempre accolti."
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
-msgstr ""
+msgstr "Visualizza su GitHub"
 
 #: app/templates/about.html:32
 msgid "Contact Information"
-msgstr ""
+msgstr "Contatti"
 
 #: app/templates/about.html:33
 msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
-msgstr ""
+msgstr "Per domande, suggerimenti o supporto, la preghiamo di visitare la nostra pagina di contatto o di mettersi in contatto con noi tramite la nostra repository GitHub."
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
-msgstr ""
+msgstr "Contattaci"
 
 #: app/templates/base.html:31
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: app/templates/base.html:34
 msgid "Browse"
-msgstr ""
+msgstr "Sfoglia"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr ""
+msgstr "Contatti"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
-msgstr ""
+msgstr "Aiutaci a tradurre AFHArchive"
 
 #: app/templates/admin/users.html:18 app/templates/base.html:100
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: app/templates/base.html:105 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
-msgstr ""
+msgstr "Carica un file"
 
 #: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
-msgstr ""
+msgstr "I miei caricamenti"
 
 #: app/templates/base.html:109
 msgid "Admin Panel"
-msgstr ""
+msgstr "Pannello d'amministrazione"
 
 #: app/templates/base.html:112
 msgid "Logout"
-msgstr ""
+msgstr "Esci"
 
 #: app/templates/auth/login.html:3 app/templates/base.html:117
 msgid "Login"
-msgstr ""
+msgstr "Accedi"
 
 #: app/templates/base.html:142
 msgid "Source on"
-msgstr ""
+msgstr "Codice sorgente su"
 
 #: app/templates/base.html:142
 msgid "Our Privacy Policy"
-msgstr ""
+msgstr "La nostra Politica sulla Privacy"
 
 #: app/templates/base.html:142 app/templates/contact.html:78
 msgid "Terms of Service"
-msgstr ""
+msgstr "Termini di Servizio"
 
 #: app/templates/base.html:142
 msgid "Status Page"
-msgstr ""
+msgstr "Pagina di Stato"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
-msgstr ""
+msgstr "Sfoglia i file"
 
 #: app/templates/browse.html:7
 msgid "Browse Archive"
-msgstr ""
+msgstr "Sfoglia l'archivio"
 
 #: app/templates/admin/uploads.html:25 app/templates/browse.html:13
 msgid "Manufacturer"
-msgstr ""
+msgstr "Produttore"
 
 #: app/templates/admin/uploads.html:27 app/templates/browse.html:15
 msgid "All Manufacturers"
-msgstr ""
+msgstr "Tutti i produttori"
 
 #: app/templates/browse.html:24
 msgid "Model"
-msgstr ""
+msgstr "Modello"
 
 #: app/templates/browse.html:26
 msgid "Device model"
-msgstr ""
+msgstr "Modello del dispositivo"
 
 #: app/templates/admin/uploads.html:36 app/templates/browse.html:29
 #: app/templates/errors/404.html:22
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: app/templates/admin/uploads.html:38 app/templates/browse.html:31
 msgid "Filename search"
-msgstr ""
+msgstr "Cerca nome del file"
 
 #: app/templates/admin/uploads.html:43 app/templates/browse.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Filtra"
 
 #: app/templates/browse.html:53 app/templates/index.html:42
 msgid "Device:"
-msgstr ""
+msgstr "Dispositivo:"
 
 #: app/templates/browse.html:54 app/templates/file_detail.html:29
 #: app/templates/index.html:43
 msgid "Size:"
-msgstr ""
+msgstr "Dimensione:"
 
 #: app/templates/browse.html:55 app/templates/file_detail.html:37
 #: app/templates/index.html:44
 msgid "Downloads:"
-msgstr ""
+msgstr "Numero di Download:"
 
 #: app/templates/browse.html:56
 msgid "MD5:"
-msgstr ""
+msgstr "MD5:"
 
 #: app/templates/browse.html:62 app/templates/file_detail.html:55
 msgid "Original AFH Link"
-msgstr ""
+msgstr "Link originale AFH"
 
 #: app/templates/admin/dashboard.html:25 app/templates/admin/dashboard.html:44
 #: app/templates/admin/dashboard.html:63 app/templates/admin/dashboard.html:82
 #: app/templates/browse.html:68 app/templates/index.html:47
 msgid "View Details"
-msgstr ""
+msgstr "Visualizza Dettagli"
 
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
 #: app/templates/my_uploads.html:22 app/templates/thank_you.html:57
 msgid "Uploaded"
-msgstr ""
+msgstr "Caricato il"
 
 #: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
-msgstr ""
+msgstr "Precedente"
 
 #: app/templates/admin/uploads.html:148 app/templates/browse.html:117
 msgid "Next"
-msgstr ""
+msgstr "Prossimo"
 
 #: app/templates/browse.html:126
 msgid "No files found"
-msgstr ""
+msgstr "Nessun file trovato"
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
-msgstr ""
+msgstr "Prova ad aggiustare i tuoi filtri di ricerca o a sfogliare tutti i file."
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
-msgstr ""
+msgstr "Ci piacerebbe sentire la tua opinione! Contatta il team di AFHArchive tramite uno di questi metodi:"
 
 #: app/templates/contact.html:22
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: app/templates/contact.html:23
 msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
-msgstr ""
+msgstr "Segnala problemi, suggerisci funzionalità, oppure contribuisci al progetto sulla nostra repository GitHub."
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
-msgstr ""
+msgstr "Apri un problema"
 
 #: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
 #: app/templates/contact.html:35
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: app/templates/contact.html:36
 msgid "For general inquiries, business matters, or urgent support requests."
-msgstr ""
+msgstr "Per domande generali, questioni aziendali, oppure richieste urgenti di supporto."
 
 #: app/templates/contact.html:38
 msgid "Send Email"
-msgstr ""
+msgstr "Invia una Email"
 
 #: app/templates/contact.html:50
 msgid "Translation Help"
-msgstr ""
+msgstr "Aiuto per la traduzione"
 
 #: app/templates/contact.html:51
 msgid "Help us make AFHArchive available in more languages by joining our translation project."
-msgstr ""
+msgstr "Aiutaci a rendere disponibile AFHArchive in più lingue unendoti al nostro progetto di traduzione."
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
-msgstr ""
+msgstr "Unisciti al progetto di traduzione"
 
 #: app/templates/contact.html:64
 msgid "Bug Reports"
-msgstr ""
+msgstr "Segnalazioni di bug"
 
 #: app/templates/contact.html:65
 msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
-msgstr ""
+msgstr "Hai trovato un bug oppure stai riscontrando problemi tecnici? Faccelo sapere così possiamo risolvere velocemente."
 
 #: app/templates/contact.html:68
 msgid "Report Bug"
-msgstr ""
+msgstr "Segnala un bug"
 
 #: app/templates/contact.html:76
 msgid "Before Contacting Us"
-msgstr ""
+msgstr "Prima di contattarci"
 
 #: app/templates/contact.html:78
 msgid "Check our"
-msgstr ""
+msgstr "Controlla i nostri"
 
 #: app/templates/contact.html:78
 msgid "and"
-msgstr ""
+msgstr "e la nostra"
 
 #: app/templates/contact.html:78
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Politica sulla Privacy"
 
 #: app/templates/contact.html:79
 msgid "Search existing"
-msgstr ""
+msgstr "Cerca gli esistenti"
 
 #: app/templates/contact.html:79
 msgid "GitHub issues"
-msgstr ""
+msgstr "problemi su GitHub"
 
 #: app/templates/contact.html:79
 msgid "to see if your question has been answered"
-msgstr ""
+msgstr "per vedere se hanno già risposto alla tua domanda"
 
 #: app/templates/contact.html:80
 msgid "For upload issues, make sure your files meet our guidelines"
-msgstr ""
+msgstr "Per problemi di caricamento, assicurati che i tuoi file seguano le nostre linee guida"
 
 #: app/templates/file_detail.html:13
 msgid "Device Information"
-msgstr ""
+msgstr "Informazioni sul dispositivo"
 
 #: app/templates/file_detail.html:16
 msgid "Manufacturer:"
-msgstr ""
+msgstr "Produttore:"
 
 #: app/templates/file_detail.html:20
 msgid "Model:"
-msgstr ""
+msgstr "Modello:"
 
 #: app/templates/file_detail.html:26 app/templates/thank_you.html:44
 msgid "File Information"
-msgstr ""
+msgstr "Informazioni sul file"
 
 #: app/templates/file_detail.html:33
 msgid "MD5 Hash:"
-msgstr ""
+msgstr "Hash MD5:"
 
 #: app/templates/file_detail.html:41
 msgid "Uploaded:"
-msgstr ""
+msgstr "Caricato il:"
 
 #: app/templates/file_detail.html:51
 msgid "Original Links"
-msgstr ""
+msgstr "Link originali"
 
 #: app/templates/file_detail.html:60
 msgid "XDA Thread"
-msgstr ""
+msgstr "Thread XDA"
 
 #: app/templates/file_detail.html:71 app/templates/thank_you.html:61
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
-msgstr ""
+msgstr "Torna a sfogliare"
 
 #: app/templates/file_detail.html:86
 msgid "Download File"
-msgstr ""
+msgstr "Scarica il file"
 
 #: app/templates/file_detail.html:96 app/templates/index.html:76
 #: app/templates/thank_you.html:70
 msgid "Support AFHArchive"
-msgstr ""
+msgstr "Supporta AFHArchive"
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
 #: app/templates/thank_you.html:73
 msgid "Help keep this archive running!"
-msgstr ""
+msgstr "Aiutaci a mandare avanti questo archivio!"
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 #: app/templates/thank_you.html:74
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr ""
+msgstr "Il tuo supporto aiuta a coprire i costi di host e a mantenere vivo questo progetto di preservazione."
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
 #: app/templates/thank_you.html:76
 msgid "Buy me a coffee"
-msgstr ""
+msgstr "Comprami un caffè"
 
 #: app/templates/file_detail.html:109
 msgid "Download Information"
-msgstr ""
+msgstr "Informazioni sul download"
 
 #: app/templates/file_detail.html:113
 msgid "File Verification"
-msgstr ""
+msgstr "Verifica del file"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
-msgstr ""
+msgstr "Puoi verificare l'integrità del file usando l'hash MD5:"
 
 #: app/templates/file_detail.html:119
 msgid "Important"
-msgstr ""
+msgstr "Importante"
 
 #: app/templates/file_detail.html:121
 msgid "This file was originally hosted on AndroidFileHost"
-msgstr ""
+msgstr "Questo file era originariamente ospitato su AndroidFileHost"
 
 #: app/templates/file_detail.html:122
 msgid "Files are provided as-is for preservation purposes"
-msgstr ""
+msgstr "I file sono forniti così come sono per scopi di preservazione"
 
 #: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
-msgstr ""
+msgstr "Usali a tuo rischio e assicurati della compatibilità"
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
-msgstr ""
+msgstr "I download sono soggetti a limiti di velocità per preservare la banda di rete"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr ""
+msgstr "Contribuito da"
 
 #: app/templates/index.html:10
 #, python-format
 msgid "Announcement posted %(date)s (active for 48 hours)"
-msgstr ""
+msgstr "Annuncio postato il %(date)s (attivo per 48 ore)"
 
 #: app/templates/index.html:15
 msgid "Welcome to AFHArchive"
-msgstr ""
+msgstr "Benvenuto su AFHArchive"
 
 #: app/templates/index.html:16
 msgid "Preserving content from the now-defunct AndroidFileHost platform"
-msgstr ""
+msgstr "Preservare il contenuto dalla piattaforma adesso defunta AndroidFileHost"
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "Aiutaci a preservare la storia dello sviluppo Android caricando i file che erano prima ospitati su AndroidFileHost."
 
 #: app/templates/index.html:20
 msgid "Sign In to Contribute"
-msgstr ""
+msgstr "Accedi per contribuire"
 
 #: app/templates/index.html:24
 msgid "Upload a File"
-msgstr ""
+msgstr "Carica un file"
 
 #: app/templates/index.html:29
 msgid "Device Image"
-msgstr ""
+msgstr "Immagine del dispositivo"
 
 #: app/templates/index.html:34
 msgid "Recent Uploads"
-msgstr ""
+msgstr "Caricamenti recenti"
 
 #: app/templates/index.html:60
 msgid "Important Notice"
-msgstr ""
+msgstr "Avviso importante"
 
 #: app/templates/index.html:63
 msgid "AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "AFHArchive è dedicato a preservare i file che erano stati ospitati in precedenza su AndroidFileHost."
 
 #: app/templates/index.html:65
 msgid "Only upload files that were once on AFH"
-msgstr ""
+msgstr "Carica solo i file che erano su AFH"
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
-msgstr ""
+msgstr "Fornisci i link originali AFH quando possibile"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
-msgstr ""
+msgstr "Includi informazioni sul dispositivo e thread XDA"
 
 #: app/templates/index.html:68
 msgid "All uploads require admin approval"
-msgstr ""
+msgstr "Tutti i caricamenti richiedono l'approvazione dell'amministratore"
 
 #: app/templates/index.html:69
 msgid "New builds or custom ROMs will not be approved"
-msgstr ""
+msgstr "Le nuove build o ROM personalizzate non saranno approvate"
 
 #: app/templates/my_uploads.html:9
 msgid "Upload New File"
-msgstr ""
+msgstr "Carica un nuovo file"
 
 #: app/templates/admin/autoreviewer.html:147
 #: app/templates/admin/uploads.html:54 app/templates/my_uploads.html:18
 msgid "Filename"
-msgstr ""
+msgstr "Nome del file"
 
 #: app/templates/admin/autoreviewer.html:148
 #: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
 #: app/templates/thank_you.html:48
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: app/templates/admin/server_tools.html:128
 #: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
 #: app/templates/thank_you.html:51
 msgid "Size"
-msgstr ""
+msgstr "Dimensione"
 
 #: app/templates/admin/server_tools.html:313
 #: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: app/templates/my_uploads.html:23 app/templates/thank_you.html:54
 msgid "Downloads"
-msgstr ""
+msgstr "Numero di Download"
 
 #: app/templates/admin/dashboard.html:16 app/templates/admin/uploads.html:18
 #: app/templates/my_uploads.html:37
 msgid "Pending"
-msgstr ""
+msgstr "In attesa"
 
 #: app/templates/admin/dashboard.html:35 app/templates/admin/uploads.html:19
 #: app/templates/my_uploads.html:39
 msgid "Approved"
-msgstr ""
+msgstr "Approvato"
 
 #: app/templates/admin/dashboard.html:54 app/templates/admin/uploads.html:20
 #: app/templates/my_uploads.html:41
 msgid "Rejected"
-msgstr ""
+msgstr "Rifiutato"
 
 #: app/templates/my_uploads.html:60
 msgid "No uploads yet"
-msgstr ""
+msgstr "Ancora nessun caricamento"
 
 #: app/templates/my_uploads.html:61
 msgid "Start contributing to the archive by uploading your first file!"
-msgstr ""
+msgstr "Inizia a contribuire all'archivio caricando il tuo primo file!"
 
 #: app/templates/my_uploads.html:63
 msgid "Upload First File"
-msgstr ""
+msgstr "Carica il tuo primo file"
 
 #: app/templates/thank_you.html:3
 msgid "Thank You"
-msgstr ""
+msgstr "Grazie"
 
 #: app/templates/thank_you.html:12
 msgid "Thank You for Downloading!"
-msgstr ""
+msgstr "Grazie per aver scaricato!"
 
 #: app/templates/thank_you.html:19
 msgid "Your download should start automatically in a few seconds."
-msgstr ""
+msgstr "Il tuo download dovrebbe avviarsi tra qualche secondo."
 
 #: app/templates/thank_you.html:20
 msgid "If it doesn't start, click the button below."
-msgstr ""
+msgstr "Se non si avvia, premi il pulsante sottostante."
 
 #: app/templates/thank_you.html:27
 msgid "Start Download"
-msgstr ""
+msgstr "Avvia il download"
 
 #: app/templates/thank_you.html:35
 msgid "Starting download in 3 seconds..."
-msgstr ""
+msgstr "Avvio del download in 3 secondi..."
 
 #: app/templates/thank_you.html:86
 msgid "Back to File Details"
-msgstr ""
+msgstr "Torna ai dettagli sul file"
 
 #: app/templates/thank_you.html:89
 msgid "Browse More Files"
-msgstr ""
+msgstr "Sfoglia altri file"
 
 #: app/templates/thank_you.html:109
 msgid "Starting download in"
-msgstr ""
+msgstr "Avvio del download in"
 
 #: app/templates/thank_you.html:109
 msgid "seconds..."
-msgstr ""
+msgstr "secondi..."
 
 #: app/templates/thank_you.html:111
 msgid "Starting download..."
-msgstr ""
+msgstr "Avvio del download..."
 
 #: app/templates/thank_you.html:122 app/templates/thank_you.html:138
 msgid "Download started! Check your downloads folder."
-msgstr ""
+msgstr "Il download si è avviato. Controlla la tua cartella dei download."
 
 #: app/templates/thank_you.html:123 app/templates/thank_you.html:139
 msgid "Download Started"
-msgstr ""
+msgstr "Download avviato"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
-msgstr ""
+msgstr "Carica un file su AFHArchive"
 
 #: app/templates/upload.html:14
 msgid "Important Guidelines"
-msgstr ""
+msgstr "Linee guida importanti"
 
 #: app/templates/upload.html:16
 msgid "Only upload files that were previously hosted on AndroidFileHost"
-msgstr ""
+msgstr "Carica solo i file che erano precedentemente ospitati su AndroidFileHost"
 
 #: app/templates/upload.html:17
 msgid "Provide as much metadata as possible to help with approval"
-msgstr ""
+msgstr "Fornisci più metadati possibili per aiutarci con l'approvazione"
 
 #: app/templates/upload.html:18
 msgid "Include the original AFH link if you have it"
-msgstr ""
+msgstr "Includi il link originale di AFH se lo possiedi"
 
 #: app/templates/upload.html:19
 msgid "All uploads are pending review - new builds will not be approved"
-msgstr ""
+msgstr "Tutti i caricamenti saranno messi in attesa di revisione"
 
 #: app/templates/upload.html:20
 msgid "Do not upload password protected archives, they will not be approved"
-msgstr ""
+msgstr "Non caricare archivi protetti da password, non saranno approvati"
 
 #: app/templates/upload.html:21
 msgid "Maximum file size: 5GB"
-msgstr ""
+msgstr "Dimensione massima dei file: 5GB"
 
 #: app/templates/upload.html:27
 msgid "Select File"
-msgstr ""
+msgstr "Seleziona il file"
 
 #: app/templates/upload.html:30
 msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
-msgstr ""
+msgstr "Formati consentiti: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
 
 #: app/templates/upload.html:35
 msgid "Upload Progress"
-msgstr ""
+msgstr "Percentuale di caricamento"
 
 #: app/templates/upload.html:44
 msgid "Preparing upload..."
-msgstr ""
+msgstr "Preparazione per il caricamento..."
 
 #: app/templates/upload.html:53
 msgid "Device Manufacturer"
-msgstr ""
+msgstr "Produttore del dispositivo"
 
 #: app/templates/upload.html:55
 msgid "e.g., Samsung, Google, OnePlus"
-msgstr ""
+msgstr "per esempio, Samsung, Google, OnePlus"
 
 #: app/templates/upload.html:60
 msgid "Device Model"
-msgstr ""
+msgstr "Modello del dispositivo"
 
 #: app/templates/upload.html:62
 msgid "e.g., Galaxy S21, Pixel 6, Generic"
-msgstr ""
+msgstr "per esempio, Galaxy S21, Pixel 6, Generico"
 
 #: app/templates/upload.html:68
 msgid "Original AndroidFileHost Link"
-msgstr ""
+msgstr "Link originale AndroidFileHost"
 
 #: app/templates/upload.html:70
 msgid "https://androidfilehost.com/?fid=..."
-msgstr ""
+msgstr "https://androidfilehost.com/?fid=..."
 
 #: app/templates/upload.html:71
 msgid "If you have the original AFH link, please provide it"
-msgstr ""
+msgstr "Se hai il link originale di AFH, per favore forniscilo"
 
 #: app/templates/upload.html:75
 msgid "XDA Thread Link"
-msgstr ""
+msgstr "Link del Thread XDA"
 
 #: app/templates/upload.html:77
 msgid "https://forum.xda-developers.com/..."
-msgstr ""
+msgstr "https://forum.xda-developers.com/..."
 
 #: app/templates/upload.html:78
 msgid "Link to the XDA thread where this file was discussed"
-msgstr ""
+msgstr "Link al thread XDA dove questo file è stato discusso"
 
 #: app/templates/upload.html:82
 msgid "Additional Notes"
-msgstr ""
+msgstr "Note aggiuntive"
 
 #: app/templates/upload.html:84
 msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
@@ -879,7 +879,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:36
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
