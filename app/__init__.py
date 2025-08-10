@@ -166,10 +166,10 @@ def create_app():
         'en': 'English',
         'ru': 'Русский',
         'ja': '日本語',
+        'de': 'Deutsch',
+        'it': 'Italiano',
         # 'es': 'Español', 
         # 'fr': 'Français',
-        # 'de': 'Deutsch',
-        # 'it': 'Italiano',
         # 'pt': 'Português',
         # 'ko': '한국어',
         # 'zh': '中文'
