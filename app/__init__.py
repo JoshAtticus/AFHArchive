@@ -208,7 +208,7 @@ def create_app():
     from app.routes.admin import admin_bp
     from app.routes.api import api_bp
     from app.routes.errors import errors_bp
-    from app.models import Announcement  # Ensure model is registered
+    from app.models import Announcement, ABTest, ABTestAssignment  # Ensure models are registered
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp)

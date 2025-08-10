@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, Response, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import Upload, User, Announcement
+from app.models import Upload, User, Announcement, ABTest, ABTestAssignment
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
 from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_all_pending, get_or_create_autoreviewer
+from app.utils.ab_testing import get_test_stats, cleanup_old_assignments
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -613,3 +614,174 @@ def run_autoreviewer_batch():
 def autoreviewer_stats_api():
     """API endpoint for autoreviewer statistics"""
     return jsonify(get_autoreviewer_stats())
+
+
+# A/B Testing routes
+@admin_bp.route('/ab-tests')
+@login_required
+@admin_required
+def ab_tests():
+    """A/B testing management dashboard"""
+    tests = ABTest.query.order_by(ABTest.created_at.desc()).all()
+    test_stats = []
+    
+    for test in tests:
+        stats = get_test_stats(test.name)
+        if stats:
+            test_stats.append(stats)
+    
+    return render_template('admin/ab_tests.html', tests=tests, test_stats=test_stats)
+
+
+@admin_bp.route('/ab-tests/create', methods=['POST'])
+@login_required
+@admin_required
+def create_ab_test():
+    """Create a new A/B test"""
+    name = request.form.get('name', '').strip()
+    description = request.form.get('description', '').strip()
+    traffic_percentage = int(request.form.get('traffic_percentage', 50))
+    
+    if not name:
+        flash('Test name is required', 'error')
+        return redirect(url_for('admin.ab_tests'))
+    
+    # Check if test with this name already exists
+    existing_test = ABTest.query.filter_by(name=name).first()
+    if existing_test:
+        flash('A test with this name already exists', 'error')
+        return redirect(url_for('admin.ab_tests'))
+    
+    try:
+        test = ABTest(
+            name=name,
+            description=description,
+            traffic_percentage=max(0, min(100, traffic_percentage))
+        )
+        db.session.add(test)
+        db.session.commit()
+        
+        flash(f'A/B test "{name}" created successfully', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to create A/B test: {e}')
+        flash('Failed to create A/B test', 'error')
+        db.session.rollback()
+    
+    return redirect(url_for('admin.ab_tests'))
+
+
+@admin_bp.route('/ab-tests/<int:test_id>/toggle', methods=['POST'])
+@login_required
+@admin_required
+def toggle_ab_test(test_id):
+    """Start or stop an A/B test"""
+    test = ABTest.query.get_or_404(test_id)
+    
+    try:
+        test.is_active = not test.is_active
+        test.updated_at = datetime.utcnow()
+        db.session.commit()
+        
+        status = "started" if test.is_active else "stopped"
+        flash(f'A/B test "{test.name}" {status} successfully', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to toggle A/B test: {e}')
+        flash('Failed to update A/B test', 'error')
+        db.session.rollback()
+    
+    return redirect(url_for('admin.ab_tests'))
+
+
+@admin_bp.route('/ab-tests/<int:test_id>/update', methods=['POST'])
+@login_required
+@admin_required
+def update_ab_test(test_id):
+    """Update A/B test settings"""
+    test = ABTest.query.get_or_404(test_id)
+    
+    description = request.form.get('description', '').strip()
+    traffic_percentage = int(request.form.get('traffic_percentage', test.traffic_percentage))
+    
+    try:
+        test.description = description
+        test.traffic_percentage = max(0, min(100, traffic_percentage))
+        test.updated_at = datetime.utcnow()
+        db.session.commit()
+        
+        flash(f'A/B test "{test.name}" updated successfully', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to update A/B test: {e}')
+        flash('Failed to update A/B test', 'error')
+        db.session.rollback()
+    
+    return redirect(url_for('admin.ab_tests'))
+
+
+@admin_bp.route('/ab-tests/<int:test_id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def delete_ab_test(test_id):
+    """Delete an A/B test and all its assignments"""
+    test = ABTest.query.get_or_404(test_id)
+    
+    try:
+        # Delete all assignments (cascade should handle this automatically)
+        db.session.delete(test)
+        db.session.commit()
+        
+        flash(f'A/B test "{test.name}" deleted successfully', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to delete A/B test: {e}')
+        flash('Failed to delete A/B test', 'error')
+        db.session.rollback()
+    
+    return redirect(url_for('admin.ab_tests'))
+
+
+@admin_bp.route('/ab-tests/cleanup-assignments', methods=['POST'])
+@login_required
+@admin_required
+def cleanup_ab_test_assignments():
+    """Clean up old A/B test assignments"""
+    days = int(request.form.get('days', 30))
+    
+    try:
+        deleted_count = cleanup_old_assignments(days)
+        flash(f'Cleaned up {deleted_count} old A/B test assignments (older than {days} days)', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to cleanup A/B test assignments: {e}')
+        flash('Failed to cleanup assignments', 'error')
+    
+    return redirect(url_for('admin.ab_tests'))
+
+
+@admin_bp.route('/ab-tests/init-direct-download', methods=['POST'])
+@login_required
+@admin_required
+def init_direct_download_test():
+    """Initialize the direct download A/B test"""
+    test_name = 'direct_download'
+    
+    # Check if test already exists
+    existing_test = ABTest.query.filter_by(name=test_name).first()
+    if existing_test:
+        flash('Direct download test already exists', 'warning')
+        return redirect(url_for('admin.ab_tests'))
+    
+    try:
+        test = ABTest(
+            name=test_name,
+            description='Test direct downloads from direct.afharchive.xyz vs standard downloads',
+            traffic_percentage=50,
+            is_active=False
+        )
+        db.session.add(test)
+        db.session.commit()
+        
+        flash('Direct download A/B test initialized successfully', 'success')
+    except Exception as e:
+        current_app.logger.error(f'Failed to initialize direct download test: {e}')
+        flash('Failed to initialize test', 'error')
+        db.session.rollback()
+    
+    return redirect(url_for('admin.ab_tests'))

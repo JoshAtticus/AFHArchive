@@ -21,6 +21,17 @@
                         </p>
                     </div>
                     
+                    {% if in_direct_download_test %}
+                    <div class="alert alert-info mb-3" role="alert">
+                        <i class="fas fa-flask"></i>
+                        <strong>{{ _('Beta Test') }}:</strong> {{ _('You\'re part of a test for direct downloads from our server.') }}
+                        <a href="{{ url_for('main.opt_out_ab_test', test_name='direct_download') }}" 
+                           class="btn btn-sm btn-outline-secondary ms-2">
+                            {{ _('Use Standard Download') }}
+                        </a>
+                    </div>
+                    {% endif %}
+                    
                     <div class="mb-4">
                         <a href="{{ url_for('main.download_direct', upload_id=upload.id) }}" 
                            class="btn btn-success btn-lg" id="downloadBtn">
@@ -98,6 +109,7 @@ let countdown = 3;
 const progressBar = document.getElementById('progressBar');
 const countdownText = document.getElementById('countdownText');
 const downloadBtn = document.getElementById('downloadBtn');
+const inDirectDownloadTest = {{ 'true' if in_direct_download_test else 'false' }};
 
 // Update countdown and progress bar
 const countdownInterval = setInterval(function() {
@@ -111,9 +123,15 @@ const countdownInterval = setInterval(function() {
         countdownText.textContent = '{{ _('Starting download...') }}';
         clearInterval(countdownInterval);
         
-        // Start download
+        // Start download with appropriate URL based on A/B test
         setTimeout(function() {
-            window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+            if (inDirectDownloadTest) {
+                // Use direct server download
+                window.location.href = "http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}";
+            } else {
+                // Use standard download
+                window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+            }
             
             // Update UI after download starts
             setTimeout(function() {
@@ -140,8 +158,12 @@ downloadBtn.addEventListener('click', function(e) {
         downloadBtn.classList.remove('btn-success');
         downloadBtn.classList.add('btn-outline-success');
         
-        // Start download immediately
-        window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+        // Start download immediately with appropriate URL
+        if (inDirectDownloadTest) {
+            window.location.href = "http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}";
+        } else {
+            window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+        }
     }
 });
 </script>

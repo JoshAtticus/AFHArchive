@@ -85,3 +85,40 @@ class Announcement(db.Model):
     def is_active(self):
         # Active for 48 hours
         return (datetime.utcnow() - self.created_at) < timedelta(hours=48)
+
+
+# A/B Testing models
+class ABTest(db.Model):
+    __tablename__ = 'ab_tests'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(Text)
+    is_active = Column(Boolean, default=False)
+    traffic_percentage = Column(Integer, default=50)  # Percentage of users in test group
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    assignments = relationship('ABTestAssignment', backref='test', lazy=True, cascade='all, delete-orphan')
+    
+    def __repr__(self):
+        return f'<ABTest {self.name}>'
+
+
+class ABTestAssignment(db.Model):
+    __tablename__ = 'ab_test_assignments'
+    
+    id = Column(Integer, primary_key=True)
+    session_id = Column(String(128), nullable=False)
+    test_id = Column(Integer, ForeignKey('ab_tests.id'), nullable=False)
+    variant = Column(String(20), nullable=False)  # 'control' or 'test'
+    assigned_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Index for faster lookups
+    __table_args__ = (
+        db.Index('idx_session_test', 'session_id', 'test_id'),
+    )
+    
+    def __repr__(self):
+        return f'<ABTestAssignment {self.session_id} -> {self.variant}>'

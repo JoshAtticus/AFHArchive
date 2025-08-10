@@ -9,6 +9,7 @@ from app.models import Upload, User, Announcement
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
+from app.utils.ab_testing import is_in_test_group, opt_out_of_test
 
 main_bp = Blueprint('main', __name__)
 
@@ -191,8 +192,12 @@ def download(upload_id):
         flash('File not available for download', 'error')
         return redirect(url_for('main.index'))
     
+    # Check if user is in the direct download A/B test
+    in_direct_download_test = is_in_test_group('direct_download')
+    
     # Show thank you page that will auto-start download
-    return render_template('thank_you.html', upload=upload)
+    return render_template('thank_you.html', upload=upload, 
+                         in_direct_download_test=in_direct_download_test)
 
 
 @main_bp.route('/download/<int:upload_id>/direct')
@@ -210,6 +215,18 @@ def download_direct(upload_id):
     
     # Download from main server
     return redirect(url_for('api.download_file', upload_id=upload_id))
+
+
+@main_bp.route('/ab-test/opt-out/<test_name>')
+def opt_out_ab_test(test_name):
+    """Allow users to opt out of A/B tests"""
+    if opt_out_of_test(test_name):
+        flash('You have been opted out of the test. Please refresh the page to see the standard version.', 'success')
+    else:
+        flash('Unable to opt out of test.', 'error')
+    
+    # Redirect back to referring page or home
+    return redirect(request.referrer or url_for('main.index'))
 
 
 @main_bp.route('/download/<int:upload_id>/from/<mirror_id>')
