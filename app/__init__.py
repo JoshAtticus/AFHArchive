@@ -187,6 +187,20 @@ def create_app():
             if new_url.endswith('?'):
                 new_url = new_url[:-1]
             return redirect(new_url, code=301)  # Permanent redirect
+
+    BAD_REFERRERS = [
+        "https://magiskmodule.gitlab.io",
+    ]
+
+    @app.before_request
+    def block_malicious_referrer():
+        if request.referrer is not None:
+            for bad_url in BAD_REFERRERS:
+                if request.referrer.startswith(bad_url):
+                    from flask import render_template, make_response
+                    html = render_template("malicious_referrer.html", referrer_url=bad_url)
+                    response = make_response(html, 403)
+                    return response
     
     # Register blueprints
     from app.routes.auth import auth_bp

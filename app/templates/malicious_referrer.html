@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Malicious Referrer Detected{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 500px; margin: auto; background: #f8d7da; border: 1px solid #f5c2c7; border-radius: 8px; padding: 32px;">
+    <h1 style="color: #b71c1c;">Malicious Referrer Detected</h1>
+    <p>The page you came from (<strong>{{ referrer_url }}</strong>) is not affiliated with this site and may be malicious.</p>
+    <p>This archive was created by <strong>JoshAtticus</strong>, not by the site you visited.</p>
+    <p>If you understand the risks, you may continue to AFHArchive below.</p>
+    <form method="get" action="/">
+        <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Continue to AFHArchive</button>
+    </form>
+</div>
+{% endblock %}
