@@ -24,7 +24,7 @@
                     {% if in_direct_download_test %}
                     <div class="alert alert-info mb-3" role="alert">
                         <i class="fas fa-flask"></i>
-                        <strong>{{ _('Beta Test') }}:</strong> {{ _('You\'re part of a test for direct downloads from our server.') }}
+                        <strong>{{ _('Beta Test') }}:</strong> {{ _('You\'re part of a test for direct downloads from our server. Downloads will open in a new tab.') }}
                         <a href="{{ url_for('main.opt_out_ab_test', test_name='direct_download') }}" 
                            class="btn btn-sm btn-outline-secondary ms-2">
                             {{ _('Use Standard Download') }}
@@ -33,10 +33,17 @@
                     {% endif %}
                     
                     <div class="mb-4">
+                        {% if in_direct_download_test %}
+                        <a href="http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}" 
+                           target="_blank" class="btn btn-success btn-lg" id="downloadBtn">
+                            <i class="fas fa-download"></i> {{ _('Start Download') }}
+                        </a>
+                        {% else %}
                         <a href="{{ url_for('main.download_direct', upload_id=upload.id) }}" 
                            class="btn btn-success btn-lg" id="downloadBtn">
                             <i class="fas fa-download"></i> {{ _('Start Download') }}
                         </a>
+                        {% endif %}
                     </div>
                     
                     <div class="progress mb-3" style="height: 6px;">
@@ -126,8 +133,8 @@ const countdownInterval = setInterval(function() {
         // Start download with appropriate URL based on A/B test
         setTimeout(function() {
             if (inDirectDownloadTest) {
-                // Use direct server download
-                window.location.href = "http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}";
+                // Use direct server download - open in new tab to bypass mixed content warnings
+                window.open("http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
             } else {
                 // Use standard download
                 window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
@@ -160,7 +167,7 @@ downloadBtn.addEventListener('click', function(e) {
         
         // Start download immediately with appropriate URL
         if (inDirectDownloadTest) {
-            window.location.href = "http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}";
+            window.open("http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
         } else {
             window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
         }
