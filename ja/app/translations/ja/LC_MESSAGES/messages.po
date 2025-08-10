@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"PO-Revision-Date: 2025-08-10 08:49\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr "ファイルをアップロード"
 #: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
-msgstr ""
+msgstr "アップロードしたファイル"
 
 #: app/templates/base.html:109
 msgid "Admin Panel"
@@ -204,15 +204,15 @@ msgstr "詳細を表示"
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
 #: app/templates/my_uploads.html:22 app/templates/thank_you.html:57
 msgid "Uploaded"
-msgstr ""
+msgstr "アップロード日"
 
 #: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
-msgstr ""
+msgstr "前"
 
 #: app/templates/admin/uploads.html:148 app/templates/browse.html:117
 msgid "Next"
-msgstr ""
+msgstr "次"
 
 #: app/templates/browse.html:126
 msgid "No files found"
@@ -232,7 +232,7 @@ msgstr "Github"
 
 #: app/templates/contact.html:23
 msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
-msgstr ""
+msgstr "Githubレポジトリで問題を報告したり、機能を提案したりして、プロジェクトに貢献してください。"
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
@@ -269,7 +269,7 @@ msgstr "バグレポート"
 
 #: app/templates/contact.html:65
 msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
-msgstr ""
+msgstr "バグが見つかったり、技術的な問題が発生しましたか？すぐに解決できるように、お知らせください。"
 
 #: app/templates/contact.html:68
 msgid "Report Bug"
@@ -418,7 +418,7 @@ msgstr "AFHArchiveへようこそ"
 
 #: app/templates/index.html:16
 msgid "Preserving content from the now-defunct AndroidFileHost platform"
-msgstr ""
+msgstr "廃止されたAndroidFileHostプラットフォームからのコンテンツの保存"
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
@@ -426,7 +426,7 @@ msgstr "過去にAndroidFileHostでアップロードされていたファイル
 
 #: app/templates/index.html:20
 msgid "Sign In to Contribute"
-msgstr ""
+msgstr "貢献するにはサインインしてください"
 
 #: app/templates/index.html:24
 msgid "Upload a File"
@@ -458,7 +458,7 @@ msgstr "可能な限りは元のAFHのリンクを提供してください。"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
-msgstr ""
+msgstr "デバイス情報とXDAスレッドを含めてください。"
 
 #: app/templates/index.html:68
 msgid "All uploads require admin approval"
@@ -493,7 +493,7 @@ msgstr "サイズ"
 #: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #: app/templates/my_uploads.html:23 app/templates/thank_you.html:54
 msgid "Downloads"
@@ -536,19 +536,19 @@ msgstr ""
 
 #: app/templates/thank_you.html:19
 msgid "Your download should start automatically in a few seconds."
-msgstr ""
+msgstr "ダウンロードは自動的に開始されます...(数秒以内)"
 
 #: app/templates/thank_you.html:20
 msgid "If it doesn't start, click the button below."
-msgstr ""
+msgstr "開始されない場合は下のボタンをクリックしてください。"
 
 #: app/templates/thank_you.html:27
 msgid "Start Download"
-msgstr ""
+msgstr "ダウンロード開始"
 
 #: app/templates/thank_you.html:35
 msgid "Starting download in 3 seconds..."
-msgstr ""
+msgstr "3秒後にダウンロードが開始されます..."
 
 #: app/templates/thank_you.html:86
 msgid "Back to File Details"
@@ -576,7 +576,7 @@ msgstr ""
 
 #: app/templates/thank_you.html:123 app/templates/thank_you.html:139
 msgid "Download Started"
-msgstr ""
+msgstr "ダウンロードが開始されました"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
@@ -600,11 +600,11 @@ msgstr "元のAndroidFileHostのリンクがある場合は、それを含めて
 
 #: app/templates/upload.html:19
 msgid "All uploads are pending review - new builds will not be approved"
-msgstr ""
+msgstr "すべてのアップロードは審査されます - 新しいビルドは承認されません"
 
 #: app/templates/upload.html:20
 msgid "Do not upload password protected archives, they will not be approved"
-msgstr ""
+msgstr "パスワードで保護されたファイルをアップロードしないでください。そうしたファイルは、承認されません。"
 
 #: app/templates/upload.html:21
 msgid "Maximum file size: 5GB"
@@ -649,7 +649,7 @@ msgstr "元のAndroidFileHostのリンク"
 
 #: app/templates/upload.html:70
 msgid "https://androidfilehost.com/?fid=..."
-msgstr ""
+msgstr "https://androidfilehost.com/?fid=..."
 
 #: app/templates/upload.html:71
 msgid "If you have the original AFH link, please provide it"
@@ -661,7 +661,7 @@ msgstr "XDAのスレッドへのリンク"
 
 #: app/templates/upload.html:77
 msgid "https://forum.xda-developers.com/..."
-msgstr ""
+msgstr "https://forum.xda-developers.com/..."
 
 #: app/templates/upload.html:78
 msgid "Link to the XDA thread where this file was discussed"
@@ -1251,7 +1251,7 @@ msgstr "ユーザー"
 
 #: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
 msgid "Actions"
-msgstr ""
+msgstr "アクション"
 
 #: app/templates/admin/uploads.html:157
 msgid "No uploads found"
@@ -1267,7 +1267,7 @@ msgstr "名前"
 
 #: app/templates/admin/users.html:21
 msgid "Role"
-msgstr ""
+msgstr "役職"
 
 #: app/templates/admin/users.html:23
 msgid "Joined"
