@@ -11,10 +11,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 babel = Babel()
 
-# Import SSL manager
-from app.utils.ssl_manager import SSLCertificateManager
-ssl_manager = SSLCertificateManager()
-
 def safe_int_config(key, default):
     """Safely parse integer config values, handling inline comments"""
     value = config(key, default=str(default))
@@ -142,9 +138,6 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Please log in to access this page.'
     
-    # Initialize SSL manager
-    ssl_manager.init_app(app)
-    
     # Initialize Babel
     babel.init_app(app, locale_selector=get_locale)
     
@@ -182,11 +175,10 @@ def create_app():
         # 'zh': '中文'
     }
     
-    # Domain redirect handler and HTTPS enforcement
+    # Domain redirect handler
     @app.before_request
     def redirect_old_domain():
-        """Redirect requests from afh.joshattic.us to afharchive.xyz and enforce HTTPS for direct subdomain"""
-        # Redirect old domain
+        """Redirect requests from afh.joshattic.us to afharchive.xyz"""
         if request.host == 'afh.joshattic.us':
             from flask import redirect, url_for
             # Construct the new URL with the same path and query parameters
@@ -195,16 +187,6 @@ def create_app():
             if new_url.endswith('?'):
                 new_url = new_url[:-1]
             return redirect(new_url, code=301)  # Permanent redirect
-        
-        # Enforce HTTPS for direct.afharchive.xyz
-        if request.host == 'direct.afharchive.xyz':
-            if not request.is_secure:
-                from flask import redirect
-                # Redirect HTTP to HTTPS
-                new_url = f"https://{request.host}{request.full_path}"
-                if new_url.endswith('?'):
-                    new_url = new_url[:-1]
-                return redirect(new_url, code=301)  # Permanent redirect
 
     BAD_REFERRERS = [
         "https://magiskmodule.gitlab.io",
