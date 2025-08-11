@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2025-08-11 12:23\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -454,7 +454,7 @@ msgstr "AFHに一度でも公開されていたファイルのみをアップロ
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
-msgstr "可能な限りは元のAFHのリンクを提供してください。"
+msgstr "可能な限り元のAFHのリンクを提供してください。"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
@@ -1422,11 +1422,11 @@ msgstr "参加"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
-msgstr "AFHArchiveにログインする"
+msgstr "AFHArchiveにサインインする"
 
 #: app/templates/auth/login.html:13
 msgid "Sign in with your Google account to start contributing to the archive."
-msgstr "アーカイブへの投稿を開始するには、Googleアカウントでログインしてください。"
+msgstr "アーカイブへの投稿を開始するには、Googleアカウントでサインインしてください。"
 
 #: app/templates/auth/login.html:16
 msgid "Sign in with Google"
