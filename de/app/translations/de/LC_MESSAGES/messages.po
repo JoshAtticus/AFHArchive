@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2025-08-12 21:02\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -261,7 +261,7 @@ msgstr "Hilf uns dabei, AFHArchive in weiteren Sprachen verfügbar zu machen, in
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
-msgstr "Übersetzungsprojekt beitreten"
+msgstr "Dem Übersetzungsprojekt beitreten"
 
 #: app/templates/contact.html:64
 msgid "Bug Reports"
@@ -281,7 +281,7 @@ msgstr "Bevor du uns kontaktierst"
 
 #: app/templates/contact.html:78
 msgid "Check our"
-msgstr "Prüfe unser"
+msgstr "Prüfe unsere"
 
 #: app/templates/contact.html:78
 msgid "and"
@@ -544,15 +544,15 @@ msgstr "Wenn er nicht startet, klicke auf die Schaltfläche unten."
 
 #: app/templates/thank_you.html:27
 msgid "Beta Test"
-msgstr ""
+msgstr "Beta-Test"
 
 #: app/templates/thank_you.html:27
 msgid "You're part of a test for direct downloads from our server. Downloads will open in a new tab."
-msgstr ""
+msgstr "Du nimmst an einem Test für direkte Downloads von unserem Server teil. Die Downloads werden in einem neuen Tab geöffnet."
 
 #: app/templates/thank_you.html:30
 msgid "Use Standard Download"
-msgstr ""
+msgstr "Standard-Downloadmethode verwenden"
 
 #: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
