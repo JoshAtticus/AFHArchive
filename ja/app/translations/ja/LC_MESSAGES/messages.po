@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-15 16:12\n"
+"PO-Revision-Date: 2025-08-15 17:21\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr "コミュニティガイドライン"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFH"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
@@ -236,7 +236,7 @@ msgstr "Githubレポジトリで問題を報告したり、機能を提案した
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
-msgstr ""
+msgstr "Issueを開く"
 
 #: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
 #: app/templates/contact.html:35
@@ -345,7 +345,7 @@ msgstr "ノート"
 
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
-msgstr ""
+msgstr "1つ前に戻る"
 
 #: app/templates/file_detail.html:86
 msgid "Download File"
@@ -405,7 +405,7 @@ msgstr "帯域幅を節約するためにダウンロードにレート制限が
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr ""
+msgstr "アップロードしたユーザー"
 
 #: app/templates/index.html:10
 #, python-format
@@ -693,7 +693,7 @@ msgstr "アップロードをキャンセルする"
 
 #: app/templates/upload.html:101
 msgid "Upload Process"
-msgstr "アップデートプロセス"
+msgstr "アップロードのプロセス"
 
 #: app/templates/upload.html:105
 msgid "Select your file (max 5GB)"
@@ -1032,7 +1032,7 @@ msgstr "メールアドレス："
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
-msgstr ""
+msgstr "："
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "Yes"
@@ -1112,11 +1112,11 @@ msgstr "アップロードID"
 
 #: app/templates/admin/autoreviewer.html:149
 msgid "Uploader"
-msgstr ""
+msgstr "アップロードしたユーザー"
 
 #: app/templates/admin/autoreviewer.html:150
 msgid "Rejected Date"
-msgstr ""
+msgstr "ファイルが拒否された日"
 
 #: app/templates/admin/autoreviewer.html:151
 msgid "Reason"
@@ -1160,7 +1160,7 @@ msgstr "ユーザー管理"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
-msgstr ""
+msgstr "アナウンスを作成する"
 
 #: app/templates/admin/dashboard.html:123
 #: app/templates/admin/server_tools.html:3
@@ -1217,7 +1217,7 @@ msgstr "ディスク情報は利用できません。"
 
 #: app/templates/admin/server_tools.html:104
 msgid "Uploads Storage"
-msgstr ""
+msgstr "アップロードストレージ"
 
 #: app/templates/admin/server_tools.html:109
 msgid "Total Size"
@@ -1225,7 +1225,7 @@ msgstr "合計のサイズ"
 
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
-msgstr ""
+msgstr "アップデートストレージ情報は現在利用できません"
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
@@ -1309,7 +1309,7 @@ msgstr "データベースのサイズ"
 
 #: app/templates/admin/server_tools.html:238
 msgid "Total Records"
-msgstr ""
+msgstr "合計レコード数"
 
 #: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
 msgid "Uploads"
