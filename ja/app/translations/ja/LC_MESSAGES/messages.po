@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-15 17:21\n"
+"PO-Revision-Date: 2025-08-16 09:43\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -945,7 +945,7 @@ msgstr ""
 
 #: app/templates/admin/ab_tests.html:213
 msgid "Delete Test"
-msgstr ""
+msgstr "削除テスト"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/announcement.html:5
@@ -1000,7 +1000,7 @@ msgstr ""
 
 #: app/templates/admin/announcement.html:34
 msgid "All Users"
-msgstr ""
+msgstr "全てのユーザー"
 
 #: app/templates/admin/announcement.html:38
 msgid "Only Users Who Have Uploaded"
@@ -1056,7 +1056,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:71
 msgid "Duplicates Rejected"
-msgstr ""
+msgstr "重複で拒否されました"
 
 #: app/templates/admin/autoreviewer.html:78
 msgid "Rejection Rate:"
@@ -1080,7 +1080,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:118
 msgid "How It Works"
-msgstr ""
+msgstr "仕組み"
 
 #: app/templates/admin/autoreviewer.html:120
 msgid "Automatically runs after each file upload"
@@ -1170,7 +1170,7 @@ msgstr "サーバーツール"
 
 #: app/templates/admin/dashboard.html:129
 msgid "Autoreviewer"
-msgstr ""
+msgstr "自動レビュー"
 
 #: app/templates/admin/dashboard.html:135
 msgid "A/B Testing"
