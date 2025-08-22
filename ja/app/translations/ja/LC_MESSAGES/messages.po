@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-10 08:49\n"
+"POT-Creation-Date: 2025-08-10 21:56+0800\n"
+"PO-Revision-Date: 2025-08-16 09:43\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr "詳細"
+msgstr "AFHArchiveについて"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
@@ -40,7 +40,7 @@ msgstr "コミュニティガイドライン"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFH"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
@@ -88,7 +88,7 @@ msgstr "閲覧"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr "コンタクト"
+msgstr "連絡"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
@@ -134,7 +134,7 @@ msgstr "利用規約"
 
 #: app/templates/base.html:142
 msgid "Status Page"
-msgstr ""
+msgstr "サーバーの状態"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
@@ -202,7 +202,7 @@ msgid "View Details"
 msgstr "詳細を表示"
 
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
-#: app/templates/my_uploads.html:22 app/templates/thank_you.html:57
+#: app/templates/my_uploads.html:22 app/templates/thank_you.html:75
 msgid "Uploaded"
 msgstr "アップロード日"
 
@@ -236,7 +236,7 @@ msgstr "Githubレポジトリで問題を報告したり、機能を提案した
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
-msgstr ""
+msgstr "Issueを開く"
 
 #: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
 #: app/templates/contact.html:35
@@ -285,7 +285,7 @@ msgstr ""
 
 #: app/templates/contact.html:78
 msgid "and"
-msgstr ""
+msgstr "...と"
 
 #: app/templates/contact.html:78
 msgid "Privacy Policy"
@@ -305,7 +305,7 @@ msgstr ""
 
 #: app/templates/contact.html:80
 msgid "For upload issues, make sure your files meet our guidelines"
-msgstr ""
+msgstr "アップロードの問題の場合は、ファイルがガイドラインにきちんと準拠しているかを確認してください。"
 
 #: app/templates/file_detail.html:13
 msgid "Device Information"
@@ -319,7 +319,7 @@ msgstr "メーカー："
 msgid "Model:"
 msgstr "モデル："
 
-#: app/templates/file_detail.html:26 app/templates/thank_you.html:44
+#: app/templates/file_detail.html:26 app/templates/thank_you.html:62
 msgid "File Information"
 msgstr "ファイルの情報"
 
@@ -339,35 +339,35 @@ msgstr "元のリンク"
 msgid "XDA Thread"
 msgstr "XDAスレッド"
 
-#: app/templates/file_detail.html:71 app/templates/thank_you.html:61
+#: app/templates/file_detail.html:71 app/templates/thank_you.html:79
 msgid "Notes"
 msgstr "ノート"
 
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
-msgstr ""
+msgstr "1つ前に戻る"
 
 #: app/templates/file_detail.html:86
 msgid "Download File"
 msgstr "ファイルをダウンロードする"
 
 #: app/templates/file_detail.html:96 app/templates/index.html:76
-#: app/templates/thank_you.html:70
+#: app/templates/thank_you.html:88
 msgid "Support AFHArchive"
 msgstr "AFHArchiveを支援する"
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
-#: app/templates/thank_you.html:73
+#: app/templates/thank_you.html:91
 msgid "Help keep this archive running!"
 msgstr "アーカイブの運営にご協力ください！"
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
-#: app/templates/thank_you.html:74
+#: app/templates/thank_you.html:92
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr ""
+msgstr "あなたがサポートすることで、サイトのホスティング費用が賄われ、このプロジェクトが存続できることに貢献できます。"
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
-#: app/templates/thank_you.html:76
+#: app/templates/thank_you.html:94
 msgid "Buy me a coffee"
 msgstr "コーヒーを買ってください"
 
@@ -377,7 +377,7 @@ msgstr "ダウンロードの情報"
 
 #: app/templates/file_detail.html:113
 msgid "File Verification"
-msgstr ""
+msgstr "ファイルの検証"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
@@ -405,12 +405,12 @@ msgstr "帯域幅を節約するためにダウンロードにレート制限が
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr ""
+msgstr "アップロードしたユーザー"
 
 #: app/templates/index.html:10
 #, python-format
 msgid "Announcement posted %(date)s (active for 48 hours)"
-msgstr ""
+msgstr "お知らせは%(date)sに投稿されました。(48時間有効です)"
 
 #: app/templates/index.html:15
 msgid "Welcome to AFHArchive"
@@ -454,7 +454,7 @@ msgstr "AFHに一度でも公開されていたファイルのみをアップロ
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
-msgstr "可能な限りは元のAFHのリンクを提供してください。"
+msgstr "可能な限り元のAFHのリンクを提供してください。"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
@@ -479,13 +479,13 @@ msgstr "ファイル名"
 
 #: app/templates/admin/autoreviewer.html:148
 #: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
-#: app/templates/thank_you.html:48
+#: app/templates/thank_you.html:66
 msgid "Device"
 msgstr "デバイス"
 
 #: app/templates/admin/server_tools.html:128
 #: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
-#: app/templates/thank_you.html:51
+#: app/templates/thank_you.html:69
 msgid "Size"
 msgstr "サイズ"
 
@@ -495,7 +495,7 @@ msgstr "サイズ"
 msgid "Status"
 msgstr "ステータス"
 
-#: app/templates/my_uploads.html:23 app/templates/thank_you.html:54
+#: app/templates/my_uploads.html:23 app/templates/thank_you.html:72
 msgid "Downloads"
 msgstr "ダウンロード数"
 
@@ -528,11 +528,11 @@ msgstr "最初のファイルをアップロード"
 
 #: app/templates/thank_you.html:3
 msgid "Thank You"
-msgstr ""
+msgstr "ありがとう"
 
 #: app/templates/thank_you.html:12
 msgid "Thank You for Downloading!"
-msgstr ""
+msgstr "ダウンロードしてくれてありがとう！"
 
 #: app/templates/thank_you.html:19
 msgid "Your download should start automatically in a few seconds."
@@ -543,44 +543,56 @@ msgid "If it doesn't start, click the button below."
 msgstr "開始されない場合は下のボタンをクリックしてください。"
 
 #: app/templates/thank_you.html:27
+msgid "Beta Test"
+msgstr "ベータテスト"
+
+#: app/templates/thank_you.html:27
+msgid "You're part of a test for direct downloads from our server. Downloads will open in a new tab."
+msgstr ""
+
+#: app/templates/thank_you.html:30
+msgid "Use Standard Download"
+msgstr ""
+
+#: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
 msgstr "ダウンロード開始"
 
-#: app/templates/thank_you.html:35
+#: app/templates/thank_you.html:53
 msgid "Starting download in 3 seconds..."
 msgstr "3秒後にダウンロードが開始されます..."
 
-#: app/templates/thank_you.html:86
+#: app/templates/thank_you.html:104
 msgid "Back to File Details"
-msgstr ""
+msgstr "ファイルの詳細に戻る"
 
-#: app/templates/thank_you.html:89
+#: app/templates/thank_you.html:107
 msgid "Browse More Files"
-msgstr ""
+msgstr "その他のファイルを参照する"
 
-#: app/templates/thank_you.html:109
+#: app/templates/thank_you.html:128
 msgid "Starting download in"
 msgstr ""
 
-#: app/templates/thank_you.html:109
+#: app/templates/thank_you.html:128
 msgid "seconds..."
 msgstr ""
 
-#: app/templates/thank_you.html:111
+#: app/templates/thank_you.html:130
 msgid "Starting download..."
-msgstr ""
+msgstr "ダウンロード開始..."
 
-#: app/templates/thank_you.html:122 app/templates/thank_you.html:138
+#: app/templates/thank_you.html:147 app/templates/thank_you.html:163
 msgid "Download started! Check your downloads folder."
 msgstr ""
 
-#: app/templates/thank_you.html:123 app/templates/thank_you.html:139
+#: app/templates/thank_you.html:148 app/templates/thank_you.html:164
 msgid "Download Started"
 msgstr "ダウンロードが開始されました"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
-msgstr "AFHArchiveにファイルをアップロード"
+msgstr "ファイルをアップロード"
 
 #: app/templates/upload.html:14
 msgid "Important Guidelines"
@@ -681,7 +693,7 @@ msgstr "アップロードをキャンセルする"
 
 #: app/templates/upload.html:101
 msgid "Upload Process"
-msgstr "アップデートプロセス"
+msgstr "アップロードのプロセス"
 
 #: app/templates/upload.html:105
 msgid "Select your file (max 5GB)"
@@ -799,6 +811,142 @@ msgstr "GB"
 msgid "Upload failed"
 msgstr "アップロードに失敗しました"
 
+#: app/templates/admin/ab_tests.html:3 app/templates/admin/ab_tests.html:10
+msgid "A/B Testing Management"
+msgstr "A/Bテストの管理"
+
+#: app/templates/admin/ab_tests.html:13 app/templates/admin/ab_tests.html:156
+msgid "Create Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:17
+msgid "Init Direct Download Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:32
+msgid "Active"
+msgstr "アクティブ"
+
+#: app/templates/admin/ab_tests.html:32
+msgid "Inactive"
+msgstr "非アクティブ"
+
+#: app/templates/admin/ab_tests.html:44
+msgid "Total"
+msgstr "合計"
+
+#: app/templates/admin/ab_tests.html:48
+msgid "Control"
+msgstr "コントロール"
+
+#: app/templates/admin/ab_tests.html:52
+msgid "Test"
+msgstr "テスト"
+
+#: app/templates/admin/ab_tests.html:63
+msgid "Traffic:"
+msgstr "通信トラフィック："
+
+#: app/templates/admin/ab_tests.html:63
+msgid "to test group"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:71
+msgid "Stop"
+msgstr "止める"
+
+#: app/templates/admin/ab_tests.html:73
+msgid "Start"
+msgstr "開始"
+
+#: app/templates/admin/ab_tests.html:79
+msgid "Edit"
+msgstr "編集"
+
+#: app/templates/admin/ab_tests.html:83
+msgid "Delete"
+msgstr "削除"
+
+#: app/templates/admin/ab_tests.html:95
+msgid "No A/B tests configured. Create your first test to get started!"
+msgstr "A/Bテストが構成されていません。まずは最初のテストを作成しましょう！"
+
+#: app/templates/admin/ab_tests.html:104
+msgid "Maintenance"
+msgstr "メンテナンス中"
+
+#: app/templates/admin/ab_tests.html:109
+msgid "Clean up assignments older than:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:114
+msgid "Cleanup Old Assignments"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:119
+msgid "This will remove old user assignments to prevent database bloat. Active tests are unaffected."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:133
+msgid "Create A/B Test"
+msgstr "A/B作成のテスト"
+
+#: app/templates/admin/ab_tests.html:134 app/templates/admin/ab_tests.html:171
+#: app/templates/admin/ab_tests.html:201
+#: app/templates/admin/server_tools.html:257
+#: app/templates/admin/server_tools.html:269
+msgid "Close"
+msgstr "閉じる"
+
+#: app/templates/admin/ab_tests.html:138
+msgid "Test Name"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:140
+msgid "Use lowercase letters, numbers, and underscores only."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:143 app/templates/admin/ab_tests.html:175
+msgid "Description"
+msgstr "説明"
+
+#: app/templates/admin/ab_tests.html:147 app/templates/admin/ab_tests.html:179
+msgid "Test Traffic (%)"
+msgstr "テスト通信トラフィック (%)"
+
+#: app/templates/admin/ab_tests.html:151
+msgid "Percentage of users that will see the test variant."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:155 app/templates/admin/ab_tests.html:187
+#: app/templates/admin/ab_tests.html:211
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: app/templates/admin/ab_tests.html:170
+msgid "Edit Test:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:188
+msgid "Update Test"
+msgstr "アップデートのテスト"
+
+#: app/templates/admin/ab_tests.html:200
+msgid "Delete Test:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:204
+msgid "Are you sure you want to delete this A/B test?"
+msgstr "A/Bテストを削除しても良いですか?"
+
+#: app/templates/admin/ab_tests.html:207
+msgid "This will permanently delete all test data and user assignments."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:213
+msgid "Delete Test"
+msgstr "削除テスト"
+
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/announcement.html:5
 #: app/templates/admin/announcement.html:45
@@ -852,7 +1000,7 @@ msgstr ""
 
 #: app/templates/admin/announcement.html:34
 msgid "All Users"
-msgstr ""
+msgstr "全てのユーザー"
 
 #: app/templates/admin/announcement.html:38
 msgid "Only Users Who Have Uploaded"
@@ -884,7 +1032,7 @@ msgstr "メールアドレス："
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
-msgstr ""
+msgstr "："
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "Yes"
@@ -896,7 +1044,7 @@ msgstr "いいえ"
 
 #: app/templates/admin/autoreviewer.html:46
 msgid "Created:"
-msgstr ""
+msgstr "作成日："
 
 #: app/templates/admin/autoreviewer.html:58
 msgid "Autoreviewer Statistics"
@@ -908,7 +1056,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:71
 msgid "Duplicates Rejected"
-msgstr ""
+msgstr "重複で拒否されました"
 
 #: app/templates/admin/autoreviewer.html:78
 msgid "Rejection Rate:"
@@ -932,7 +1080,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:118
 msgid "How It Works"
-msgstr ""
+msgstr "仕組み"
 
 #: app/templates/admin/autoreviewer.html:120
 msgid "Automatically runs after each file upload"
@@ -964,11 +1112,11 @@ msgstr "アップロードID"
 
 #: app/templates/admin/autoreviewer.html:149
 msgid "Uploader"
-msgstr ""
+msgstr "アップロードしたユーザー"
 
 #: app/templates/admin/autoreviewer.html:150
 msgid "Rejected Date"
-msgstr ""
+msgstr "ファイルが拒否された日"
 
 #: app/templates/admin/autoreviewer.html:151
 msgid "Reason"
@@ -1012,7 +1160,7 @@ msgstr "ユーザー管理"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
-msgstr ""
+msgstr "アナウンスを作成する"
 
 #: app/templates/admin/dashboard.html:123
 #: app/templates/admin/server_tools.html:3
@@ -1022,7 +1170,11 @@ msgstr "サーバーツール"
 
 #: app/templates/admin/dashboard.html:129
 msgid "Autoreviewer"
-msgstr ""
+msgstr "自動レビュー"
+
+#: app/templates/admin/dashboard.html:135
+msgid "A/B Testing"
+msgstr "A/Bテスト中"
 
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
@@ -1065,7 +1217,7 @@ msgstr "ディスク情報は利用できません。"
 
 #: app/templates/admin/server_tools.html:104
 msgid "Uploads Storage"
-msgstr ""
+msgstr "アップロードストレージ"
 
 #: app/templates/admin/server_tools.html:109
 msgid "Total Size"
@@ -1073,7 +1225,7 @@ msgstr "合計のサイズ"
 
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
-msgstr ""
+msgstr "アップデートストレージ情報は現在利用できません"
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
@@ -1157,7 +1309,7 @@ msgstr "データベースのサイズ"
 
 #: app/templates/admin/server_tools.html:238
 msgid "Total Records"
-msgstr ""
+msgstr "合計レコード数"
 
 #: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
 msgid "Uploads"
@@ -1166,11 +1318,6 @@ msgstr "アップロード"
 #: app/templates/admin/server_tools.html:256
 msgid "Detailed System Information"
 msgstr "詳細なシステム情報"
-
-#: app/templates/admin/server_tools.html:257
-#: app/templates/admin/server_tools.html:269
-msgid "Close"
-msgstr "閉じる"
 
 #: app/templates/admin/server_tools.html:263
 #: app/templates/admin/server_tools.html:292
@@ -1275,11 +1422,11 @@ msgstr "参加"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
-msgstr "AFHArchiveにログインする"
+msgstr "AFHArchiveにサインインする"
 
 #: app/templates/auth/login.html:13
 msgid "Sign in with your Google account to start contributing to the archive."
-msgstr "アーカイブへの投稿を開始するには、Googleアカウントでログインしてください。"
+msgstr "アーカイブへの投稿を開始するには、Googleアカウントでサインインしてください。"
 
 #: app/templates/auth/login.html:16
 msgid "Sign in with Google"
