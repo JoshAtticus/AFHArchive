@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, send_from_directory
 main_bp = Blueprint('main', __name__)
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -264,6 +264,11 @@ def about():
 @main_bp.route('/contact')
 def contact():
     return render_template('contact.html')
+
+# Ads.txt
+@main_bp.route('/ads.txt')
+def ads_txt():
+    return send_from_directory(current_app.static_folder, 'ads.txt')
 
 # Language selection
 @main_bp.route('/set_language/<language>')
