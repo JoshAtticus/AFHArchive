@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-08-05 18:49+0800\n"
-"PO-Revision-Date: 2025-08-05 10:50\n"
+"POT-Creation-Date: 2025-08-10 21:56+0800\n"
+"PO-Revision-Date: 2025-08-10 14:54\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -202,7 +202,7 @@ msgid "View Details"
 msgstr ""
 
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
-#: app/templates/my_uploads.html:22 app/templates/thank_you.html:57
+#: app/templates/my_uploads.html:22 app/templates/thank_you.html:75
 msgid "Uploaded"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 msgid "Model:"
 msgstr ""
 
-#: app/templates/file_detail.html:26 app/templates/thank_you.html:44
+#: app/templates/file_detail.html:26 app/templates/thank_you.html:62
 msgid "File Information"
 msgstr ""
 
@@ -339,7 +339,7 @@ msgstr ""
 msgid "XDA Thread"
 msgstr ""
 
-#: app/templates/file_detail.html:71 app/templates/thank_you.html:61
+#: app/templates/file_detail.html:71 app/templates/thank_you.html:79
 msgid "Notes"
 msgstr ""
 
@@ -352,22 +352,22 @@ msgid "Download File"
 msgstr ""
 
 #: app/templates/file_detail.html:96 app/templates/index.html:76
-#: app/templates/thank_you.html:70
+#: app/templates/thank_you.html:88
 msgid "Support AFHArchive"
 msgstr ""
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
-#: app/templates/thank_you.html:73
+#: app/templates/thank_you.html:91
 msgid "Help keep this archive running!"
 msgstr ""
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
-#: app/templates/thank_you.html:74
+#: app/templates/thank_you.html:92
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
 msgstr ""
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
-#: app/templates/thank_you.html:76
+#: app/templates/thank_you.html:94
 msgid "Buy me a coffee"
 msgstr ""
 
@@ -479,13 +479,13 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:148
 #: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
-#: app/templates/thank_you.html:48
+#: app/templates/thank_you.html:66
 msgid "Device"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:128
 #: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
-#: app/templates/thank_you.html:51
+#: app/templates/thank_you.html:69
 msgid "Size"
 msgstr ""
 
@@ -495,7 +495,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: app/templates/my_uploads.html:23 app/templates/thank_you.html:54
+#: app/templates/my_uploads.html:23 app/templates/thank_you.html:72
 msgid "Downloads"
 msgstr ""
 
@@ -543,38 +543,50 @@ msgid "If it doesn't start, click the button below."
 msgstr ""
 
 #: app/templates/thank_you.html:27
+msgid "Beta Test"
+msgstr ""
+
+#: app/templates/thank_you.html:27
+msgid "You're part of a test for direct downloads from our server. Downloads will open in a new tab."
+msgstr ""
+
+#: app/templates/thank_you.html:30
+msgid "Use Standard Download"
+msgstr ""
+
+#: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
 msgstr ""
 
-#: app/templates/thank_you.html:35
+#: app/templates/thank_you.html:53
 msgid "Starting download in 3 seconds..."
 msgstr ""
 
-#: app/templates/thank_you.html:86
+#: app/templates/thank_you.html:104
 msgid "Back to File Details"
 msgstr ""
 
-#: app/templates/thank_you.html:89
+#: app/templates/thank_you.html:107
 msgid "Browse More Files"
 msgstr ""
 
-#: app/templates/thank_you.html:109
+#: app/templates/thank_you.html:128
 msgid "Starting download in"
 msgstr ""
 
-#: app/templates/thank_you.html:109
+#: app/templates/thank_you.html:128
 msgid "seconds..."
 msgstr ""
 
-#: app/templates/thank_you.html:111
+#: app/templates/thank_you.html:130
 msgid "Starting download..."
 msgstr ""
 
-#: app/templates/thank_you.html:122 app/templates/thank_you.html:138
+#: app/templates/thank_you.html:147 app/templates/thank_you.html:163
 msgid "Download started! Check your downloads folder."
 msgstr ""
 
-#: app/templates/thank_you.html:123 app/templates/thank_you.html:139
+#: app/templates/thank_you.html:148 app/templates/thank_you.html:164
 msgid "Download Started"
 msgstr ""
 
@@ -796,6 +808,142 @@ msgstr ""
 
 #: app/templates/upload.html:145
 msgid "Upload failed"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:3 app/templates/admin/ab_tests.html:10
+msgid "A/B Testing Management"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:13 app/templates/admin/ab_tests.html:156
+msgid "Create Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:17
+msgid "Init Direct Download Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:32
+msgid "Active"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:32
+msgid "Inactive"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:44
+msgid "Total"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:48
+msgid "Control"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:52
+msgid "Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:63
+msgid "Traffic:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:63
+msgid "to test group"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:71
+msgid "Stop"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:73
+msgid "Start"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:79
+msgid "Edit"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:83
+msgid "Delete"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:95
+msgid "No A/B tests configured. Create your first test to get started!"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:104
+msgid "Maintenance"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:109
+msgid "Clean up assignments older than:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:114
+msgid "Cleanup Old Assignments"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:119
+msgid "This will remove old user assignments to prevent database bloat. Active tests are unaffected."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:133
+msgid "Create A/B Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:134 app/templates/admin/ab_tests.html:171
+#: app/templates/admin/ab_tests.html:201
+#: app/templates/admin/server_tools.html:257
+#: app/templates/admin/server_tools.html:269
+msgid "Close"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:138
+msgid "Test Name"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:140
+msgid "Use lowercase letters, numbers, and underscores only."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:143 app/templates/admin/ab_tests.html:175
+msgid "Description"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:147 app/templates/admin/ab_tests.html:179
+msgid "Test Traffic (%)"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:151
+msgid "Percentage of users that will see the test variant."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:155 app/templates/admin/ab_tests.html:187
+#: app/templates/admin/ab_tests.html:211
+msgid "Cancel"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:170
+msgid "Edit Test:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:188
+msgid "Update Test"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:200
+msgid "Delete Test:"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:204
+msgid "Are you sure you want to delete this A/B test?"
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:207
+msgid "This will permanently delete all test data and user assignments."
+msgstr ""
+
+#: app/templates/admin/ab_tests.html:213
+msgid "Delete Test"
 msgstr ""
 
 #: app/templates/admin/announcement.html:2
@@ -1023,6 +1171,10 @@ msgstr ""
 msgid "Autoreviewer"
 msgstr ""
 
+#: app/templates/admin/dashboard.html:135
+msgid "A/B Testing"
+msgstr ""
+
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
 msgid "System Information"
@@ -1164,11 +1316,6 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:256
 msgid "Detailed System Information"
-msgstr ""
-
-#: app/templates/admin/server_tools.html:257
-#: app/templates/admin/server_tools.html:269
-msgid "Close"
 msgstr ""
 
 #: app/templates/admin/server_tools.html:263
