@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2025-09-17 16:03\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -544,15 +544,15 @@ msgstr "Se non si avvia, premi il pulsante sottostante."
 
 #: app/templates/thank_you.html:27
 msgid "Beta Test"
-msgstr ""
+msgstr "Beta Test"
 
 #: app/templates/thank_you.html:27
 msgid "You're part of a test for direct downloads from our server. Downloads will open in a new tab."
-msgstr ""
+msgstr "Sei parte di un test per i download diretti dal nostro server. I download si apriranno in una nuova scheda."
 
 #: app/templates/thank_you.html:30
 msgid "Use Standard Download"
-msgstr ""
+msgstr "Usa il Download Standard"
 
 #: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
@@ -684,346 +684,346 @@ msgstr "Note aggiuntive"
 
 #: app/templates/upload.html:84
 msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
-msgstr ""
+msgstr "Per favore scrivi in inglese. Le note sono visibili pubblicamente - includi versione della ROM, data di creazione, o altri dettagli rilevanti. Non includere informazioni personali, nomi dei file, o hash MD5 dato che questi sono già visualizzati separatamente."
 
 #: app/templates/upload.html:91
 msgid "Cancel Upload"
-msgstr ""
+msgstr "Annulla Caricamento"
 
 #: app/templates/upload.html:101
 msgid "Upload Process"
-msgstr ""
+msgstr "Processo di caricamento"
 
 #: app/templates/upload.html:105
 msgid "Select your file (max 5GB)"
-msgstr ""
+msgstr "Seleziona il tuo file (massimo 5GB)"
 
 #: app/templates/upload.html:106
 msgid "Fill in required metadata"
-msgstr ""
+msgstr "Riempi i metadati richiesti"
 
 #: app/templates/upload.html:107
 msgid "Admin reviews for AFH authenticity"
-msgstr ""
+msgstr "Revisioni degli amministratori per l'autenticità AFH"
 
 #: app/templates/upload.html:108
 msgid "Approved files become available"
-msgstr ""
+msgstr "I file approvati diventano disponibili"
 
 #: app/templates/upload.html:111
 msgid "Note:"
-msgstr ""
+msgstr "Nota:"
 
 #: app/templates/upload.html:111
 msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
-msgstr ""
+msgstr "Solo i file che erano precedentemente su AndroidFileHost saranno approvati per la preservazione."
 
 #: app/templates/upload.html:123
 msgid "File is too large. Maximum size is 5GB."
-msgstr ""
+msgstr "Il file è troppo grande. La dimensione massima è 5GB."
 
 #: app/templates/upload.html:124
 msgid "Please select a file to upload."
-msgstr ""
+msgstr "Per favore seleziona un file da caricare."
 
 #: app/templates/upload.html:125
 msgid "Device manufacturer is required."
-msgstr ""
+msgstr "Il produttore del dispositivo è richiesto."
 
 #: app/templates/upload.html:126
 msgid "Device model is required."
-msgstr ""
+msgstr "Il modello del dispositivo è richiesto."
 
 #: app/templates/upload.html:127
 msgid "Initializing upload..."
-msgstr ""
+msgstr "Inizializzazione del caricamento..."
 
 #: app/templates/upload.html:128
 msgid "Failed to initialize upload"
-msgstr ""
+msgstr "L'inizializzazione del caricamento ha fallito"
 
 #: app/templates/upload.html:129
 msgid "Starting chunk upload..."
-msgstr ""
+msgstr "Avvio del caricamento a blocchi..."
 
 #: app/templates/upload.html:130
 msgid "Upload cancelled"
-msgstr ""
+msgstr "Caricamento annullato"
 
 #: app/templates/upload.html:131
 msgid "Chunk upload failed"
-msgstr ""
+msgstr "Il caricamento a blocchi ha fallito"
 
 #: app/templates/upload.html:132
 msgid "Invalid response from server"
-msgstr ""
+msgstr "Risposta non valida dal server"
 
 #: app/templates/upload.html:133
 msgid "Network error during chunk upload"
-msgstr ""
+msgstr "Errore di rete durante il caricamento a blocchi"
 
 #: app/templates/upload.html:134
 msgid "Chunk upload cancelled"
-msgstr ""
+msgstr "Caricamento a blocchi annullato"
 
 #: app/templates/upload.html:135
 msgid "Assembling file..."
-msgstr ""
+msgstr "Assemblaggio del file..."
 
 #: app/templates/upload.html:136
 msgid "Failed to complete upload"
-msgstr ""
+msgstr "Il completamento del caricamento ha fallito"
 
 #: app/templates/upload.html:137
 msgid "Upload completed successfully!"
-msgstr ""
+msgstr "Caricamento completato con successo!"
 
 #: app/templates/upload.html:138
 msgid "Uploading chunk"
-msgstr ""
+msgstr "Caricamento del blocco"
 
 #: app/templates/upload.html:139
 msgid "of"
-msgstr ""
+msgstr "di"
 
 #: app/templates/upload.html:140
 msgid "MB/s"
-msgstr ""
+msgstr "MB/s"
 
 #: app/templates/upload.html:141
 msgid "Bytes"
-msgstr ""
+msgstr "Byte"
 
 #: app/templates/upload.html:142
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: app/templates/upload.html:143
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: app/templates/upload.html:144
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: app/templates/upload.html:145
 msgid "Upload failed"
-msgstr ""
+msgstr "Caricamento fallito"
 
 #: app/templates/admin/ab_tests.html:3 app/templates/admin/ab_tests.html:10
 msgid "A/B Testing Management"
-msgstr ""
+msgstr "Gestione dei test A/B"
 
 #: app/templates/admin/ab_tests.html:13 app/templates/admin/ab_tests.html:156
 msgid "Create Test"
-msgstr ""
+msgstr "Crea un Test"
 
 #: app/templates/admin/ab_tests.html:17
 msgid "Init Direct Download Test"
-msgstr ""
+msgstr "Inizializza il Test di Download Diretto"
 
 #: app/templates/admin/ab_tests.html:32
 msgid "Active"
-msgstr ""
+msgstr "Attivo"
 
 #: app/templates/admin/ab_tests.html:32
 msgid "Inactive"
-msgstr ""
+msgstr "Inattivo"
 
 #: app/templates/admin/ab_tests.html:44
 msgid "Total"
-msgstr ""
+msgstr "Totale"
 
 #: app/templates/admin/ab_tests.html:48
 msgid "Control"
-msgstr ""
+msgstr "Controllo"
 
 #: app/templates/admin/ab_tests.html:52
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: app/templates/admin/ab_tests.html:63
 msgid "Traffic:"
-msgstr ""
+msgstr "Traffico:"
 
 #: app/templates/admin/ab_tests.html:63
 msgid "to test group"
-msgstr ""
+msgstr "al gruppo di test"
 
 #: app/templates/admin/ab_tests.html:71
 msgid "Stop"
-msgstr ""
+msgstr "Ferma"
 
 #: app/templates/admin/ab_tests.html:73
 msgid "Start"
-msgstr ""
+msgstr "Inizia"
 
 #: app/templates/admin/ab_tests.html:79
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #: app/templates/admin/ab_tests.html:83
 msgid "Delete"
-msgstr ""
+msgstr "Elimina"
 
 #: app/templates/admin/ab_tests.html:95
 msgid "No A/B tests configured. Create your first test to get started!"
-msgstr ""
+msgstr "Nessun test A/B è stato configurato. Crea il tuo primo test per iniziare!"
 
 #: app/templates/admin/ab_tests.html:104
 msgid "Maintenance"
-msgstr ""
+msgstr "Manutenzione"
 
 #: app/templates/admin/ab_tests.html:109
 msgid "Clean up assignments older than:"
-msgstr ""
+msgstr "Pulisci i compiti più vecchi di:"
 
 #: app/templates/admin/ab_tests.html:114
 msgid "Cleanup Old Assignments"
-msgstr ""
+msgstr "Pulisci i Vecchi Compiti"
 
 #: app/templates/admin/ab_tests.html:119
 msgid "This will remove old user assignments to prevent database bloat. Active tests are unaffected."
-msgstr ""
+msgstr "Questo rimuoverà i vecchi compiti degli utenti per prevenire l'appesantimento del database. I test attivi non sono influenzati."
 
 #: app/templates/admin/ab_tests.html:133
 msgid "Create A/B Test"
-msgstr ""
+msgstr "Crea Test A/B"
 
 #: app/templates/admin/ab_tests.html:134 app/templates/admin/ab_tests.html:171
 #: app/templates/admin/ab_tests.html:201
 #: app/templates/admin/server_tools.html:257
 #: app/templates/admin/server_tools.html:269
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #: app/templates/admin/ab_tests.html:138
 msgid "Test Name"
-msgstr ""
+msgstr "Nome del Test"
 
 #: app/templates/admin/ab_tests.html:140
 msgid "Use lowercase letters, numbers, and underscores only."
-msgstr ""
+msgstr "Usa solo lettere minuscole, numeri e trattini bassi."
 
 #: app/templates/admin/ab_tests.html:143 app/templates/admin/ab_tests.html:175
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #: app/templates/admin/ab_tests.html:147 app/templates/admin/ab_tests.html:179
 msgid "Test Traffic (%)"
-msgstr ""
+msgstr "Traffico del Test (%)"
 
 #: app/templates/admin/ab_tests.html:151
 msgid "Percentage of users that will see the test variant."
-msgstr ""
+msgstr "Percentuale di utenti che vedrà la variante del test."
 
 #: app/templates/admin/ab_tests.html:155 app/templates/admin/ab_tests.html:187
 #: app/templates/admin/ab_tests.html:211
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: app/templates/admin/ab_tests.html:170
 msgid "Edit Test:"
-msgstr ""
+msgstr "Modifica Test:"
 
 #: app/templates/admin/ab_tests.html:188
 msgid "Update Test"
-msgstr ""
+msgstr "Aggiorna Test"
 
 #: app/templates/admin/ab_tests.html:200
 msgid "Delete Test:"
-msgstr ""
+msgstr "Elimina Test:"
 
 #: app/templates/admin/ab_tests.html:204
 msgid "Are you sure you want to delete this A/B test?"
-msgstr ""
+msgstr "Sei sicuro di voler eliminare questo test A/B?"
 
 #: app/templates/admin/ab_tests.html:207
 msgid "This will permanently delete all test data and user assignments."
-msgstr ""
+msgstr "Questo cancellerà tutti i dati del test e i compiti degli utenti."
 
 #: app/templates/admin/ab_tests.html:213
 msgid "Delete Test"
-msgstr ""
+msgstr "Elimina Test"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/announcement.html:5
 #: app/templates/admin/announcement.html:45
 msgid "Send Announcement"
-msgstr ""
+msgstr "Invia Annuncio"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
 #: app/templates/admin/users.html:3 app/templates/admin/users.html:46
 msgid "Admin"
-msgstr ""
+msgstr "Amministrazione"
 
 #: app/templates/admin/announcement.html:7
 #: app/templates/admin/autoreviewer.html:10
 #: app/templates/admin/server_tools.html:9 app/templates/admin/uploads.html:9
 #: app/templates/admin/users.html:9
 msgid "Back to Dashboard"
-msgstr ""
+msgstr "Torna alla Dashboard"
 
 #: app/templates/admin/announcement.html:12
 msgid "Subject"
-msgstr ""
+msgstr "Oggetto"
 
 #: app/templates/admin/announcement.html:13
 msgid "Announcement subject"
-msgstr ""
+msgstr "Oggetto dell'annuncio"
 
 #: app/templates/admin/announcement.html:16
 msgid "Message"
-msgstr ""
+msgstr "Messaggio"
 
 #: app/templates/admin/announcement.html:16
 msgid "HTML allowed"
-msgstr ""
+msgstr "HTML consentito"
 
 #: app/templates/admin/announcement.html:17
 msgid "Type your announcement here..."
-msgstr ""
+msgstr "Digita il tuo annuncio qui..."
 
 #: app/templates/admin/announcement.html:20
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metodo d'invio"
 
 #: app/templates/admin/announcement.html:23
 msgid "Homepage Banner"
-msgstr ""
+msgstr "Banner nella pagina principale"
 
 #: app/templates/admin/announcement.html:31
 msgid "Recipients"
-msgstr ""
+msgstr "Recipienti"
 
 #: app/templates/admin/announcement.html:34
 msgid "All Users"
-msgstr ""
+msgstr "Tutti gli utenti"
 
 #: app/templates/admin/announcement.html:38
 msgid "Only Users Who Have Uploaded"
-msgstr ""
+msgstr "Solo gli utenti che hanno caricato"
 
 #: app/templates/admin/announcement.html:43
 msgid "With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges."
-msgstr ""
+msgstr "Con tanto potere c'è tanta responsabilità! Per favore pensaci due volte prima di fare un annuncio—gli annunci inviano una email a tutti gli utenti! L'abuso di questo permesso può risultare nella rimozione dei privilegi amministrativi."
 
 #: app/templates/admin/autoreviewer.html:8
 msgid "Autoreviewer Management"
-msgstr ""
+msgstr "Gestione dell'autorevisionatore"
 
 #: app/templates/admin/autoreviewer.html:21
 msgid "Autoreviewer System Info"
-msgstr ""
+msgstr "Informazioni di sistema sull'autorevisionatore"
 
 #: app/templates/admin/autoreviewer.html:26
 msgid "System User ID:"
-msgstr ""
+msgstr "ID Utente di Sistema:"
 
 #: app/templates/admin/autoreviewer.html:30
 msgid "Name:"
-msgstr ""
+msgstr "Nome:"
 
 #: app/templates/admin/autoreviewer.html:36
 msgid "Email:"
@@ -1031,431 +1031,431 @@ msgstr "Email:"
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
-msgstr ""
+msgstr "Stato amministratore:"
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "Yes"
-msgstr ""
+msgstr "Si"
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: app/templates/admin/autoreviewer.html:46
 msgid "Created:"
-msgstr ""
+msgstr "Creato:"
 
 #: app/templates/admin/autoreviewer.html:58
 msgid "Autoreviewer Statistics"
-msgstr ""
+msgstr "Statistiche autorevisionatore"
 
 #: app/templates/admin/autoreviewer.html:65
 msgid "Total Reviewed"
-msgstr ""
+msgstr "Revisioni totali"
 
 #: app/templates/admin/autoreviewer.html:71
 msgid "Duplicates Rejected"
-msgstr ""
+msgstr "Duplicati rifiutati"
 
 #: app/templates/admin/autoreviewer.html:78
 msgid "Rejection Rate:"
-msgstr ""
+msgstr "Percentuale di rifiuto:"
 
 #: app/templates/admin/autoreviewer.html:101
 msgid "Autoreviewer Actions"
-msgstr ""
+msgstr "Azioni dell'autorevisionatore"
 
 #: app/templates/admin/autoreviewer.html:106
 msgid "Run Batch Processing"
-msgstr ""
+msgstr "Esegui elaborazione di gruppo"
 
 #: app/templates/admin/autoreviewer.html:108
 msgid "Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes."
-msgstr ""
+msgstr "Esegui l'autorevisionatore su tutti i caricamenti in attesa per controllare per duplicati. Questo rifiuterà tutti i caricamenti che hanno hash MD5 duplicati."
 
 #: app/templates/admin/autoreviewer.html:113
 msgid "Run Batch Autoreviewer"
-msgstr ""
+msgstr "Esegui l'autorevisionatore di gruppo"
 
 #: app/templates/admin/autoreviewer.html:118
 msgid "How It Works"
-msgstr ""
+msgstr "Come funziona"
 
 #: app/templates/admin/autoreviewer.html:120
 msgid "Automatically runs after each file upload"
-msgstr ""
+msgstr "Si esegue automaticamente dopo ogni caricamento di file"
 
 #: app/templates/admin/autoreviewer.html:121
 msgid "Compares MD5 hashes to detect exact duplicates"
-msgstr ""
+msgstr "Confronta gli hash MD5 per trovare i duplicati esatti"
 
 #: app/templates/admin/autoreviewer.html:122
 msgid "Rejects uploads that match existing approved or pending files"
-msgstr ""
+msgstr "Rifiuta i caricamenti che corrispondono con file approvati o in attesa"
 
 #: app/templates/admin/autoreviewer.html:123
 msgid "Sends notification emails to uploaders"
-msgstr ""
+msgstr "Invia una email ai caricatori"
 
 #: app/templates/admin/autoreviewer.html:124
 msgid "Appears as \"Autoreviewer\" in the system"
-msgstr ""
+msgstr "Appare come \"Autorevisionatore\" nel sistema"
 
 #: app/templates/admin/autoreviewer.html:139
 msgid "Recent Duplicate Rejections"
-msgstr ""
+msgstr "Duplicati rifiutati recentemente"
 
 #: app/templates/admin/autoreviewer.html:146
 msgid "Upload ID"
-msgstr ""
+msgstr "ID caricamento"
 
 #: app/templates/admin/autoreviewer.html:149
 msgid "Uploader"
-msgstr ""
+msgstr "Caricatore"
 
 #: app/templates/admin/autoreviewer.html:150
 msgid "Rejected Date"
-msgstr ""
+msgstr "Data di rifiuto"
 
 #: app/templates/admin/autoreviewer.html:151
 msgid "Reason"
-msgstr ""
+msgstr "Motivo"
 
 #: app/templates/admin/autoreviewer.html:164
 #: app/templates/admin/server_tools.html:30
 #: app/templates/admin/server_tools.html:231
 msgid "Unknown"
-msgstr ""
+msgstr "Sconosciuto"
 
 #: app/templates/admin/autoreviewer.html:165
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
-msgstr ""
+msgstr "Dashboard di amministrazione"
 
 #: app/templates/admin/dashboard.html:73
 #: app/templates/admin/server_tools.html:240
 msgid "Users"
-msgstr ""
+msgstr "Utenti"
 
 #: app/templates/admin/dashboard.html:92
 msgid "Quick Actions"
-msgstr ""
+msgstr "Azioni rapide"
 
 #: app/templates/admin/dashboard.html:99
 msgid "Review Pending Uploads"
-msgstr ""
+msgstr "Revisiona i caricamenti recenti"
 
 #: app/templates/admin/dashboard.html:105
 msgid "Manage All Uploads"
-msgstr ""
+msgstr "Gestisci tutti i caricamenti"
 
 #: app/templates/admin/dashboard.html:111 app/templates/admin/users.html:3
 #: app/templates/admin/users.html:7
 msgid "Manage Users"
-msgstr ""
+msgstr "Gestisci gli utenti"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
-msgstr ""
+msgstr "Fai un annuncio"
 
 #: app/templates/admin/dashboard.html:123
 #: app/templates/admin/server_tools.html:3
 #: app/templates/admin/server_tools.html:7
 msgid "Server Tools"
-msgstr ""
+msgstr "Strumenti del server"
 
 #: app/templates/admin/dashboard.html:129
 msgid "Autoreviewer"
-msgstr ""
+msgstr "Autorevisionatore"
 
 #: app/templates/admin/dashboard.html:135
 msgid "A/B Testing"
-msgstr ""
+msgstr "Prova A/B"
 
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
 msgid "System Information"
-msgstr ""
+msgstr "Informazioni sul sistema"
 
 #: app/templates/admin/server_tools.html:24
 msgid "Uptime"
-msgstr ""
+msgstr "Tempo di attività"
 
 #: app/templates/admin/server_tools.html:27
 msgid "days"
-msgstr ""
+msgstr "giorni"
 
 #: app/templates/admin/server_tools.html:35
 #: app/templates/admin/server_tools.html:314
 msgid "CPU Usage"
-msgstr ""
+msgstr "Utilizzo CPU"
 
 #: app/templates/admin/server_tools.html:40
 msgid "System information unavailable"
-msgstr ""
+msgstr "Informazioni sul sistema non disponibili"
 
 #: app/templates/admin/server_tools.html:49
 #: app/templates/admin/server_tools.html:315
 msgid "Memory Usage"
-msgstr ""
+msgstr "Utilizzo memoria"
 
 #: app/templates/admin/server_tools.html:66
 msgid "Memory information unavailable"
-msgstr ""
+msgstr "Informazioni sulla memoria non disponibili"
 
 #: app/templates/admin/server_tools.html:78
 msgid "Disk Usage"
-msgstr ""
+msgstr "Utilizzo del disco"
 
 #: app/templates/admin/server_tools.html:95
 msgid "Disk information unavailable"
-msgstr ""
+msgstr "Informazioni sul disco non disponibili"
 
 #: app/templates/admin/server_tools.html:104
 msgid "Uploads Storage"
-msgstr ""
+msgstr "Spazio dei caricamenti"
 
 #: app/templates/admin/server_tools.html:109
 msgid "Total Size"
-msgstr ""
+msgstr "Dimensione totale"
 
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
-msgstr ""
+msgstr "Informazioni sullo spazio dei caricamenti non disponibili"
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
-msgstr ""
+msgstr "Cache dei blocchi"
 
 #: app/templates/admin/server_tools.html:127
 msgid "Files"
-msgstr ""
+msgstr "File"
 
 #: app/templates/admin/server_tools.html:131
 msgid "Chunk cache information unavailable"
-msgstr ""
+msgstr "Informazioni sulla cache dei blocchi non disponibili"
 
 #: app/templates/admin/server_tools.html:143
 msgid "Storage Management"
-msgstr ""
+msgstr "Gestione spazio"
 
 #: app/templates/admin/server_tools.html:150
 msgid "Are you sure you want to clear all chunk cache files?"
-msgstr ""
+msgstr "Sei sicuro di voler eliminare tutti file della cache dei blocchi?"
 
 #: app/templates/admin/server_tools.html:152
 msgid "Clear Chunk Cache"
-msgstr ""
+msgstr "Pulisci la cache dei blocchi"
 
 #: app/templates/admin/server_tools.html:155
 msgid "Removes all files from the chunks directory to free up space"
-msgstr ""
+msgstr "Rimuove tutti i file dalla cartella dei blocchi per liberare spazio"
 
 #: app/templates/admin/server_tools.html:161
 msgid "Are you sure you want to remove orphaned files?"
-msgstr ""
+msgstr "Sei sicuro di voler rimuovere i file orfani?"
 
 #: app/templates/admin/server_tools.html:163
 msgid "Clean Orphaned Files"
-msgstr ""
+msgstr "Pulisci i file orfani"
 
 #: app/templates/admin/server_tools.html:166
 msgid "Removes upload files that no longer have database entries"
-msgstr ""
+msgstr "Rimuove i file che non hanno più elementi nel database"
 
 #: app/templates/admin/server_tools.html:172
 msgid "Refresh System Info"
-msgstr ""
+msgstr "Ricarica le informazioni di sistema"
 
 #: app/templates/admin/server_tools.html:174
 msgid "Updates system information and statistics"
-msgstr ""
+msgstr "Aggiorna le informazioni del sistema e le statistiche"
 
 #: app/templates/admin/server_tools.html:187
 msgid "Server Management"
-msgstr ""
+msgstr "Gestione Server"
 
 #: app/templates/admin/server_tools.html:194
 msgid "Are you sure you want to restart the server? This will temporarily interrupt service."
-msgstr ""
+msgstr "Sei sicuro di voler riavviare il server? Questo interromperà il servizio temporaneamente."
 
 #: app/templates/admin/server_tools.html:196
 msgid "Restart Server"
-msgstr ""
+msgstr "Riavvia Server"
 
 #: app/templates/admin/server_tools.html:199
 msgid "Gracefully restarts the server application"
-msgstr ""
+msgstr "Riavvia il programma server con grazia"
 
 #: app/templates/admin/server_tools.html:205
 msgid "Detailed System Info"
-msgstr ""
+msgstr "Informazioni dettagliate sul sistema"
 
 #: app/templates/admin/server_tools.html:207
 msgid "View detailed system and process information"
-msgstr ""
+msgstr "Visualizza informazioni dettagliate sul sistema e sul processo"
 
 #: app/templates/admin/server_tools.html:220
 msgid "Database Information"
-msgstr ""
+msgstr "Informazioni sul database"
 
 #: app/templates/admin/server_tools.html:226
 msgid "Database Size"
-msgstr ""
+msgstr "Dimensione del database"
 
 #: app/templates/admin/server_tools.html:238
 msgid "Total Records"
-msgstr ""
+msgstr "Registrazioni totali"
 
 #: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
 msgid "Uploads"
-msgstr ""
+msgstr "Caricamenti"
 
 #: app/templates/admin/server_tools.html:256
 msgid "Detailed System Information"
-msgstr ""
+msgstr "Informazioni dettagliate sul sistema"
 
 #: app/templates/admin/server_tools.html:263
 #: app/templates/admin/server_tools.html:292
 msgid "Loading..."
-msgstr ""
+msgstr "Caricamento..."
 
 #: app/templates/admin/server_tools.html:270
 msgid "Refresh"
-msgstr ""
+msgstr "Ricarica"
 
 #: app/templates/admin/server_tools.html:304
 msgid "Platform"
-msgstr ""
+msgstr "Piattaforma"
 
 #: app/templates/admin/server_tools.html:305
 msgid "Python Version"
-msgstr ""
+msgstr "Versione di Python"
 
 #: app/templates/admin/server_tools.html:306
 msgid "CPU Cores"
-msgstr ""
+msgstr "Core della CPU"
 
 #: app/templates/admin/server_tools.html:307
 msgid "Load Average"
-msgstr ""
+msgstr "Carico medio"
 
 #: app/templates/admin/server_tools.html:311
 msgid "Process Information"
-msgstr ""
+msgstr "Informazioni sul processo"
 
 #: app/templates/admin/server_tools.html:312
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: app/templates/admin/server_tools.html:316
 msgid "Threads"
-msgstr ""
+msgstr "Thread"
 
 #: app/templates/admin/server_tools.html:326
 msgid "Network I/O"
-msgstr ""
+msgstr "I/O Rete"
 
 #: app/templates/admin/server_tools.html:327
 msgid "Bytes Sent"
-msgstr ""
+msgstr "Byte inviati"
 
 #: app/templates/admin/server_tools.html:328
 msgid "Bytes Received"
-msgstr ""
+msgstr "Byte ricevuti"
 
 #: app/templates/admin/server_tools.html:333
 msgid "Disk I/O"
-msgstr ""
+msgstr "I/O Disco"
 
 #: app/templates/admin/server_tools.html:334
 msgid "Bytes Read"
-msgstr ""
+msgstr "Byte letti"
 
 #: app/templates/admin/server_tools.html:335
 msgid "Bytes Written"
-msgstr ""
+msgstr "Byte scritti"
 
 #: app/templates/admin/server_tools.html:345
 msgid "Error loading system information"
-msgstr ""
+msgstr "Errore durante il caricamento delle informazioni sul sistema"
 
 #: app/templates/admin/uploads.html:3 app/templates/admin/uploads.html:7
 msgid "Manage Uploads"
-msgstr ""
+msgstr "Gestisci i caricamenti"
 
 #: app/templates/admin/uploads.html:21
 msgid "All"
-msgstr ""
+msgstr "Tutti"
 
 #: app/templates/admin/uploads.html:55 app/templates/admin/users.html:50
 msgid "User"
-msgstr ""
+msgstr "Utente"
 
 #: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
 msgid "Actions"
-msgstr ""
+msgstr "Azioni"
 
 #: app/templates/admin/uploads.html:157
 msgid "No uploads found"
-msgstr ""
+msgstr "Nessun caricamento trovato"
 
 #: app/templates/admin/uploads.html:158
 msgid "No uploads match your current filters."
-msgstr ""
+msgstr "Nessun caricamento corrisponde con i tuoi filtri attuali."
 
 #: app/templates/admin/users.html:19
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: app/templates/admin/users.html:21
 msgid "Role"
-msgstr ""
+msgstr "Ruolo"
 
 #: app/templates/admin/users.html:23
 msgid "Joined"
-msgstr ""
+msgstr "Registrato"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
-msgstr ""
+msgstr "Accedi ad AFHArchive"
 
 #: app/templates/auth/login.html:13
 msgid "Sign in with your Google account to start contributing to the archive."
-msgstr ""
+msgstr "Accedi con il tuo account Google e inizia a contribuire all'archivio."
 
 #: app/templates/auth/login.html:16
 msgid "Sign in with Google"
-msgstr ""
+msgstr "Accedi con Google"
 
 #: app/templates/auth/login.html:21
 msgid "By signing in, you agree to help preserve AndroidFileHost content responsibly. Only files that were previously hosted on AFH will be approved."
-msgstr ""
+msgstr "Accedendo, accetti di aiutare a preservare il contenuto di AndroidFileHost responsabilmente. Solo i file che erano stati ospitati precedentemente su AFH saranno approvati."
 
 #: app/templates/errors/404.html:3 app/templates/errors/404.html:11
 msgid "Page Not Found"
-msgstr ""
+msgstr "Pagina non trovata"
 
 #: app/templates/errors/404.html:13
 msgid "The page you're looking for doesn't exist or has been moved."
-msgstr ""
+msgstr "La pagina che stavi cercando non esiste o è stata spostata."
 
 #: app/templates/errors/404.html:16
 msgid "This could be due to a broken link, mistyped URL, or the file may have been removed from our archive."
-msgstr ""
+msgstr "Questo può accadere a causa di un link rotto, un URL digitato male, o un file che è stato rimosso dal nostro archivio."
 
 #: app/templates/errors/404.html:20
 msgid "Search for files..."
-msgstr ""
+msgstr "Cerca i file..."
 
 #: app/templates/errors/404.html:28
 msgid "Go Home"
-msgstr ""
+msgstr "Torna alla home"
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
-msgstr ""
+msgstr "Torna indietro"
 
