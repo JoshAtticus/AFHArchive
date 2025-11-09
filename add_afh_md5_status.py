@@ -13,9 +13,9 @@ def add_afh_md5_status_column():
     
     # Try to find the database file
     possible_db_paths = [
-        'instance/app.db',
-        'app.db',
-        os.path.join(os.path.dirname(__file__), 'instance', 'app.db'),
+        'instance/afharchive.db',
+        'afharchive.db',
+        os.path.join(os.path.dirname(__file__), 'instance', 'afharchive.db'),
     ]
     
     db_path = None
