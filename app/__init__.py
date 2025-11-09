@@ -122,6 +122,8 @@ def create_app():
     app.config['UPLOAD_FOLDER'] = config('UPLOAD_DIR', default='uploads')
     app.config['GOOGLE_CLIENT_ID'] = config('GOOGLE_CLIENT_ID')
     app.config['GOOGLE_CLIENT_SECRET'] = config('GOOGLE_CLIENT_SECRET')
+    app.config['GITHUB_CLIENT_ID'] = config('GITHUB_CLIENT_ID', default='')
+    app.config['GITHUB_CLIENT_SECRET'] = config('GITHUB_CLIENT_SECRET', default='')
     app.config['ADMIN_EMAILS'] = config('ADMIN_EMAILS', default='').split(',')
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
     

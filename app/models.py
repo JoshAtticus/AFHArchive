@@ -9,7 +9,8 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True)
-    google_id = Column(String(100), unique=True, nullable=False)
+    google_id = Column(String(100), unique=True, nullable=True)  # Made nullable for multi-provider support
+    github_id = Column(String(100), unique=True, nullable=True)  # GitHub OAuth ID
     email = Column(String(100), unique=True, nullable=False)
     name = Column(String(100), nullable=False)
     avatar_url = Column(String(200))

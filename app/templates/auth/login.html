@@ -10,11 +10,17 @@
                 <h3><i class="fas fa-sign-in-alt"></i> {{ _('Sign In to AFHArchive') }}</h3>
             </div>
             <div class="card-body text-center">
-                <p class="mb-4">{{ _('Sign in with your Google account to start contributing to the archive.') }}</p>
+                <p class="mb-4">{{ _('Sign in with your Google or GitHub account to start contributing to the archive.') }}</p>
                 
-                <a href="{{ url_for('auth.google_auth') }}" class="btn btn-danger btn-lg">
-                    <i class="fab fa-google"></i> {{ _('Sign in with Google') }}
-                </a>
+                <div class="d-grid gap-3">
+                    <a href="{{ url_for('auth.google_auth') }}" class="btn btn-danger btn-lg">
+                        <i class="fab fa-google"></i> {{ _('Sign in with Google') }}
+                    </a>
+                    
+                    <a href="{{ url_for('auth.github_auth') }}" class="btn btn-dark btn-lg">
+                        <i class="fab fa-github"></i> {{ _('Sign in with GitHub') }}
+                    </a>
+                </div>
                 
                 <div class="mt-4">
                     <small class="text-muted">
