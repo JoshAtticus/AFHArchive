@@ -46,6 +46,9 @@ class Upload(db.Model):
     reviewed_at = Column(DateTime)
     download_count = Column(Integer, default=0)
     
+    # AFH MD5 verification status: 'match', 'mismatch', 'error', 'no_link', or None (not checked)
+    afh_md5_status = Column(String(20))
+    
     # Foreign keys
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     reviewed_by = Column(Integer, ForeignKey('users.id'))

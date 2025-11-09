@@ -7,6 +7,7 @@ from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
 from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_all_pending, get_or_create_autoreviewer
 from app.utils.ab_testing import get_test_stats, cleanup_old_assignments
+from app.utils.afh_verifier import verify_md5_against_afh
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -127,6 +128,12 @@ def uploads():
 @admin_required
 def view_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
+    
+    # Automatically check AFH MD5 if not already checked and AFH link exists
+    if upload.afh_link and upload.afh_md5_status is None:
+        upload.afh_md5_status = verify_md5_against_afh(upload)
+        db.session.commit()
+    
     return render_template('admin/upload_detail.html', upload=upload)
 
 @admin_bp.route('/upload/<int:upload_id>/approve', methods=['POST'])
@@ -214,11 +221,44 @@ def edit_upload(upload_id):
         upload.xda_thread = request.form.get('xda_thread', '').strip()
         upload.notes = request.form.get('notes', '').strip()
         
+        # If AFH link changed, reset the verification status
+        if upload.afh_link != request.form.get('afh_link', '').strip():
+            upload.afh_md5_status = None
+        
         db.session.commit()
         flash('Upload metadata updated', 'success')
         return redirect(url_for('admin.view_upload', upload_id=upload_id))
     
     return render_template('admin/edit_upload.html', upload=upload)
+
+
+@admin_bp.route('/upload/<int:upload_id>/check-afh-md5', methods=['POST'])
+@login_required
+@admin_required
+def check_afh_md5(upload_id):
+    """Manually trigger AFH MD5 verification"""
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if not upload.afh_link:
+        return jsonify({'success': False, 'message': 'No AFH link provided'})
+    
+    # Force recheck
+    upload.afh_md5_status = verify_md5_against_afh(upload)
+    db.session.commit()
+    
+    # Return status for immediate UI update
+    status_messages = {
+        'match': 'MD5 hashes match!',
+        'mismatch': 'MD5 hashes do not match',
+        'error': 'Could not verify MD5 against AFH',
+        'no_link': 'No AFH link provided'
+    }
+    
+    return jsonify({
+        'success': True,
+        'status': upload.afh_md5_status,
+        'message': status_messages.get(upload.afh_md5_status, 'Unknown status')
+    })
 
 @admin_bp.route('/upload/<int:upload_id>/delete', methods=['POST'])
 @login_required

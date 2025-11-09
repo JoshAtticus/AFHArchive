@@ -35,7 +35,37 @@
                     </tr>
                     <tr>
                         <td>MD5 Hash</td>
-                        <td><code>{{ upload.md5_hash }}</code></td>
+                        <td>
+                            <code>{{ upload.md5_hash }}</code>
+                            {% if upload.afh_link %}
+                                <div class="mt-2">
+                                    {% if upload.afh_md5_status == 'match' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check-circle"></i> Matches AFH
+                                        </span>
+                                    {% elif upload.afh_md5_status == 'mismatch' %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times-circle"></i> Doesn't match AFH
+                                        </span>
+                                    {% elif upload.afh_md5_status == 'error' %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="fas fa-exclamation-triangle"></i> Couldn't verify MD5 against AFH
+                                        </span>
+                                    {% elif upload.afh_md5_status == 'no_link' %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-info-circle"></i> No AFH link
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-question-circle"></i> Not verified
+                                        </span>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="recheckMd5Btn" onclick="recheckAFHMD5()">
+                                        <i class="fas fa-sync-alt"></i> Recheck
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Manufacturer</td>
@@ -215,4 +245,38 @@
     </div>
 </div>
 {% endif %}
+
+<script>
+function recheckAFHMD5() {
+    const btn = document.getElementById('recheckMd5Btn');
+    const originalHtml = btn.innerHTML;
+    
+    // Disable button and show loading
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+    
+    fetch('{{ url_for("admin.check_afh_md5", upload_id=upload.id) }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload page to show updated status
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        }
+    })
+    .catch(error => {
+        alert('Network error: ' + error);
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    });
+}
+</script>
 {% endblock %}

@@ -6,6 +6,7 @@ WTForms
 Flask-Babel
 python-dotenv
 requests
+beautifulsoup4
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
