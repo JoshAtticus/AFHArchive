@@ -94,6 +94,13 @@
                 
                 <hr>
                 
+                <p><strong>Account Deletion Notice:</strong></p>
+                <button class="btn btn-sm btn-outline-danger w-100 mb-2" onclick="useTemplate('deletion')">
+                    Use Template
+                </button>
+                
+                <hr>
+                
                 <p><strong>Custom Message:</strong></p>
                 <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="useTemplate('custom')">
                     Use Template
@@ -155,6 +162,22 @@ function useTemplate(type) {
 <p>If you have any questions or concerns, please don't hesitate to reply to this email.</p>
 
 <p>Best regards,<br>
+AFHArchive Admin Team</p>`;
+    } else if (type === 'deletion') {
+        subjectField.value = 'Account Deletion Notice - Action Required';
+        messageField.value = `<p>Hi {{ user.name }},</p>
+
+<p>We're reaching out regarding your AFHArchive account. Our records show that your account has been inactive for over 30 days with no file uploads.</p>
+
+<p><strong>AFHArchive is a preservation archive</strong> dedicated to saving files that were previously hosted on AndroidFileHost. Accounts are intended for users who are actively contributing to this preservation effort.</p>
+
+<p><strong>Because of your inactivity, we've deleted your account. You may sign up at any time again on our website.</p>
+
+<p>If you no longer wish to contribute to AFHArchive, no action is needed.</p>
+
+<p>If you have any questions or believe this notice was sent in error, please reply to this email.</p>
+
+<p>Thank you for your understanding,<br>
 AFHArchive Admin Team</p>`;
     } else if (type === 'custom') {
         subjectField.value = 'Message from AFHArchive Admin';
