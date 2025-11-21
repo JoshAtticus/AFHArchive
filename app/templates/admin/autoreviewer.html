@@ -229,8 +229,8 @@
                                         </a>
                                     </td>
                                     <td>{{ upload.device_manufacturer }} {{ upload.device_model }}</td>
-                                    <td>{{ upload.uploader.name if upload.uploader else _('Unknown') }}</td>
-                                    <td>{{ upload.reviewed_at.strftime('%Y-%m-%d %H:%M') if upload.reviewed_at else _('N/A') }}</td>
+                                    <td>{{ upload.uploader_name }}</td>
+                                    <td>{{ upload.reviewed_at }}</td>
                                     <td>
                                         <small class="text-muted">
                                             {{ upload.rejection_reason[:100] }}{% if upload.rejection_reason and upload.rejection_reason|length > 100 %}...{% endif %}

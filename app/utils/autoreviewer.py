@@ -250,8 +250,22 @@ def get_autoreviewer_stats():
     reviewed_uploads = Upload.query.filter_by(reviewed_by=autoreviewer.id).all()
     rejected_uploads = [u for u in reviewed_uploads if u.status == 'rejected']
     
+    # Serialize upload objects for JSON/template compatibility
+    serialized_rejected = []
+    for upload in rejected_uploads[-10:]:  # Last 10 rejected uploads
+        serialized_rejected.append({
+            'id': upload.id,
+            'original_filename': upload.original_filename,
+            'device_manufacturer': upload.device_manufacturer,
+            'device_model': upload.device_model,
+            'uploader_name': upload.uploader.name if upload.uploader else 'Unknown',
+            'reviewed_at': upload.reviewed_at.strftime('%Y-%m-%d %H:%M') if upload.reviewed_at else 'N/A',
+            'rejection_reason': upload.rejection_reason
+        })
+    
     return {
         'total_reviewed': len(reviewed_uploads),
         'total_rejected': len(rejected_uploads),
-        'duplicate_uploads': rejected_uploads[-10:]  # Last 10 rejected uploads
+        'duplicate_uploads': serialized_rejected
     }
+
