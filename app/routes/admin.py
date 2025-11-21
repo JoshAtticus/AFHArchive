@@ -21,17 +21,46 @@ import secrets
 import requests
 from datetime import datetime, timedelta
 pending_email_batches = defaultdict(lambda: {'approved': [], 'rejected': [], 'timer': None})
+
 def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     """Batch notifications for 5 minutes before sending approval/rejection emails"""
     user_id = user.id
     batch = pending_email_batches[user_id]
-    batch['approved'].extend(approved_uploads)
-    batch['rejected'].extend(rejected_uploads)
+    
+    # Serialize upload data immediately while still in session context
+    for upload in approved_uploads:
+        upload_data = {
+            'id': upload.id,
+            'original_filename': upload.original_filename,
+            'device_manufacturer': upload.device_manufacturer,
+            'device_model': upload.device_model,
+            'reviewed_at': upload.reviewed_at
+        }
+        batch['approved'].append(upload_data)
+    
+    for upload in rejected_uploads:
+        upload_data = {
+            'id': upload.id,
+            'original_filename': upload.original_filename,
+            'device_manufacturer': upload.device_manufacturer,
+            'device_model': upload.device_model,
+            'rejection_reason': upload.rejection_reason,
+            'reviewed_at': upload.reviewed_at
+        }
+        batch['rejected'].append(upload_data)
+    
     if batch['timer']:
         batch['timer'].cancel()
     
     # Capture the app instance while we're still in the application context
     app = current_app._get_current_object()
+    
+    # Serialize user data
+    user_data = {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email
+    }
     
     def send_batched_email():
         with app.app_context():
@@ -39,7 +68,7 @@ def schedule_upload_notification(user, approved_uploads, rejected_uploads):
             rejected = batch['rejected']
             subject = None
             template = None
-            context = {'user': user}
+            context = {'user': user_data}
             if approved and not rejected:
                 subject = "Your uploads were approved"
                 template = 'uploads_approved.html'
@@ -56,7 +85,7 @@ def schedule_upload_notification(user, approved_uploads, rejected_uploads):
             else:
                 return
             html = render_email_template(template, **context)
-            send_email(user.email, subject, html)
+            send_email(user_data['email'], subject, html)
             # Clear batch
             pending_email_batches[user_id] = {'approved': [], 'rejected': [], 'timer': None}
     # Schedule for 5 minutes (300 seconds)
@@ -374,8 +403,8 @@ def send_user_email(user_id):
             flash('Subject and message are required', 'error')
             return redirect(url_for('admin.send_user_email', user_id=user_id))
         
-        # Send email using custom email template
-        html = render_email_template('custom_email.html', message=message)
+        # Send email using custom email template with subject in header
+        html = render_email_template('custom_email.html', message=message, subject=subject)
         success = send_email(user.email, subject, html)
         
         if success:

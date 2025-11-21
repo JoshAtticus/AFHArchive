@@ -77,13 +77,31 @@ def schedule_autoreviewer_notification(user, rejected_uploads):
     """Batch autoreviewer notifications for 5 minutes before sending rejection emails"""
     user_id = user.id
     batch = pending_autoreviewer_notifications[user_id]
-    batch['rejected'].extend(rejected_uploads)
+    
+    # Serialize upload data immediately while still in session context
+    for upload in rejected_uploads:
+        upload_data = {
+            'id': upload.id,
+            'original_filename': upload.original_filename,
+            'device_manufacturer': upload.device_manufacturer,
+            'device_model': upload.device_model,
+            'rejection_reason': upload.rejection_reason,
+            'reviewed_at': upload.reviewed_at
+        }
+        batch['rejected'].append(upload_data)
     
     if batch['timer']:
         batch['timer'].cancel()
     
     # Capture the app instance while we're still in the application context
     app = current_app._get_current_object()
+    
+    # Serialize user data
+    user_data = {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email
+    }
     
     def send_batched_autoreviewer_email():
         with app.app_context():
@@ -93,10 +111,10 @@ def schedule_autoreviewer_notification(user, rejected_uploads):
             
             subject = "Your uploads were automatically rejected"
             template = 'uploads_rejected.html'
-            context = {'user': user, 'uploads': rejected}
+            context = {'user': user_data, 'uploads': rejected}
             
             html = render_email_template(template, **context)
-            send_email(user.email, subject, html)
+            send_email(user_data['email'], subject, html)
             
             # Clear batch
             pending_autoreviewer_notifications[user_id] = {'rejected': [], 'timer': None}
