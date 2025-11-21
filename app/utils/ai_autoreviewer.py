@@ -24,7 +24,7 @@ class AIAutoReviewer:
             raise ValueError("GEMINI_API_KEY not configured. Please set it in your .env file.")
         
         self.client = genai.Client(api_key=self.api_key)
-        self.model = "gemini-2.0-flash-exp"  # Using the latest flash model
+        self.model = "gemini-flash-lite-latest"  # Using the latest flash model
         
     def prepare_upload_data(self, upload, md5_matches_afh):
         """
