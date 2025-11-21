@@ -656,6 +656,99 @@ def autoreviewer_stats_api():
     return jsonify(get_autoreviewer_stats())
 
 
+@admin_bp.route('/autoreviewer/ai-review/<int:upload_id>', methods=['POST'])
+@login_required
+@admin_required
+def ai_review_single_upload(upload_id):
+    """Manually trigger AI review on a single upload"""
+    try:
+        from app.utils.ai_autoreviewer import ai_review_upload
+        from app.models import Upload
+        
+        upload = Upload.query.get_or_404(upload_id)
+        
+        # Determine MD5 match status
+        md5_matches_afh = False
+        if hasattr(upload, 'afh_md5_status') and upload.afh_md5_status:
+            md5_matches_afh = upload.afh_md5_status == 'match'
+        
+        success, result = ai_review_upload(upload, md5_matches_afh)
+        
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': result.get('error', 'AI review failed')
+            }), 500
+        
+        message = 'AI review completed. '
+        if result.get('approved'):
+            message += 'Upload approved.'
+        elif result.get('rejected'):
+            message += f"Upload rejected: {result.get('reject_reason', 'No reason given')}"
+        elif result.get('updates'):
+            message += f"Metadata updated: {', '.join(result['updates'].keys())}"
+        else:
+            message += 'No action taken.'
+        
+        return jsonify({
+            'success': True,
+            'message': message,
+            'result': {
+                'approved': result.get('approved', False),
+                'rejected': result.get('rejected', False),
+                'updates': result.get('updates', {})
+            }
+        })
+        
+    except ImportError:
+        return jsonify({
+            'success': False,
+            'message': 'AI autoreviewer not available. Install google-genai package.'
+        }), 500
+    except ValueError as e:
+        return jsonify({
+            'success': False,
+            'message': f'AI autoreviewer not configured: {str(e)}'
+        }), 500
+    except Exception as e:
+        current_app.logger.error(f'AI review error: {str(e)}')
+        return jsonify({
+            'success': False,
+            'message': f'Error: {str(e)}'
+        }), 500
+
+
+@admin_bp.route('/autoreviewer/ai-batch', methods=['POST'])
+@login_required
+@admin_required
+def ai_review_batch():
+    """Run AI review on all pending uploads"""
+    try:
+        from app.utils.ai_autoreviewer import ai_review_batch as run_ai_batch
+        
+        stats = run_ai_batch()
+        
+        message = (
+            f"AI batch review completed: "
+            f"{stats['approved']} approved, "
+            f"{stats['rejected']} rejected, "
+            f"{stats['updated']} updated, "
+            f"{stats['errors']} errors out of {stats['total']} total"
+        )
+        
+        flash(message, 'success' if stats['errors'] == 0 else 'warning')
+        
+    except ImportError:
+        flash('AI autoreviewer not available. Install google-genai package.', 'error')
+    except ValueError as e:
+        flash(f'AI autoreviewer not configured: {str(e)}', 'error')
+    except Exception as e:
+        current_app.logger.error(f'AI batch review error: {str(e)}')
+        flash(f'AI batch review failed: {str(e)}', 'error')
+    
+    return redirect(url_for('admin.autoreviewer_dashboard'))
+
+
 # A/B Testing routes
 @admin_bp.route('/ab-tests')
 @login_required

@@ -105,13 +105,20 @@ def schedule_autoreviewer_notification(user, rejected_uploads):
     batch['timer'] = Timer(300, send_batched_autoreviewer_email)
     batch['timer'].start()
 
-def auto_review_upload(upload_id):
+def auto_review_upload(upload_id, use_ai=True):
     """
-    Automatically review an upload for duplicates.
+    Automatically review an upload for duplicates and using AI.
     This function should be called after an upload is created.
+    
+    Args:
+        upload_id: ID of the upload to review
+        use_ai: Whether to use AI review (default: True)
+    
+    Returns:
+        bool: True if upload was auto-rejected, False otherwise
     """
     try:
-        current_app.logger.info(f"Starting autoreviewer for upload {upload_id}")
+        current_app.logger.info(f"Starting autoreviewer for upload {upload_id} (AI: {use_ai})")
         
         upload = Upload.query.get(upload_id)
         if not upload:
@@ -129,7 +136,7 @@ def auto_review_upload(upload_id):
         autoreviewer = get_or_create_autoreviewer()
         current_app.logger.info(f"Using autoreviewer user: {autoreviewer.name} (ID: {autoreviewer.id})")
         
-        # Check for duplicates
+        # PHASE 1: Check for duplicates by MD5 hash
         current_app.logger.info(f"Checking for duplicates of MD5: {upload.md5_hash}")
         is_duplicate, existing_upload = check_for_duplicates(upload)
         
@@ -177,8 +184,36 @@ def auto_review_upload(upload_id):
             
             return True
         
-        # Not a duplicate, leave as pending for manual review
-        current_app.logger.info(f"Autoreviewer passed upload {upload_id} - no duplicates found")
+        # PHASE 2: AI Review (if enabled and not a duplicate)
+        if use_ai:
+            try:
+                current_app.logger.info(f"Starting AI review for upload {upload_id}")
+                from app.utils.ai_autoreviewer import ai_review_upload
+                
+                # Determine MD5 match status
+                md5_matches_afh = False
+                if hasattr(upload, 'afh_md5_status') and upload.afh_md5_status:
+                    md5_matches_afh = upload.afh_md5_status == 'match'
+                
+                success, result = ai_review_upload(upload, md5_matches_afh, autoreviewer)
+                
+                if success and (result.get('approved') or result.get('rejected')):
+                    current_app.logger.info(f"AI review completed for upload {upload_id}: approved={result.get('approved')}, rejected={result.get('rejected')}")
+                    return result.get('rejected', False)
+                else:
+                    current_app.logger.info(f"AI review did not make a decision for upload {upload_id}")
+                    
+            except ImportError:
+                current_app.logger.warning("AI autoreviewer not available (google-genai not installed)")
+            except ValueError as e:
+                current_app.logger.warning(f"AI autoreviewer not configured: {str(e)}")
+            except Exception as e:
+                current_app.logger.error(f"AI review error for upload {upload_id}: {str(e)}")
+                import traceback
+                current_app.logger.error(traceback.format_exc())
+        
+        # Not a duplicate and not auto-approved/rejected by AI, leave as pending for manual review
+        current_app.logger.info(f"Autoreviewer passed upload {upload_id} - no duplicates found and no AI decision")
         return False
         
     except Exception as e:

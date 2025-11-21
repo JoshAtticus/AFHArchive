@@ -102,26 +102,37 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <h6><i class="fas fa-play"></i> {{ _('Run Batch Processing') }}</h6>
-                            <p class="text-muted">
-                                {{ _('Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes.') }}
+                            <p class="text-muted small">
+                                {{ _('Check all pending uploads for duplicates based on MD5 hash.') }}
                             </p>
                             <form method="POST" action="{{ url_for('admin.run_autoreviewer_batch') }}" 
                                   onsubmit="return confirm('Are you sure you want to run autoreviewer on all pending uploads? This may reject multiple files.')">
-                                <button type="submit" class="btn btn-warning">
-                                    <i class="fas fa-play"></i> {{ _('Run Batch Autoreviewer') }}
+                                <button type="submit" class="btn btn-warning w-100">
+                                    <i class="fas fa-play"></i> {{ _('Run Duplicate Check') }}
                                 </button>
                             </form>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <h6><i class="fas fa-robot"></i> {{ _('AI Batch Review') }}</h6>
+                            <p class="text-muted small">
+                                {{ _('Use AI to review all pending uploads for quality and accuracy.') }}
+                            </p>
+                            <form method="POST" action="{{ url_for('admin.ai_review_batch') }}" 
+                                  onsubmit="return confirm('Are you sure you want to run AI review on all pending uploads? The AI may approve, reject, or update uploads.')">
+                                <button type="submit" class="btn btn-info w-100">
+                                    <i class="fas fa-robot"></i> {{ _('Run AI Review') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-4">
                             <h6><i class="fas fa-info-circle"></i> {{ _('How It Works') }}</h6>
-                            <ul class="text-muted">
-                                <li>{{ _('Automatically runs after each file upload') }}</li>
-                                <li>{{ _('Compares MD5 hashes to detect exact duplicates') }}</li>
-                                <li>{{ _('Rejects uploads that match existing approved or pending files') }}</li>
+                            <ul class="text-muted small">
+                                <li>{{ _('Duplicate check: Compares MD5 hashes') }}</li>
+                                <li>{{ _('AI review: Analyzes metadata & content') }}</li>
+                                <li>{{ _('Auto-approves or rejects based on criteria') }}</li>
                                 <li>{{ _('Sends notification emails to uploaders') }}</li>
-                                <li>{{ _('Appears as "Autoreviewer" in the system') }}</li>
                             </ul>
                         </div>
                     </div>
