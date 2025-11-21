@@ -722,21 +722,35 @@ def ai_review_single_upload(upload_id):
 @login_required
 @admin_required
 def ai_review_batch():
-    """Run AI review on all pending uploads"""
+    """Run AI review on all pending uploads with live progress"""
     try:
         from app.utils.ai_autoreviewer import ai_review_batch as run_ai_batch
+        from app import socketio
+        import threading
         
-        stats = run_ai_batch()
+        # Capture the app instance for the background thread
+        app = current_app._get_current_object()
         
-        message = (
-            f"AI batch review completed: "
-            f"{stats['approved']} approved, "
-            f"{stats['rejected']} rejected, "
-            f"{stats['updated']} updated, "
-            f"{stats['errors']} errors out of {stats['total']} total"
-        )
+        def run_batch_review():
+            """Run batch review in background thread"""
+            with app.app_context():
+                try:
+                    run_ai_batch(emit_progress=True)
+                except Exception as e:
+                    current_app.logger.error(f'Background AI batch review error: {str(e)}')
+                    try:
+                        socketio.emit('ai_review_progress', {
+                            'status': 'error',
+                            'message': f'Batch review failed: {str(e)}'
+                        }, namespace='/autoreviewer')
+                    except:
+                        pass
         
-        flash(message, 'success' if stats['errors'] == 0 else 'warning')
+        # Start batch review in background thread
+        thread = threading.Thread(target=run_batch_review, daemon=True)
+        thread.start()
+        
+        flash('AI batch review started. Check the progress below.', 'info')
         
     except ImportError:
         flash('AI autoreviewer not available. Install google-genai package.', 'error')

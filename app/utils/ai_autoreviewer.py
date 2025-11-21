@@ -8,6 +8,7 @@ import os
 import json
 from datetime import datetime
 from flask import current_app
+from decouple import config
 from google import genai
 from google.genai import types
 
@@ -17,9 +18,10 @@ class AIAutoReviewer:
     
     def __init__(self):
         """Initialize the AI autoreviewer with Gemini API"""
-        self.api_key = os.environ.get("GEMINI_API_KEY")
+        # Try to get API key from Flask config first (set in app init), then fall back to decouple config
+        self.api_key = current_app.config.get('GEMINI_API_KEY') or config('GEMINI_API_KEY', default='')
         if not self.api_key:
-            raise ValueError("GEMINI_API_KEY environment variable not set")
+            raise ValueError("GEMINI_API_KEY not configured. Please set it in your .env file.")
         
         self.client = genai.Client(api_key=self.api_key)
         self.model = "gemini-2.0-flash-exp"  # Using the latest flash model
@@ -336,13 +338,14 @@ def ai_review_upload(upload, md5_matches_afh=None, autoreviewer_user=None):
         return False, {'error': str(e)}
 
 
-def ai_review_batch(upload_ids=None, status='pending'):
+def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
     """
     Run AI review on a batch of uploads
     
     Args:
         upload_ids: List of upload IDs to review, or None for all pending
         status: Status filter if upload_ids is None
+        emit_progress: Whether to emit progress updates via SocketIO
         
     Returns:
         dict: Statistics about the batch review
@@ -359,23 +362,126 @@ def ai_review_batch(upload_ids=None, status='pending'):
         'approved': 0,
         'rejected': 0,
         'updated': 0,
-        'errors': 0
+        'errors': 0,
+        'processed': 0
     }
     
     current_app.logger.info(f"Starting AI batch review of {stats['total']} uploads")
     
-    for upload in uploads:
-        success, result = ai_review_upload(upload)
-        
-        if not success or 'error' in result:
+    if emit_progress:
+        try:
+            from app import socketio
+            socketio.emit('ai_review_progress', {
+                'status': 'started',
+                'total': stats['total'],
+                'processed': 0,
+                'message': f'Starting AI review of {stats["total"]} uploads...'
+            }, namespace='/autoreviewer')
+        except Exception as e:
+            current_app.logger.error(f"Error emitting progress: {e}")
+    
+    for idx, upload in enumerate(uploads, 1):
+        try:
+            current_app.logger.info(f"AI reviewing upload {upload.id} ({idx}/{stats['total']})")
+            
+            if emit_progress:
+                try:
+                    from app import socketio
+                    socketio.emit('ai_review_progress', {
+                        'status': 'processing',
+                        'total': stats['total'],
+                        'processed': idx - 1,
+                        'current_upload': {
+                            'id': upload.id,
+                            'filename': upload.original_filename,
+                            'manufacturer': upload.device_manufacturer,
+                            'model': upload.device_model
+                        },
+                        'message': f'Reviewing upload {idx}/{stats["total"]}: {upload.original_filename}...'
+                    }, namespace='/autoreviewer')
+                except Exception as e:
+                    current_app.logger.error(f"Error emitting progress: {e}")
+            
+            success, result = ai_review_upload(upload)
+            
+            stats['processed'] = idx
+            
+            if not success or 'error' in result:
+                stats['errors'] += 1
+                status_msg = 'error'
+                action = f"Error: {result.get('error', 'Unknown error')}"
+            elif result.get('approved'):
+                stats['approved'] += 1
+                status_msg = 'approved'
+                action = 'Approved'
+            elif result.get('rejected'):
+                stats['rejected'] += 1
+                status_msg = 'rejected'
+                action = f"Rejected: {result.get('reject_reason', 'No reason')[:100]}"
+            else:
+                status_msg = 'no_action'
+                action = 'No action taken'
+            
+            if result.get('updates'):
+                stats['updated'] += 1
+                action += f" (Updated: {', '.join(result['updates'].keys())})"
+            
+            if emit_progress:
+                try:
+                    from app import socketio
+                    socketio.emit('ai_review_progress', {
+                        'status': 'completed_item',
+                        'total': stats['total'],
+                        'processed': idx,
+                        'item_status': status_msg,
+                        'current_upload': {
+                            'id': upload.id,
+                            'filename': upload.original_filename,
+                            'action': action
+                        },
+                        'stats': stats.copy(),
+                        'message': f'Completed {idx}/{stats["total"]}: {action}'
+                    }, namespace='/autoreviewer')
+                except Exception as e:
+                    current_app.logger.error(f"Error emitting progress: {e}")
+                    
+        except Exception as e:
             stats['errors'] += 1
-        elif result.get('approved'):
-            stats['approved'] += 1
-        elif result.get('rejected'):
-            stats['rejected'] += 1
-        
-        if result.get('updates'):
-            stats['updated'] += 1
+            stats['processed'] = idx
+            current_app.logger.error(f"Error reviewing upload {upload.id}: {e}")
+            
+            if emit_progress:
+                try:
+                    from app import socketio
+                    socketio.emit('ai_review_progress', {
+                        'status': 'completed_item',
+                        'total': stats['total'],
+                        'processed': idx,
+                        'item_status': 'error',
+                        'current_upload': {
+                            'id': upload.id,
+                            'filename': upload.original_filename,
+                            'action': f'Error: {str(e)}'
+                        },
+                        'stats': stats.copy(),
+                        'message': f'Error on {idx}/{stats["total"]}: {str(e)}'
+                    }, namespace='/autoreviewer')
+                except Exception as emit_error:
+                    current_app.logger.error(f"Error emitting progress: {emit_error}")
     
     current_app.logger.info(f"AI batch review completed: {stats}")
+    
+    if emit_progress:
+        try:
+            from app import socketio
+            socketio.emit('ai_review_progress', {
+                'status': 'finished',
+                'total': stats['total'],
+                'processed': stats['processed'],
+                'stats': stats,
+                'message': f'Batch review complete! Processed {stats["processed"]} uploads: {stats["approved"]} approved, {stats["rejected"]} rejected, {stats["updated"]} updated, {stats["errors"]} errors'
+            }, namespace='/autoreviewer')
+        except Exception as e:
+            current_app.logger.error(f"Error emitting final progress: {e}")
+    
     return stats

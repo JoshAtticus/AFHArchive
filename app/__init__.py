@@ -2,6 +2,7 @@ from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_babel import Babel, _
+from flask_socketio import SocketIO
 from decouple import config
 import os
 import glob
@@ -10,6 +11,7 @@ import glob
 db = SQLAlchemy()
 login_manager = LoginManager()
 babel = Babel()
+socketio = SocketIO(cors_allowed_origins="*")
 
 def safe_int_config(key, default):
     """Safely parse integer config values, handling inline comments"""
@@ -126,6 +128,7 @@ def create_app():
     app.config['GITHUB_CLIENT_SECRET'] = config('GITHUB_CLIENT_SECRET', default='')
     app.config['ADMIN_EMAILS'] = config('ADMIN_EMAILS', default='').split(',')
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
+    app.config['GEMINI_API_KEY'] = config('GEMINI_API_KEY', default='')
     
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -142,6 +145,9 @@ def create_app():
     
     # Initialize Babel
     babel.init_app(app, locale_selector=get_locale)
+    
+    # Initialize SocketIO
+    socketio.init_app(app, async_mode='gevent', cors_allowed_origins="*")
     
     # Auto-compile translations and setup Crowdin directory support
     compile_translations()

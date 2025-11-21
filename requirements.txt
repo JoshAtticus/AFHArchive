@@ -4,6 +4,7 @@ Flask-Login
 Flask-WTF
 WTForms
 Flask-Babel
+Flask-SocketIO
 python-dotenv
 requests
 beautifulsoup4
