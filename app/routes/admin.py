@@ -141,11 +141,32 @@ def view_upload(upload_id):
 @admin_required
 def approve_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
+    
+    # Check if this is a previously rejected upload
+    was_rejected = upload.status == 'rejected'
+    
+    # If file was deleted (common for rejected uploads), we need to check if it exists
+    if was_rejected:
+        import os
+        if not os.path.exists(upload.file_path):
+            flash(f'Cannot approve: File "{upload.original_filename}" was deleted after rejection. The uploader will need to re-upload.', 'error')
+            return redirect(url_for('admin.view_upload', upload_id=upload_id))
+    
     upload.status = 'approved'
     upload.reviewed_at = datetime.utcnow()
     upload.reviewed_by = current_user.id
+    
+    # Clear rejection reason on manual approval
+    if was_rejected:
+        upload.rejection_reason = f"[Previously rejected but manually approved by admin {current_user.name}] " + (upload.rejection_reason or "")
+    
     db.session.commit()
-    flash(f'Upload "{upload.original_filename}" approved', 'success')
+    
+    if was_rejected:
+        flash(f'Upload "{upload.original_filename}" manually approved (was previously rejected)', 'success')
+    else:
+        flash(f'Upload "{upload.original_filename}" approved', 'success')
+    
     # Schedule notification to uploader
     if upload.uploader:
         schedule_upload_notification(upload.uploader, [upload], [])
@@ -337,6 +358,34 @@ def delete_user(user_id):
     
     flash(f'User "{user.name}" and all their uploads have been deleted', 'info')
     return redirect(url_for('admin.users'))
+
+@admin_bp.route('/user/<int:user_id>/send-email', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def send_user_email(user_id):
+    """Send a custom email to a specific user"""
+    user = User.query.get_or_404(user_id)
+    
+    if request.method == 'POST':
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+        
+        if not subject or not message:
+            flash('Subject and message are required', 'error')
+            return redirect(url_for('admin.send_user_email', user_id=user_id))
+        
+        # Send email using custom email template
+        html = render_email_template('custom_email.html', message=message)
+        success = send_email(user.email, subject, html)
+        
+        if success:
+            flash(f'Email sent successfully to {user.name} ({user.email})', 'success')
+            return redirect(url_for('admin.users'))
+        else:
+            flash('Failed to send email. Please check the server logs.', 'error')
+            return redirect(url_for('admin.send_user_email', user_id=user_id))
+    
+    return render_template('admin/send_user_email.html', user=user)
 
 @admin_bp.route('/download/<int:upload_id>')
 @login_required
@@ -663,16 +712,20 @@ def ai_review_single_upload(upload_id):
     """Manually trigger AI review on a single upload"""
     try:
         from app.utils.ai_autoreviewer import ai_review_upload
+        from app.utils.afh_verifier import verify_md5_against_afh
         from app.models import Upload
         
         upload = Upload.query.get_or_404(upload_id)
         
-        # Determine MD5 match status
-        md5_matches_afh = False
-        if hasattr(upload, 'afh_md5_status') and upload.afh_md5_status:
-            md5_matches_afh = upload.afh_md5_status == 'match'
+        # IMPORTANT: Verify AFH MD5 first if there's an AFH link
+        if upload.afh_link:
+            current_app.logger.info(f"Verifying AFH MD5 for upload {upload_id} before AI review...")
+            upload.afh_md5_status = verify_md5_against_afh(upload)
+            db.session.commit()
+            current_app.logger.info(f"AFH MD5 status for upload {upload_id}: {upload.afh_md5_status}")
         
-        success, result = ai_review_upload(upload, md5_matches_afh)
+        # Now run AI review with the verified status
+        success, result = ai_review_upload(upload)
         
         if not success:
             return jsonify({

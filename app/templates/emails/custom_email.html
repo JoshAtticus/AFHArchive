@@ -1,0 +1,9 @@
+{% extends "emails/email_base.html" %}
+
+{% block content %}
+<tr>
+    <td style="padding: 20px;">
+        {{ message|safe }}
+    </td>
+</tr>
+{% endblock %}

@@ -84,6 +84,11 @@
                             <i class="fas fa-file-archive"></i>
                         </a>
                         
+                        <a href="{{ url_for('admin.send_user_email', user_id=user.id) }}" 
+                           class="btn btn-outline-info" title="Send Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        
                         {% if user.id != current_user.id %}
                         <button type="button" class="btn btn-outline-danger" 
                                 onclick="deleteUser({{ user.id }}, '{{ user.name }}')" 
