@@ -27,16 +27,16 @@ def migrate():
         print("Adding 'joshatticus_id' column to users table...")
         
         try:
-            # Add the new column
-            with db.engine.connect() as conn:
-                conn.execute(text('ALTER TABLE users ADD COLUMN joshatticus_id VARCHAR(100) UNIQUE'))
-                conn.commit()
+            # Add the new column (without UNIQUE constraint for SQLite) and create a UNIQUE INDEX
+            with db.engine.begin() as conn:
+                conn.execute(text("ALTER TABLE users ADD COLUMN joshatticus_id VARCHAR(100)"))
+                conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_users_joshatticus_id ON users (joshatticus_id)"))
             
             print("✓ Successfully added 'joshatticus_id' column to users table")
             
         except Exception as e:
             print(f"✗ Error adding column: {e}")
-            print("If you're using SQLite, you may need to recreate the database or manually add the column.")
+            print("If you're using SQLite, ALTER TABLE cannot add a UNIQUE column directly; a UNIQUE INDEX was created instead (or recreate the DB if this fails).")
 
 if __name__ == '__main__':
     migrate()
