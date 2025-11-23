@@ -126,6 +126,8 @@ def create_app():
     app.config['GOOGLE_CLIENT_SECRET'] = config('GOOGLE_CLIENT_SECRET')
     app.config['GITHUB_CLIENT_ID'] = config('GITHUB_CLIENT_ID', default='')
     app.config['GITHUB_CLIENT_SECRET'] = config('GITHUB_CLIENT_SECRET', default='')
+    app.config['JOSHATTICUS_CLIENT_ID'] = config('JOSHATTICUS_CLIENT_ID', default='')
+    app.config['JOSHATTICUS_CLIENT_SECRET'] = config('JOSHATTICUS_CLIENT_SECRET', default='')
     app.config['ADMIN_EMAILS'] = config('ADMIN_EMAILS', default='').split(',')
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
     app.config['GEMINI_API_KEY'] = config('GEMINI_API_KEY', default='')

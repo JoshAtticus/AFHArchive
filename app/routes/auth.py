@@ -228,6 +228,134 @@ def github_callback():
         flash('Authentication failed', 'error')
         return redirect(url_for('main.index'))
 
+@auth_bp.route('/joshatticus')
+def joshatticus_auth():
+    """JoshAtticusID OAuth2 authorization"""
+    # Generate and store state parameter for CSRF protection
+    import secrets
+    state = secrets.token_urlsafe(32)
+    session['joshatticus_oauth_state'] = state
+    
+    joshatticus_auth_url = (
+        f"https://id.joshattic.us/oauth/authorize?"
+        f"client_id={current_app.config.get('JOSHATTICUS_CLIENT_ID')}&"
+        f"redirect_uri={url_for('auth.joshatticus_callback', _external=True)}&"
+        f"scope=name email profile_picture&"
+        f"state={state}"
+    )
+    return redirect(joshatticus_auth_url)
+
+@auth_bp.route('/joshatticus/callback')
+def joshatticus_callback():
+    """Handle JoshAtticusID OAuth2 callback"""
+    # Verify state parameter
+    state = request.args.get('state')
+    stored_state = session.pop('joshatticus_oauth_state', None)
+    
+    if not state or not stored_state or state != stored_state:
+        current_app.logger.error("JoshAtticusID OAuth state mismatch")
+        flash('Invalid state parameter', 'error')
+        return redirect(url_for('main.index'))
+    
+    code = request.args.get('code')
+    if not code:
+        flash('Authorization failed', 'error')
+        return redirect(url_for('main.index'))
+    
+    # Exchange code for tokens
+    token_url = "https://id.joshattic.us/oauth/token"
+    token_data = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'client_id': current_app.config.get('JOSHATTICUS_CLIENT_ID'),
+        'client_secret': current_app.config.get('JOSHATTICUS_CLIENT_SECRET'),
+        'redirect_uri': url_for('auth.joshatticus_callback', _external=True)
+    }
+    
+    try:
+        # Use form-encoded data for token request
+        token_response = requests.post(
+            token_url, 
+            data=token_data,
+            headers={'Content-Type': 'application/x-www-form-urlencoded'}
+        )
+        token_json = token_response.json()
+        
+        if 'access_token' not in token_json:
+            current_app.logger.error(f"JoshAtticusID token error: {token_json}")
+            flash('Authentication failed', 'error')
+            return redirect(url_for('main.index'))
+        
+        # Log token response for debugging
+        current_app.logger.info(f"JoshAtticusID token response: {token_json}")
+        
+        # Get user info from userinfo endpoint
+        userinfo_url = "https://id.joshattic.us/oauth/userinfo"
+        headers = {'Authorization': f"Bearer {token_json['access_token']}"}
+        userinfo_response = requests.get(userinfo_url, headers=headers)
+        
+        if userinfo_response.status_code != 200:
+            current_app.logger.error(f"JoshAtticusID userinfo error: {userinfo_response.text}")
+            flash('Failed to get user information', 'error')
+            return redirect(url_for('main.index'))
+        
+        user_data = userinfo_response.json()
+        current_app.logger.info(f"JoshAtticusID user data: {user_data}")
+        
+        # Extract user information (using correct field names from the API)
+        joshatticus_id = str(user_data.get('sub'))
+        email = user_data.get('email')
+        name = user_data.get('name', email.split('@')[0] if email else 'User')
+        avatar_url = user_data.get('picture', '')  # Note: it's 'picture' not 'profile_picture' in userinfo
+        
+        if not email:
+            flash('Email not provided by JoshAtticusID', 'error')
+            return redirect(url_for('main.index'))
+        
+        # Check if user exists by JoshAtticusID or email
+        user = User.query.filter_by(joshatticus_id=joshatticus_id).first()
+        if not user:
+            user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            # Create new user
+            is_admin = email in current_app.config['ADMIN_EMAILS']
+            user = User(
+                joshatticus_id=joshatticus_id,
+                email=email,
+                name=name,
+                avatar_url=avatar_url,
+                is_admin=is_admin
+            )
+            db.session.add(user)
+            db.session.commit()
+            flash(f'Welcome to AFHArchive, {name}!', 'success')
+            # Send welcome email
+            html = render_email_template('welcome.html', user=user)
+            send_email(user.email, 'Welcome to AFHArchive!', html)
+        else:
+            # Update existing user with JoshAtticusID if linking accounts
+            if not user.joshatticus_id:
+                user.joshatticus_id = joshatticus_id
+                current_app.logger.info(f"Linked JoshAtticusID to existing user {user.email}")
+            
+            # Update profile information
+            user.name = name
+            if avatar_url:
+                user.avatar_url = avatar_url
+            db.session.commit()
+            flash(f'Welcome back, {user.name}!', 'success')
+        
+        login_user(user, remember=True)
+        return redirect(url_for('main.index'))
+        
+    except Exception as e:
+        current_app.logger.error(f"JoshAtticusID OAuth error: {str(e)}")
+        import traceback
+        current_app.logger.error(traceback.format_exc())
+        flash('An error occurred during authentication', 'error')
+        return redirect(url_for('main.index'))
+
 @auth_bp.route('/logout')
 @login_required
 def logout():

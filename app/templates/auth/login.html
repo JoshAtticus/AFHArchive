@@ -3,6 +3,67 @@
 {% block title %}{{ _('Login') }} - AFHArchive{% endblock %}
 
 {% block content %}
+<style>
+.btn-joshatticus {
+    background: linear-gradient(135deg, rgba(78, 145, 252, 0.9), rgba(26, 114, 255, 0.7));
+    border: 1px solid rgba(138, 180, 248, 0.5);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-joshatticus::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(138, 180, 248, 0.4), rgba(138, 180, 248, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-joshatticus:hover::before {
+    opacity: 1;
+}
+
+.btn-joshatticus::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right, rgba(138, 180, 248, 0), rgba(138, 180, 248, 0), rgba(138, 180, 248, 0.3));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-joshatticus:hover::after {
+    opacity: 1;
+}
+
+.btn-joshatticus:hover {
+    background: linear-gradient(135deg, rgba(138, 180, 248, 1), rgba(138, 180, 248, 0.8));
+    border-color: rgba(138, 180, 248, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 180, 248, 0.4);
+    color: white;
+}
+
+.joshatticus-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+}
+</style>
+
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
@@ -13,6 +74,15 @@
                 <p class="mb-4">{{ _('Sign in with your Google or GitHub account to start contributing to the archive.') }}</p>
                 
                 <div class="d-grid gap-3">
+                    <a href="{{ url_for('auth.joshatticus_auth') }}" class="btn btn-joshatticus btn-lg">
+                        <svg class="joshatticus-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="2 1 20 22.1">
+                            <g><path clip-rule="evenodd" d="M21.5071 5.13813C21.8125 5.31781 22 5.64568 22 6V17.4286C22 17.8051 21.7885 18.1496 21.4529 18.3202L12.4529 22.8916C12.1429 23.049 11.7733 23.0342 11.477 22.8523C11.1806 22.6704 11 22.3477 11 22V11C11 10.6368 11.1969 10.3022 11.5144 10.1258L20.5144 5.12584C20.8241 4.95377 21.2017 4.95844 21.5071 5.13813ZM13 11.5884V20.3705L20 16.8149V7.69951L13 11.5884Z" fill-rule="evenodd" style="fill: rgb(255, 255, 255);"/></g>
+                            <g><path clip-rule="evenodd" d="M11.5939 1.08619C11.8524 0.971271 12.1476 0.971271 12.4061 1.08619L21.4061 5.08619C21.7526 5.24017 21.9822 5.57682 21.999 5.95558C22.0159 6.33433 21.8171 6.69004 21.4856 6.87416L12.4856 11.8742C12.1836 12.0419 11.8164 12.0419 11.5144 11.8742L2.51436 6.87416C2.18294 6.69004 1.98415 6.33433 2.00099 5.95558C2.01783 5.57682 2.24741 5.24017 2.59387 5.08619L11.5939 1.08619ZM5.23828 6.09953L12 9.85604L18.7617 6.09953L12 3.09432L5.23828 6.09953Z" fill-rule="evenodd" style="fill: rgb(255, 255, 255);"/></g>
+                            <g><path clip-rule="evenodd" d="M2.49287 5.13813C2.18749 5.31781 2 5.64568 2 6V17.4286C2 17.8051 2.21146 18.1496 2.54713 18.3202L11.5471 22.8916C11.8571 23.049 12.2267 23.0342 12.523 22.8523C12.8194 22.6704 13 22.3477 13 22V11C13 10.6368 12.8031 10.3022 12.4856 10.1258L3.48564 5.12584C3.17591 4.95377 2.79825 4.95844 2.49287 5.13813ZM11 11.5884V20.3705L4 16.8149V7.69951L11 11.5884Z" fill-rule="evenodd" style="fill: rgb(255, 255, 255);"/></g>
+                        </svg>
+                        {{ _('Sign in with JoshAtticusID') }}
+                    </a>
+                    
                     <a href="{{ url_for('auth.google_auth') }}" class="btn btn-danger btn-lg">
                         <i class="fab fa-google"></i> {{ _('Sign in with Google') }}
                     </a>
