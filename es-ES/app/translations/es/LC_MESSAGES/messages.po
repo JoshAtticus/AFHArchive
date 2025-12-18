@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-12-18 17:03\n"
+"PO-Revision-Date: 2025-12-18 18:26\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "Comparta archivos de desarrollo de Android legítimos y útiles"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "Proporcionar descripciones e información precisas"
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
@@ -60,7 +60,7 @@ msgstr ""
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive es un software de código abierto, desarrollado de forma transparente en GitHub. Las contribuciones y comentarios de la comunidad son siempre bienvenidos."
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: app/templates/about.html:33
 msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
-msgstr ""
+msgstr "Si tiene preguntas, sugerencias o necesita ayuda, visite nuestra página de contacto o contáctenos a través de nuestro repositorio de GitHub."
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
@@ -220,11 +220,11 @@ msgstr ""
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
-msgstr ""
+msgstr "Intente ajustar sus filtros de búsqueda o explorar todos los archivos."
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
-msgstr ""
+msgstr "¡Nos encantaría saber de ti! Ponte en contacto con el equipo de AFHArchive a través de cualquiera de los siguientes métodos:"
 
 #: app/templates/contact.html:22
 msgid "GitHub"
