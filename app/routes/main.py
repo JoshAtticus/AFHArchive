@@ -37,7 +37,21 @@ def index():
     if announcement and not announcement.is_active:
         announcement = None
 
-    return render_template('index.html', uploads=approved_uploads, random_image=random_image, announcement=announcement)
+    # Calculate statistics
+    total_users = User.query.count()
+    total_uploads = Upload.query.filter_by(status='approved').count()
+    total_size_bytes = db.session.query(db.func.sum(Upload.file_size)).filter_by(status='approved').scalar() or 0
+    total_size_gb = round(total_size_bytes / (1024 ** 3), 2)  # Convert bytes to GB
+    total_downloads = db.session.query(db.func.sum(Upload.download_count)).filter_by(status='approved').scalar() or 0
+
+    stats = {
+        'total_users': total_users,
+        'total_uploads': total_uploads,
+        'total_size_gb': total_size_gb,
+        'total_downloads': total_downloads
+    }
+
+    return render_template('index.html', uploads=approved_uploads, random_image=random_image, announcement=announcement, stats=stats)
 
 def handle_afh_redirect(fid):
     try:
