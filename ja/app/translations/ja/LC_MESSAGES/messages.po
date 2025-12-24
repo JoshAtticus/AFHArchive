@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-16 09:43\n"
+"PO-Revision-Date: 2025-11-30 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,7 @@ msgstr "メールアドレス"
 
 #: app/templates/contact.html:36
 msgid "For general inquiries, business matters, or urgent support requests."
-msgstr ""
+msgstr "一般的なお問い合わせやビジネス上の問題、または緊急のサポート リクエストの場合。"
 
 #: app/templates/contact.html:38
 msgid "Send Email"
@@ -552,7 +552,7 @@ msgstr ""
 
 #: app/templates/thank_you.html:30
 msgid "Use Standard Download"
-msgstr ""
+msgstr "標準のダウンロード方式を使用する"
 
 #: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
@@ -584,7 +584,7 @@ msgstr "ダウンロード開始..."
 
 #: app/templates/thank_you.html:147 app/templates/thank_you.html:163
 msgid "Download started! Check your downloads folder."
-msgstr ""
+msgstr "ダウンロードが開始されました！ダウンロードフォルダーを確認してください。"
 
 #: app/templates/thank_you.html:148 app/templates/thank_you.html:164
 msgid "Download Started"
@@ -769,7 +769,7 @@ msgstr "チャンクのアップロードがキャンセルされました"
 
 #: app/templates/upload.html:135
 msgid "Assembling file..."
-msgstr ""
+msgstr "ファイルを組み立てています..."
 
 #: app/templates/upload.html:136
 msgid "Failed to complete upload"
@@ -933,7 +933,7 @@ msgstr "アップデートのテスト"
 
 #: app/templates/admin/ab_tests.html:200
 msgid "Delete Test:"
-msgstr ""
+msgstr "消去のテスト："
 
 #: app/templates/admin/ab_tests.html:204
 msgid "Are you sure you want to delete this A/B test?"
