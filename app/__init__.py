@@ -132,6 +132,10 @@ def create_app():
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
     app.config['GEMINI_API_KEY'] = config('GEMINI_API_KEY', default='')
     
+    # Mirror Configuration
+    app.config['MIRROR_API_KEY'] = config('MIRROR_API_KEY', default='')
+    app.config['MAIN_SERVER_URL'] = config('MAIN_SERVER_URL', default='')
+    
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
