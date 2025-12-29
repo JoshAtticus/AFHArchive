@@ -12,7 +12,7 @@ from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
 from app.utils.ab_testing import is_in_test_group, opt_out_of_test
-from app.utils.mirror_utils import trigger_mirror_sync
+from app.utils.mirror_utils import trigger_mirror_sync, get_or_create_mirror_user
 
 main_bp = Blueprint('main', __name__)
 
@@ -34,6 +34,9 @@ def get_or_fetch_upload(upload_id):
             if resp.status_code == 200:
                 data = resp.json()
                 
+                # Get system user for mirror uploads
+                mirror_user = get_or_create_mirror_user()
+                
                 # Create local record
                 upload = Upload(
                     id=data['id'],
@@ -45,7 +48,8 @@ def get_or_fetch_upload(upload_id):
                     device_manufacturer=data['device_manufacturer'],
                     device_model=data['device_model'],
                     status='approved',
-                    uploaded_at=datetime.fromisoformat(data['uploaded_at']) if data['uploaded_at'] else datetime.utcnow()
+                    uploaded_at=datetime.fromisoformat(data['uploaded_at']) if data['uploaded_at'] else datetime.utcnow(),
+                    user_id=mirror_user.id
                 )
                 db.session.add(upload)
                 db.session.commit()

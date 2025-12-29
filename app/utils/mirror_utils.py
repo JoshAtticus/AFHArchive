@@ -1,7 +1,21 @@
 from app import db
-from app.models import Mirror, FileReplica, Upload
+from app.models import Mirror, FileReplica, Upload, User
 from flask import url_for, current_app
 import requests
+
+def get_or_create_mirror_user():
+    """Get or create the system user for mirror uploads"""
+    email = 'mirror@afharchive.xyz'
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(
+            email=email,
+            name='Mirror System',
+            is_admin=True
+        )
+        db.session.add(user)
+        db.session.commit()
+    return user
 
 def trigger_mirror_sync(upload_id, mirror_ids=None):
     """

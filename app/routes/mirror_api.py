@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app, send_file, Response
 from app import db
 from app.models import Mirror, FileReplica, Upload
+from app.utils.mirror_utils import get_or_create_mirror_user
 import os
 from datetime import datetime
 import requests
@@ -123,7 +124,9 @@ def perform_sync(job_data, app_config, app=None):
                     # Check if upload exists
                     upload = Upload.query.get(file_id)
                     if not upload:
-                        upload = Upload(id=file_id)
+                        # Get system user for mirror uploads
+                        mirror_user = get_or_create_mirror_user()
+                        upload = Upload(id=file_id, user_id=mirror_user.id)
                         db.session.add(upload)
                     
                     # Update fields
