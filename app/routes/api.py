@@ -94,13 +94,15 @@ def download_file(upload_id):
 
     # Get bandwidth limit from config
     download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
+    mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
+    # Capture logger to avoid context issues in generator
+    app_logger = current_app.logger 
     
     def generate():
         """Stream file with bandwidth limiting"""
         try:
             if is_mirror:
                 # Rate limit for mirrors (default 12.5 Mbps)
-                mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
                 f = open(file_path, 'rb')
                 if mirror_speed_limit > 0:
                     f = FixedRateLimitedFile(f, mirror_speed_limit)
@@ -119,7 +121,7 @@ def download_file(upload_id):
                     yield data
                     remaining -= len(data)
         except Exception as e:
-            current_app.logger.error(f'Download streaming error: {str(e)}')
+            app_logger.error(f'Download streaming error: {str(e)}')
     
     headers = {
         'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
