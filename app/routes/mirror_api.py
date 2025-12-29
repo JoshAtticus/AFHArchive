@@ -135,6 +135,7 @@ def perform_sync(job_data, app_config):
                     'Range': f'bytes={downloaded}-{end}'
                 }
                 
+                # print(f"Downloading chunk {downloaded}-{end} from {download_url}")
                 response = requests.get(download_url, headers=headers, stream=True)
                 if response.status_code not in [200, 206]:
                     raise Exception(f"Download failed with status {response.status_code}")
@@ -161,8 +162,10 @@ def perform_sync(job_data, app_config):
             'status': 'synced',
             'error_message': None
         })
+        print(f"Sync complete for {filename}")
         
     except Exception as e:
+        print(f"Sync failed for {filename}: {e}")
         # Report error
         requests.post(f"{main_url}/api/mirror/sync_complete", json={
             'api_key': api_key,
@@ -205,6 +208,15 @@ def receive_sync_job():
         
     # Start background thread
     print(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
+    
+    # Override download_url to ensure it uses the configured MAIN_SERVER_URL
+    # This fixes issues where the main server sends a localhost URL
+    if app_config['MAIN_SERVER_URL']:
+        # Remove trailing slash if present
+        main_url = app_config['MAIN_SERVER_URL'].rstrip('/')
+        data['download_url'] = f"{main_url}/api/mirror/download/{data.get('file_id')}"
+        print(f"Using constructed download URL: {data['download_url']}")
+    
     thread = threading.Thread(target=perform_sync, args=(data, app_config))
     thread.start()
     
