@@ -159,6 +159,13 @@ class Mirror(db.Model):
         limit_mb = self.storage_limit_gb * 1024
         return round((self.storage_used_mb / limit_mb) * 100, 2)
 
+    @property
+    def is_online(self):
+        if not self.last_heartbeat:
+            return False
+        # Online if heartbeat within last 5 minutes
+        return (datetime.utcnow() - self.last_heartbeat) < timedelta(minutes=5)
+
 class FileReplica(db.Model):
     __tablename__ = 'file_replicas'
     

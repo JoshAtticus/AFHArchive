@@ -41,9 +41,13 @@
                         </td>
                         <td>
                             {% if mirror.is_active %}
-                            <span class="badge bg-success">Active</span>
+                                {% if mirror.is_online %}
+                                    <span class="badge bg-success">Online</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Offline</span>
+                                {% endif %}
                             {% else %}
-                            <span class="badge bg-secondary">Inactive</span>
+                                <span class="badge bg-secondary">Disabled</span>
                             {% endif %}
                         </td>
                         <td>{{ mirror.last_heartbeat }}</td>

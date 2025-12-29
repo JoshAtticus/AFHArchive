@@ -34,6 +34,8 @@ def trigger_mirror_sync(upload_id, mirror_ids=None):
         try:
             download_url = url_for('mirror_api.download_chunk', upload_id=upload.id, _external=True)
             
+            current_app.logger.info(f"Triggering sync for {upload.original_filename} to {mirror.url}")
+            
             resp = requests.post(
                 f"{mirror.url}/api/mirror/job/sync",
                 json={
@@ -49,15 +51,18 @@ def trigger_mirror_sync(upload_id, mirror_ids=None):
             if resp.status_code == 200:
                 replica.status = 'syncing'
                 count += 1
+                current_app.logger.info(f"Sync triggered successfully for {mirror.name}")
             else:
                 replica.status = 'error'
-                replica.error_message = f"Mirror rejected job: {resp.status_code}"
+                replica.error_message = f"Mirror rejected job: {resp.status_code} - {resp.text}"
+                current_app.logger.error(f"Mirror {mirror.name} rejected sync job: {resp.status_code} - {resp.text}")
                 
             db.session.commit()
             
         except Exception as e:
             replica.status = 'error'
             replica.error_message = str(e)
+            current_app.logger.error(f"Error triggering sync to {mirror.name}: {e}")
             db.session.commit()
             
     return count

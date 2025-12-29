@@ -121,6 +121,10 @@ def main():
     # Run the Flask development server
     app = create_app()
     
+    # Start mirror client if configured
+    from app.routes.mirror_api import start_mirror_client
+    start_mirror_client(app)
+    
     # Get configuration
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     host = os.getenv('FLASK_HOST', '127.0.0.1')

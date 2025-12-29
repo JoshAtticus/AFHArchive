@@ -200,10 +200,67 @@ def receive_sync_job():
     }
     
     if not app_config['MIRROR_API_KEY']:
+        print("Error: MIRROR_API_KEY not configured on this server")
         return jsonify({'error': 'This server is not configured as a mirror'}), 400
         
     # Start background thread
+    print(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
     thread = threading.Thread(target=perform_sync, args=(data, app_config))
     thread.start()
     
     return jsonify({'status': 'job_accepted'})
+
+def mirror_heartbeat_loop(app):
+    """
+    Background loop to send heartbeats to the main server.
+    """
+    with app.app_context():
+        api_key = app.config.get('MIRROR_API_KEY')
+        main_url = app.config.get('MAIN_SERVER_URL')
+        upload_folder = app.config.get('UPLOAD_FOLDER')
+        
+        if not api_key or not main_url:
+            print("Mirror configuration missing. Heartbeat disabled.")
+            return
+
+        print(f"Starting mirror heartbeat to {main_url}...")
+        
+        while True:
+            try:
+                # Calculate storage usage
+                total_size = 0
+                if os.path.exists(upload_folder):
+                    for dirpath, dirnames, filenames in os.walk(upload_folder):
+                        for f in filenames:
+                            fp = os.path.join(dirpath, f)
+                            if not os.path.islink(fp):
+                                total_size += os.path.getsize(fp)
+                
+                storage_used_mb = int(total_size / (1024 * 1024))
+                
+                # Send heartbeat
+                resp = requests.post(
+                    f"{main_url}/api/mirror/heartbeat",
+                    json={
+                        'api_key': api_key,
+                        'storage_used_mb': storage_used_mb
+                    },
+                    timeout=10
+                )
+                
+                if resp.status_code == 200:
+                    print(f"Heartbeat sent successfully to {main_url}")
+                else:
+                    print(f"Heartbeat failed: {resp.status_code} - {resp.text}")
+                    
+            except Exception as e:
+                print(f"Heartbeat error: {e}")
+                
+            time.sleep(60)
+
+def start_mirror_client(app):
+    """Starts the mirror client background tasks if configured."""
+    if app.config.get('MIRROR_API_KEY'):
+        thread = threading.Thread(target=mirror_heartbeat_loop, args=(app,), daemon=True)
+        thread.start()
+

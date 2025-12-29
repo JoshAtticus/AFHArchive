@@ -1093,6 +1093,7 @@ def trigger_sync(upload_id):
     # Convert to integers
     mirror_ids = [int(mid) for mid in mirror_ids]
     
+    current_app.logger.info(f"Admin triggering sync for upload {upload.id} to mirrors {mirror_ids}")
     count = trigger_mirror_sync(upload.id, mirror_ids)
             
     flash(f'Sync triggered for {count} mirrors', 'success')

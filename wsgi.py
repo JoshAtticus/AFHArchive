@@ -22,6 +22,10 @@ from app import create_app, db
 # Create the Flask application
 application = create_app()
 
+# Start mirror client if configured
+from app.routes.mirror_api import start_mirror_client
+start_mirror_client(application)
+
 # Initialize database if needed
 def init_db_if_needed():
     """Initialize database tables if they don't exist"""
