@@ -275,10 +275,25 @@ def receive_sync_job():
     
     return jsonify({'status': 'job_accepted'})
 
+import fcntl
+import sys
+
 def mirror_heartbeat_loop(app):
     """
     Background loop to send heartbeats to the main server.
+    Uses a file lock to ensure only one worker runs this loop.
     """
+    lock_file = '/tmp/afh_mirror_heartbeat.lock'
+    fp = open(lock_file, 'w')
+    
+    try:
+        # Try to acquire an exclusive lock (non-blocking)
+        fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        # Another instance is already running
+        print("Mirror heartbeat already running in another worker.")
+        return
+
     with app.app_context():
         api_key = app.config.get('MIRROR_API_KEY')
         main_url = app.config.get('MAIN_SERVER_URL')
@@ -297,9 +312,9 @@ def mirror_heartbeat_loop(app):
                 if os.path.exists(upload_folder):
                     for dirpath, dirnames, filenames in os.walk(upload_folder):
                         for f in filenames:
-                            fp = os.path.join(dirpath, f)
-                            if not os.path.islink(fp):
-                                total_size += os.path.getsize(fp)
+                            fp_file = os.path.join(dirpath, f)
+                            if not os.path.islink(fp_file):
+                                total_size += os.path.getsize(fp_file)
                 
                 storage_used_mb = int(total_size / (1024 * 1024))
                 
