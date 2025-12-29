@@ -126,12 +126,15 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAX_CONTENT_LENGTH'] = safe_int_config('MAX_CONTENT_LENGTH', 5368709120)  # 5GB
     app.config['UPLOAD_FOLDER'] = config('UPLOAD_DIR', default='uploads')
-    app.config['GOOGLE_CLIENT_ID'] = config('GOOGLE_CLIENT_ID')
-    app.config['GOOGLE_CLIENT_SECRET'] = config('GOOGLE_CLIENT_SECRET')
+    
+    # OAuth Configuration (Optional for Mirrors)
+    app.config['GOOGLE_CLIENT_ID'] = config('GOOGLE_CLIENT_ID', default='')
+    app.config['GOOGLE_CLIENT_SECRET'] = config('GOOGLE_CLIENT_SECRET', default='')
     app.config['GITHUB_CLIENT_ID'] = config('GITHUB_CLIENT_ID', default='')
     app.config['GITHUB_CLIENT_SECRET'] = config('GITHUB_CLIENT_SECRET', default='')
     app.config['JOSHATTICUS_CLIENT_ID'] = config('JOSHATTICUS_CLIENT_ID', default='')
     app.config['JOSHATTICUS_CLIENT_SECRET'] = config('JOSHATTICUS_CLIENT_SECRET', default='')
+    
     app.config['ADMIN_EMAILS'] = config('ADMIN_EMAILS', default='').split(',')
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
     app.config['GEMINI_API_KEY'] = config('GEMINI_API_KEY', default='')
