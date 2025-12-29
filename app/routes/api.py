@@ -9,7 +9,7 @@ import threading
 import re
 from app.models import Upload, User, Mirror
 from app import db
-from app.utils.rate_limiter import RateLimiter
+from app.utils.rate_limiter import RateLimiter, FixedRateLimitedFile
 from app.utils.file_handler import allowed_file, calculate_md5, safe_remove_file
 from werkzeug.utils import secure_filename
 
@@ -99,8 +99,11 @@ def download_file(upload_id):
         """Stream file with bandwidth limiting"""
         try:
             if is_mirror:
-                # No rate limit for mirrors
+                # Rate limit for mirrors (default 12.5 Mbps)
+                mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
                 f = open(file_path, 'rb')
+                if mirror_speed_limit > 0:
+                    f = FixedRateLimitedFile(f, mirror_speed_limit)
             else:
                 # Rate limit for users
                 f = rate_limiter.create_limited_file(file_path, download_speed_limit)

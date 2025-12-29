@@ -48,7 +48,49 @@ class BandwidthLimitedFile:
     def __getattr__(self, name):
         # Delegate other attributes to the wrapped file object
         return getattr(self.file_obj, name)
+
+    def __enter__(self):
+        return self
     
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+class FixedRateLimitedFile:
+    """File wrapper that limits read speed to a fixed rate"""
+    
+    def __init__(self, file_obj, speed_limit_bps):
+        self.file_obj = file_obj
+        self.speed_limit = speed_limit_bps
+        self.last_read_time = time.time()
+    
+    def read(self, size=-1):
+        # Read the requested data
+        data = self.file_obj.read(size)
+        if not data:
+            return data
+        
+        current_time = time.time()
+        
+        if self.speed_limit > 0:
+            # Calculate how long this chunk should take based on speed limit
+            time_since_last = current_time - self.last_read_time
+            expected_time = len(data) / self.speed_limit
+            
+            # If we're going too fast, sleep to throttle
+            if time_since_last < expected_time:
+                sleep_time = expected_time - time_since_last
+                time.sleep(sleep_time)
+        
+        self.last_read_time = time.time()
+        return data
+    
+    def close(self):
+        return self.file_obj.close()
+    
+    def __getattr__(self, name):
+        # Delegate other attributes to the wrapped file object
+        return getattr(self.file_obj, name)
+
     def __enter__(self):
         return self
     

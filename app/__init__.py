@@ -137,6 +137,7 @@ def create_app():
     
     app.config['ADMIN_EMAILS'] = config('ADMIN_EMAILS', default='').split(',')
     app.config['DOWNLOAD_SPEED_LIMIT'] = safe_int_config('DOWNLOAD_SPEED_LIMIT', 10485760)
+    app.config['MIRROR_SYNC_SPEED_LIMIT'] = safe_int_config('MIRROR_SYNC_SPEED_LIMIT', 1638400) # Default 12.5 Mbps
     app.config['GEMINI_API_KEY'] = config('GEMINI_API_KEY', default='')
     
     # Mirror Configuration
