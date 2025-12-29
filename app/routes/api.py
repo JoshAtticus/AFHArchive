@@ -169,17 +169,30 @@ def mirror_sync_download(upload_id):
     
     # Convert relative path to absolute path
     if not os.path.isabs(upload.file_path):
+        # Make path relative to application root directory (go up from app/routes/api.py to project root)
         app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        file_path = os.path.join(app_root, upload.file_path)
+        
+        # Check if file_path already starts with 'uploads/'
+        if upload.file_path.startswith('uploads/'):
+             file_path = os.path.join(app_root, upload.file_path)
+        else:
+             # If not, assume it's in the configured UPLOAD_FOLDER
+             file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], upload.file_path)
+             if not os.path.isabs(file_path):
+                 file_path = os.path.join(app_root, file_path)
     else:
         file_path = upload.file_path
     
     if not os.path.exists(file_path):
-        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(file_path))
+        # Try fallback to uploads folder directly if the above logic failed
+        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(upload.file_path))
+        if not os.path.isabs(fallback_path):
+             fallback_path = os.path.join(app_root, fallback_path)
+             
         if os.path.exists(fallback_path):
             file_path = fallback_path
         else:
-            current_app.logger.error(f"File not found for mirror sync {upload_id}")
+            current_app.logger.error(f"File not found for mirror sync {upload_id}. Tried: '{file_path}' (Abs: {os.path.abspath(file_path)}) and Fallback: '{fallback_path}' (Abs: {os.path.abspath(fallback_path)})")
             abort(404)
             
     file_size = os.path.getsize(file_path)
