@@ -1115,7 +1115,8 @@ def delete_mirror(id):
 @admin_required
 def mirror_files():
     page = request.args.get('page', 1, type=int)
-    uploads = Upload.query.order_by(Upload.uploaded_at.desc()).paginate(page=page, per_page=20)
+    # Only show approved uploads in the replication manager
+    uploads = Upload.query.filter_by(status='approved').order_by(Upload.uploaded_at.desc()).paginate(page=page, per_page=20)
     mirrors = Mirror.query.all()
     return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors)
 
@@ -1124,6 +1125,11 @@ def mirror_files():
 @admin_required
 def trigger_sync(upload_id):
     upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        flash('Cannot sync unapproved files', 'error')
+        return redirect(url_for('admin.mirror_files'))
+
     mirror_ids = request.form.getlist('mirrors')
     
     if not mirror_ids:
@@ -1180,7 +1186,7 @@ def trigger_bulk_sync():
     
     for upload_id in upload_ids:
         upload = Upload.query.get(upload_id)
-        if not upload:
+        if not upload or upload.status != 'approved':
             continue
             
         # Check storage space for each mirror
