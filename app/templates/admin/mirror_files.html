@@ -68,15 +68,6 @@
                                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ upload.id }}">
                                     <i class="fas fa-sync"></i> Sync
                                 </button>
-                                
-                                <!-- Sync Modal -->
-                                <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <!-- Form inside modal but separate from bulk form -->
-                                        </div>
-                                    </div>
-                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -206,7 +197,10 @@
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script>
-    var socket = io();
+    var socket = io({
+        transports: ['websocket'],
+        upgrade: false
+    });
     
     // Select All functionality
     document.getElementById('selectAll').addEventListener('change', function() {

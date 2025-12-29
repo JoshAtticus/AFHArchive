@@ -10,7 +10,8 @@ import multiprocessing
 bind = f"{os.getenv('GUNICORN_HOST', '0.0.0.0')}:{os.getenv('GUNICORN_PORT', '8000')}"
 
 # Worker processes
-workers = int(os.getenv('GUNICORN_WORKERS', multiprocessing.cpu_count() * 2 + 1))
+# Use 1 worker to support Socket.IO without Redis/RabbitMQ
+workers = 1
 worker_class = os.getenv('GUNICORN_WORKER_CLASS', 'gevent')
 worker_connections = int(os.getenv('GUNICORN_WORKER_CONNECTIONS', '1000'))
 

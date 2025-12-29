@@ -23,8 +23,11 @@ from app import create_app, db
 application = create_app()
 
 # Start mirror client if configured
-from app.routes.mirror_api import start_mirror_client
-start_mirror_client(application)
+# Only start if we are NOT running under Gunicorn (to avoid multiple workers starting threads)
+# OR if we are explicitly told to be a mirror via env var
+if os.environ.get('ENABLE_MIRROR_CLIENT') == 'true':
+    from app.routes.mirror_api import start_mirror_client
+    start_mirror_client(application)
 
 # Initialize database if needed
 def init_db_if_needed():
