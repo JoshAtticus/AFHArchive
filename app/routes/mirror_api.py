@@ -72,12 +72,18 @@ def download_chunk(upload_id):
     upload = Upload.query.get_or_404(upload_id)
     
     file_path = upload.file_path
-    if not os.path.isabs(file_path):
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file_path)
     
+    # Check if file exists at the path stored in DB
     if not os.path.exists(file_path):
-        return jsonify({'error': 'File not found'}), 404
-        
+        # Fallback: Try joining UPLOAD_FOLDER with the filename
+        # This handles cases where DB path might be just the filename or relative path is different
+        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(file_path))
+        if os.path.exists(fallback_path):
+            file_path = fallback_path
+        else:
+            current_app.logger.error(f"File not found for upload {upload_id}. DB path: {upload.file_path}, Fallback: {fallback_path}")
+            return jsonify({'error': 'File not found'}), 404
+    
     size = os.path.getsize(file_path)
     
     range_header = request.headers.get('Range', None)
