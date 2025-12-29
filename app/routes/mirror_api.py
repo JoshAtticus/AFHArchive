@@ -181,8 +181,12 @@ def perform_sync(job_data, app_config, app=None):
             for chunk in iter(lambda: f.read(4096), b""):
                 local_md5.update(chunk)
         
-        if local_md5.hexdigest() != md5_hash:
-            raise Exception("MD5 mismatch")
+        calculated_md5 = local_md5.hexdigest()
+        if calculated_md5 != md5_hash:
+            actual_size = os.path.getsize(local_path)
+            error_msg = f"MD5 mismatch. Expected: {md5_hash}, Got: {calculated_md5}. Expected Size: {file_size}, Got Size: {actual_size}"
+            logger.error(error_msg)
+            raise Exception(error_msg)
             
         # Report success
         requests.post(f"{main_url}/api/mirror/sync_complete", json={

@@ -149,6 +149,84 @@
                 {% endif %}
             </div>
         </div>
+
+        <div class="card mt-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="fas fa-copy"></i> Mirror Replication</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mirror</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mirror in mirrors %}
+                                {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
+                                <tr>
+                                    <td>{{ mirror.name }}</td>
+                                    <td>
+                                        {% if replica %}
+                                            {% if replica.status == 'synced' %}
+                                                <span class="badge bg-success">Synced</span>
+                                            {% elif replica.status == 'syncing' %}
+                                                <span class="badge bg-info">Syncing</span>
+                                            {% elif replica.status == 'error' %}
+                                                <span class="badge bg-danger">Error</span>
+                                                {% if replica.error_message %}
+                                                    <div class="text-danger small mt-1" style="font-size: 0.75rem; word-wrap: break-word;">
+                                                        {% if 'MD5 mismatch' in replica.error_message %}
+                                                            <strong>MD5 Mismatch</strong><br>
+                                                            {{ replica.error_message.replace('MD5 mismatch. ', '').replace('. ', '.<br>') | safe }}
+                                                        {% else %}
+                                                            {{ replica.error_message }}
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="badge bg-warning">{{ replica.status }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge bg-secondary">Not on mirror</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ mirror.id }}">
+                                            <i class="fas fa-sync"></i>
+                                        </button>
+                                        
+                                        <!-- Sync Modal -->
+                                        <div class="modal fade" id="syncModal{{ mirror.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id, mirror_id=mirror.id) }}" method="POST">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Sync to {{ mirror.name }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to sync <strong>{{ upload.original_filename }}</strong> to <strong>{{ mirror.name }}</strong>?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary">Sync Now</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-4">

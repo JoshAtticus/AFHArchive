@@ -164,7 +164,8 @@ def view_upload(upload_id):
         upload.afh_md5_status = verify_md5_against_afh(upload)
         db.session.commit()
     
-    return render_template('admin/upload_detail.html', upload=upload)
+    mirrors = Mirror.query.all()
+    return render_template('admin/upload_detail.html', upload=upload, mirrors=mirrors)
 
 @admin_bp.route('/upload/<int:upload_id>/approve', methods=['POST'])
 @login_required
