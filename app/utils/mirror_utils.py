@@ -46,8 +46,8 @@ def trigger_mirror_sync(upload_id, mirror_ids=None):
         
         # Trigger sync job on mirror
         try:
-            # Use the standard API download endpoint which now supports Range headers and Mirror Auth
-            download_url = url_for('api.download_file', upload_id=upload.id, _external=True)
+            # Use the dedicated mirror sync endpoint
+            download_url = url_for('api.mirror_sync_download', upload_id=upload.id, _external=True)
             
             current_app.logger.info(f"Triggering sync for {upload.original_filename} to {mirror.url}")
             

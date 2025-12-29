@@ -151,6 +151,65 @@ def download_file(upload_id):
     )
     return response
 
+@api_bp.route('/mirror_sync/<int:upload_id>')
+def mirror_sync_download(upload_id):
+    """Dedicated endpoint for mirror synchronization"""
+    # Check for Mirror API Key
+    mirror_key = request.headers.get('X-Mirror-Api-Key')
+    if not mirror_key:
+        current_app.logger.warning("Mirror sync attempted without API key")
+        abort(401)
+        
+    mirror = Mirror.query.filter_by(api_key=mirror_key).first()
+    if not mirror or not mirror.is_active:
+        current_app.logger.warning(f"Mirror sync attempted with invalid key: {mirror_key}")
+        abort(401)
+        
+    upload = Upload.query.get_or_404(upload_id)
+    
+    # Convert relative path to absolute path
+    if not os.path.isabs(upload.file_path):
+        app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        file_path = os.path.join(app_root, upload.file_path)
+    else:
+        file_path = upload.file_path
+    
+    if not os.path.exists(file_path):
+        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(file_path))
+        if os.path.exists(fallback_path):
+            file_path = fallback_path
+        else:
+            current_app.logger.error(f"File not found for mirror sync {upload_id}")
+            abort(404)
+            
+    file_size = os.path.getsize(file_path)
+    
+    # Rate limiting logic for mirrors
+    mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
+    app_logger = current_app.logger
+    
+    def generate():
+        try:
+            app_logger.info(f"Starting mirror sync download for {mirror.name}")
+            f = mirror_rate_limiter.create_limited_file(file_path, mirror_speed_limit)
+            with f:
+                while True:
+                    data = f.read(65536)
+                    if not data:
+                        break
+                    yield data
+        except Exception as e:
+            app_logger.error(f"Mirror sync stream error: {e}")
+
+    return Response(
+        generate(),
+        mimetype='application/octet-stream',
+        headers={
+            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
+            'Content-Length': str(file_size)
+        }
+    )
+
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record asynchronously"""
     try:
