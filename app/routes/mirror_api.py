@@ -278,8 +278,8 @@ def receive_sync_job():
     # Override download_url to ensure it uses the configured MAIN_SERVER_URL
     # This fixes issues where the main server sends a localhost URL
     if app_config['MAIN_SERVER_URL']:
-        # Use the standard API download endpoint
-        data['download_url'] = f"{app_config['MAIN_SERVER_URL']}/api/download/{data.get('file_id')}"
+        # Use the direct download endpoint as requested
+        data['download_url'] = f"{app_config['MAIN_SERVER_URL']}/download/{data.get('file_id')}/direct"
         print(f"Using constructed download URL: {data['download_url']}")
     
     # Pass the API key to the thread so it can authenticate with the main server

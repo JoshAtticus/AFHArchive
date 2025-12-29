@@ -72,6 +72,7 @@ def download_file(upload_id):
         if os.path.exists(fallback_path):
             file_path = fallback_path
         else:
+            current_app.logger.error(f"File not found for upload {upload_id}. Path: {file_path}, Fallback: {fallback_path}")
             abort(404)
     
     file_size = os.path.getsize(file_path)
