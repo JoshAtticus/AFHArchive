@@ -314,7 +314,9 @@ def download_direct(upload_id):
     if not upload:
         abort(404)
     
-    if upload.status != 'approved':
+    # Allow mirrors to download unapproved files (validation happens in api.download_file)
+    mirror_key = request.headers.get('X-Mirror-Api-Key')
+    if not mirror_key and upload.status != 'approved':
         flash('File not available for download', 'error')
         return redirect(url_for('main.index'))
     

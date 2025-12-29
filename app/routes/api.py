@@ -151,11 +151,6 @@ def download_file(upload_id):
     )
     return response
 
-@api_bp.route('/download/<int:upload_id>/direct')
-def download_file_direct(upload_id):
-    """Direct download endpoint for mirrors (alias for download_file)"""
-    return download_file(upload_id)
-
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record asynchronously"""
     try:
