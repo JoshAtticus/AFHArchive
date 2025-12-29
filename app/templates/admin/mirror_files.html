@@ -54,7 +54,12 @@
                                                 </div>
                                                 <small class="text-muted progress-text">Starting...</small>
                                             {% elif replica.status == 'error' %}
-                                                <span class="badge bg-danger" title="{{ replica.error_message }}">Error</span>
+                                                <span class="badge bg-danger">Error</span>
+                                                {% if replica.error_message %}
+                                                    <div class="text-danger small mt-1" style="font-size: 0.75rem; max-width: 200px; word-wrap: break-word;">
+                                                        <i class="fas fa-exclamation-circle"></i> {{ replica.error_message }}
+                                                    </div>
+                                                {% endif %}
                                             {% else %}
                                                 <span class="badge bg-warning">{{ replica.status }}</span>
                                             {% endif %}
