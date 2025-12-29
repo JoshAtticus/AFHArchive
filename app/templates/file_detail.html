@@ -11,34 +11,34 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h5>{{ _('Device Information') }}</h5>
-                        <table class="table table-sm">
+                        <table class="table table-sm table-bordered">
                             <tr>
-                                <th>{{ _('Manufacturer:') }}</th>
+                                <th class="bg-light" style="width: 40%">{{ _('Manufacturer:') }}</th>
                                 <td>{{ upload.device_manufacturer }}</td>
                             </tr>
                             <tr>
-                                <th>{{ _('Model:') }}</th>
+                                <th class="bg-light">{{ _('Model:') }}</th>
                                 <td>{{ upload.device_model }}</td>
                             </tr>
                         </table>
                     </div>
                     <div class="col-md-6">
                         <h5>{{ _('File Information') }}</h5>
-                        <table class="table table-sm">
+                        <table class="table table-sm table-bordered">
                             <tr>
-                                <th>{{ _('Size:') }}</th>
+                                <th class="bg-light" style="width: 40%">{{ _('Size:') }}</th>
                                 <td>{{ upload.file_size_mb }} MB</td>
                             </tr>
                             <tr>
-                                <th>{{ _('MD5 Hash:') }}</th>
-                                <td><code>{{ upload.md5_hash }}</code></td>
+                                <th class="bg-light">{{ _('MD5 Hash:') }}</th>
+                                <td class="text-break"><code>{{ upload.md5_hash }}</code></td>
                             </tr>
                             <tr>
-                                <th>{{ _('Downloads:') }}</th>
+                                <th class="bg-light">{{ _('Downloads:') }}</th>
                                 <td>{{ upload.download_count }}</td>
                             </tr>
                             <tr>
-                                <th>{{ _('Uploaded:') }}</th>
+                                <th class="bg-light">{{ _('Uploaded:') }}</th>
                                 <td>{{ upload.uploaded_at.strftime('%B %d, %Y') }}</td>
                             </tr>
                         </table>
@@ -82,29 +82,35 @@
                     <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
                     </a>
-                    <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="btn btn-success btn-lg">
-                        <i class="fas fa-download"></i> {{ _('Download File') }}
-                    </a>
                 </div>
                 
-                {% if upload.replicas %}
                 <div>
                     <h5>{{ _('Available Mirrors') }}</h5>
                     <div class="list-group">
-                        {% for replica in upload.replicas %}
-                            {% if replica.status == 'synced' and replica.mirror.is_active %}
-                            <a href="{{ replica.mirror.url }}/uploads/{{ upload.filename }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
-                                    <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
-                                </div>
-                                <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
-                            </a>
-                            {% endif %}
-                        {% endfor %}
+                        <!-- Main Server -->
+                        <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-server text-primary"></i> {{ _('Main Server') }}
+                                <small class="text-muted ms-2">({{ _('Primary') }})</small>
+                            </div>
+                            <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
+                        </a>
+
+                        {% if upload.replicas %}
+                            {% for replica in upload.replicas %}
+                                {% if replica.status == 'synced' and replica.mirror.is_active %}
+                                <a href="{{ replica.mirror.url }}/uploads/{{ upload.filename }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
+                                        <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
+                                </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>

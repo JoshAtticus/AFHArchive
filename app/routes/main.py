@@ -14,6 +14,10 @@ from app.utils.mirror_utils import trigger_mirror_sync
 
 main_bp = Blueprint('main', __name__)
 
+@main_bp.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
+
 @main_bp.route('/')
 def index():
     # Check if there's a file ID parameter for AFH link redirection
