@@ -100,63 +100,56 @@ def perform_sync(job_data, app_config, app=None):
         
     local_path = os.path.join(upload_dir, filename)
     
-    # Chunk size (e.g., 10MB)
-    CHUNK_SIZE = 10 * 1024 * 1024 
-    
     try:
+        headers = {'X-Mirror-Api-Key': api_key}
+        
+        # Retry loop for the connection start
+        retries = 0
+        max_retries = 5
+        response = None
+        
+        while retries < max_retries:
+            try:
+                response = requests.get(download_url, headers=headers, stream=True, timeout=30)
+                if response.status_code == 200:
+                    break
+                elif response.status_code in [502, 503, 504]:
+                     print(f"Server returned {response.status_code}, retrying...")
+                else:
+                    raise Exception(f"Download failed with status {response.status_code}")
+            except Exception as e:
+                print(f"Connection attempt {retries+1} failed: {e}")
+            
+            retries += 1
+            if retries < max_retries:
+                time.sleep(5 * retries)
+            
+        if not response or response.status_code != 200:
+             raise Exception(f"Failed to connect after {max_retries} retries. Status: {response.status_code if response else 'None'}")
+
         with open(local_path, 'wb') as f:
             downloaded = 0
-            while downloaded < file_size:
-                end = min(downloaded + CHUNK_SIZE - 1, file_size - 1)
-                headers = {
-                    'X-Mirror-Api-Key': api_key,
-                    'Range': f'bytes={downloaded}-{end}'
-                }
-                
-                retries = 0
-                max_retries = 5
-                success = False
-                
-                while not success and retries < max_retries:
-                    try:
-                        response = requests.get(download_url, headers=headers, stream=True, timeout=30)
-                        if response.status_code not in [200, 206]:
-                            # If we get a 502/503/504, it might be temporary. Treat as retryable.
-                            if response.status_code in [502, 503, 504]:
-                                raise requests.exceptions.ConnectionError(f"Server returned {response.status_code}")
-                            raise Exception(f"Download failed with status {response.status_code}")
-                            
-                        for chunk in response.iter_content(chunk_size=8192):
-                            if chunk:
-                                f.write(chunk)
-                        
-                        success = True
-                    except (requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, Exception) as e:
-                        # Catch generic Exception too for IncompleteRead which can sometimes be wrapped
-                        retries += 1
-                        wait_time = 5 * retries # Increase wait time (5, 10, 15, 20, 25 seconds)
-                        print(f"Error downloading chunk {downloaded}-{end}: {e}. Retrying ({retries}/{max_retries}) in {wait_time}s...")
-                        time.sleep(wait_time)
-                        # Reset file pointer to start of this chunk to overwrite any partial data
-                        f.seek(downloaded)
-                
-                if not success:
-                    raise Exception(f"Failed to download chunk {downloaded}-{end} after {max_retries} retries")
-                        
-                downloaded = end + 1
-                
-                # Report progress
-                percent = int((downloaded / file_size) * 100)
-                try:
-                    requests.post(f"{main_url}/api/mirror/progress", json={
-                        'api_key': api_key,
-                        'upload_id': file_id,
-                        'progress': percent,
-                        'downloaded_bytes': downloaded,
-                        'total_bytes': file_size
-                    }, timeout=5)
-                except:
-                    pass # Ignore progress report failures
+            last_progress_time = time.time()
+            
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    
+                    # Report progress every 2 seconds
+                    if time.time() - last_progress_time > 2:
+                        percent = int((downloaded / file_size) * 100)
+                        try:
+                            requests.post(f"{main_url}/api/mirror/progress", json={
+                                'api_key': api_key,
+                                'upload_id': file_id,
+                                'progress': percent,
+                                'downloaded_bytes': downloaded,
+                                'total_bytes': file_size
+                            }, timeout=5)
+                            last_progress_time = time.time()
+                        except:
+                            pass # Ignore progress report failures
                 
         # Verify MD5
         local_md5 = hashlib.md5()
