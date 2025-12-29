@@ -158,12 +158,43 @@ let uploadState = {
     activeXHR: null
 };
 
+function showNotification(message, type='info') {
+    // Create alert container if it doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.position = 'fixed';
+        container.style.top = '80px';
+        container.style.right = '20px';
+        container.style.zIndex = '9999';
+        container.style.minWidth = '300px';
+        container.style.maxWidth = '400px';
+        document.body.appendChild(container);
+    }
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    container.appendChild(alertDiv);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 150);
+    }, 5000);
+}
+
 document.getElementById('file').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
         if (file.size > maxSize) {
-            alert(translations.file_too_large);
+            showNotification(translations.file_too_large, 'error');
             e.target.value = '';
         }
     }
@@ -175,7 +206,7 @@ document.getElementById('upload-form').addEventListener('submit', function(e) {
     const file = document.getElementById('file').files[0];
     
     if (!file) {
-        alert(translations.select_file);
+        showNotification(translations.select_file, 'error');
         return;
     }
     
@@ -184,12 +215,12 @@ document.getElementById('upload-form').addEventListener('submit', function(e) {
     const model = document.getElementById('device_model').value.trim();
     
     if (!manufacturer) {
-        alert(translations.manufacturer_required);
+        showNotification(translations.manufacturer_required, 'error');
         return;
     }
     
     if (!model) {
-        alert(translations.model_required);
+        showNotification(translations.model_required, 'error');
         return;
     }
     

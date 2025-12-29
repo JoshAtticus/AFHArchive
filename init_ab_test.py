@@ -17,36 +17,43 @@ def main():
     app = create_app()
     
     with app.app_context():
-        # Check if direct download test already exists
+        # 1. Direct Download Test
         existing_test = ABTest.query.filter_by(name='direct_download').first()
         
         if existing_test:
             print("Direct download A/B test already exists.")
-            print(f"Status: {'Active' if existing_test.is_active else 'Inactive'}")
-            print(f"Traffic: {existing_test.traffic_percentage}%")
-            return
+        else:
+            # Create the direct download A/B test
+            test = ABTest(
+                name='direct_download',
+                description='Test direct downloads from direct.afharchive.xyz vs standard downloads',
+                traffic_percentage=50,
+                is_active=False
+            )
+            db.session.add(test)
+            print("✅ Direct download A/B test created successfully!")
+
+        # 2. Autoreviewer on Upload Test
+        existing_ar_test = ABTest.query.filter_by(name='autoreviewer_on_upload').first()
         
-        # Create the direct download A/B test
-        test = ABTest(
-            name='direct_download',
-            description='Test direct downloads from direct.afharchive.xyz vs standard downloads',
-            traffic_percentage=50,
-            is_active=False  # Start inactive until manually activated
-        )
+        if existing_ar_test:
+            print("Autoreviewer on upload A/B test already exists.")
+        else:
+            # Create the autoreviewer A/B test
+            ar_test = ABTest(
+                name='autoreviewer_on_upload',
+                description='Automatically run AI autoreviewer on new uploads',
+                traffic_percentage=50,
+                is_active=False
+            )
+            db.session.add(ar_test)
+            print("✅ Autoreviewer on upload A/B test created successfully!")
         
         try:
-            db.session.add(test)
             db.session.commit()
-            print("✅ Direct download A/B test created successfully!")
-            print("📝 Test name: direct_download")
-            print("🎯 Traffic: 50% to test group")
-            print("⚡ Status: Inactive (activate via admin panel)")
-            print("\nTo activate the test:")
-            print("1. Start your Flask app")
-            print("2. Go to /admin/ab-tests")
-            print("3. Click 'Start' on the direct_download test")
+            print("\nTests initialized. Activate them via admin panel.")
         except Exception as e:
-            print(f"❌ Failed to create A/B test: {e}")
+            print(f"❌ Failed to save A/B tests: {e}")
             db.session.rollback()
 
 if __name__ == '__main__':

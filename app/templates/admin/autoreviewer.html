@@ -267,15 +267,36 @@ setInterval(function() {
 let socket = null;
 
 function initSocketIO() {
-    // Connect to the /autoreviewer namespace
-    socket = io('/autoreviewer');
+    if (socket && socket.connected) {
+        console.log('Socket already connected');
+        return;
+    }
+
+    // Connect to the /autoreviewer namespace with websocket transport preferred
+    socket = io('/autoreviewer', {
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 5
+    });
     
     socket.on('connect', function() {
         console.log('Connected to AI review progress updates');
+        addLogEntry('Connected to progress server', 'success');
+    });
+    
+    socket.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+        // Don't spam the log with connection errors
+        if (socket.active) { 
+             // temporary error
+        } else {
+             addLogEntry('Connection error: ' + error.message, 'warning');
+        }
     });
     
     socket.on('disconnect', function() {
         console.log('Disconnected from AI review progress updates');
+        addLogEntry('Disconnected from progress server', 'warning');
     });
     
     socket.on('ai_review_progress', function(data) {

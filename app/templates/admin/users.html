@@ -173,6 +173,37 @@
 </div>
 
 <script>
+function showNotification(message, type='info') {
+    // Create alert container if it doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.position = 'fixed';
+        container.style.top = '80px';
+        container.style.right = '20px';
+        container.style.zIndex = '9999';
+        container.style.minWidth = '300px';
+        container.style.maxWidth = '400px';
+        document.body.appendChild(container);
+    }
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    container.appendChild(alertDiv);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 150);
+    }, 5000);
+}
+
 function toggleAdmin(userId, makeAdmin) {
     const action = makeAdmin ? 'make-admin' : 'remove-admin';
     const message = makeAdmin ? 'make this user an admin' : 'remove admin privileges from this user';
@@ -187,13 +218,14 @@ function toggleAdmin(userId, makeAdmin) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                showNotification('User updated successfully. Reloading...', 'success');
+                setTimeout(() => location.reload(), 1000);
             } else {
-                alert('Error: ' + data.message);
+                showNotification('Error: ' + data.message, 'error');
             }
         })
         .catch(error => {
-            alert('An error occurred: ' + error);
+            showNotification('An error occurred: ' + error, 'error');
         });
     }
 }

@@ -191,7 +191,17 @@ def upload():
             # This must happen after the commit so the upload ID exists
             try:
                 current_app.logger.info(f"Running autoreviewer for upload {upload.id}")
-                duplicate_rejected = auto_review_upload(upload.id)
+                
+                # Check A/B test for AI review
+                # If test is inactive, is_in_test_group returns False (control)
+                # But we might want default behavior to be OFF if test is inactive?
+                # Actually, is_in_test_group returns False if test is not active or user is in control.
+                # So if test is not active, use_ai will be False.
+                # If test is active, use_ai will be True for test group, False for control.
+                use_ai = is_in_test_group('autoreviewer_on_upload')
+                current_app.logger.info(f"AI review enabled for this upload: {use_ai}")
+                
+                duplicate_rejected = auto_review_upload(upload.id, use_ai=use_ai)
                 if duplicate_rejected:
                     current_app.logger.info(f"Autoreviewer rejected upload {upload.id} as duplicate")
                 else:

@@ -302,16 +302,16 @@ def ai_review_upload(upload, md5_matches_afh=None, autoreviewer_user=None):
             upload.reviewed_at = datetime.utcnow()
             upload.reviewed_by = autoreviewer_user.id
             
-            # Delete the rejected file
-            try:
-                from app.utils.file_handler import delete_upload_file
-                file_deleted = delete_upload_file(upload.file_path)
-                if file_deleted:
-                    current_app.logger.info(f"Deleted rejected file: {upload.file_path}")
-                else:
-                    current_app.logger.warning(f"Failed to delete rejected file: {upload.file_path}")
-            except Exception as e:
-                current_app.logger.error(f"Error deleting rejected file: {str(e)}")
+            # Delete the rejected file - DISABLED per user request
+            # try:
+            #     from app.utils.file_handler import delete_upload_file
+            #     file_deleted = delete_upload_file(upload.file_path)
+            #     if file_deleted:
+            #         current_app.logger.info(f"Deleted rejected file: {upload.file_path}")
+            #     else:
+            #         current_app.logger.warning(f"Failed to delete rejected file: {upload.file_path}")
+            # except Exception as e:
+            #     current_app.logger.error(f"Error deleting rejected file: {str(e)}")
             
             db.session.commit()
             current_app.logger.info(f"AI rejected upload {upload.id}")

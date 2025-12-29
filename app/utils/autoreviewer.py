@@ -178,16 +178,16 @@ def auto_review_upload(upload_id, use_ai=True):
             upload.reviewed_at = datetime.utcnow()
             upload.reviewed_by = autoreviewer.id
             
-            # Delete the duplicate file since it's rejected
-            try:
-                from app.utils.file_handler import delete_upload_file
-                file_deleted = delete_upload_file(upload.file_path)
-                if file_deleted:
-                    current_app.logger.info(f"Deleted duplicate file: {upload.file_path}")
-                else:
-                    current_app.logger.warning(f"Failed to delete duplicate file: {upload.file_path}")
-            except Exception as e:
-                current_app.logger.error(f"Error deleting duplicate file {upload.file_path}: {str(e)}")
+            # Delete the duplicate file since it's rejected - DISABLED per user request
+            # try:
+            #     from app.utils.file_handler import delete_upload_file
+            #     file_deleted = delete_upload_file(upload.file_path)
+            #     if file_deleted:
+            #         current_app.logger.info(f"Deleted duplicate file: {upload.file_path}")
+            #     else:
+            #         current_app.logger.warning(f"Failed to delete duplicate file: {upload.file_path}")
+            # except Exception as e:
+            #     current_app.logger.error(f"Error deleting duplicate file {upload.file_path}: {str(e)}")
             
             db.session.commit()
             

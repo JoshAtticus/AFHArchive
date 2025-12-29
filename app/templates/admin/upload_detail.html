@@ -342,6 +342,37 @@
 {% endif %}
 
 <script>
+function showNotification(message, type='info') {
+    // Create alert container if it doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.position = 'fixed';
+        container.style.top = '80px';
+        container.style.right = '20px';
+        container.style.zIndex = '9999';
+        container.style.minWidth = '300px';
+        container.style.maxWidth = '400px';
+        document.body.appendChild(container);
+    }
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow`;
+    alertDiv.role = 'alert';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    container.appendChild(alertDiv);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 150);
+    }, 5000);
+}
+
 function recheckAFHMD5() {
     const btn = document.getElementById('recheckMd5Btn');
     const originalHtml = btn.innerHTML;
@@ -359,16 +390,17 @@ function recheckAFHMD5() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            showNotification('MD5 check successful. Reloading...', 'success');
             // Reload page to show updated status
-            location.reload();
+            setTimeout(() => location.reload(), 1000);
         } else {
-            alert('Error: ' + data.message);
+            showNotification('Error: ' + data.message, 'error');
             btn.disabled = false;
             btn.innerHTML = originalHtml;
         }
     })
     .catch(error => {
-        alert('Network error: ' + error);
+        showNotification('Network error: ' + error, 'error');
         btn.disabled = false;
         btn.innerHTML = originalHtml;
     });
@@ -395,17 +427,17 @@ function triggerAIReview() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('AI Review Complete: ' + data.message);
+            showNotification('AI Review Complete: ' + data.message, 'success');
             // Reload page to show updated status
-            location.reload();
+            setTimeout(() => location.reload(), 1500);
         } else {
-            alert('AI Review Failed: ' + data.message);
+            showNotification('AI Review Failed: ' + data.message, 'error');
             btn.disabled = false;
             btn.innerHTML = originalHtml;
         }
     })
     .catch(error => {
-        alert('Network error: ' + error);
+        showNotification('Network error: ' + error, 'error');
         btn.disabled = false;
         btn.innerHTML = originalHtml;
     });
