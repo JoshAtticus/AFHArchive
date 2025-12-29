@@ -391,6 +391,62 @@ def contact():
 def ads_txt():
     return send_from_directory(current_app.static_folder, 'ads.txt')
 
+@main_bp.route('/robots.txt')
+def robots_txt():
+    """Generate robots.txt"""
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /my-uploads",
+        "Disallow: /download/",
+        "Disallow: /api/",
+        f"Sitemap: {url_for('main.sitemap', _external=True)}"
+    ]
+    return "\n".join(lines), 200, {'Content-Type': 'text/plain'}
+
+@main_bp.route('/sitemap.xml')
+def sitemap():
+    """Generate sitemap.xml for SEO"""
+    pages = []
+    
+    # Static pages
+    # (loc, changefreq, priority)
+    static_urls = [
+        ('main.index', 'daily', '1.0'),
+        ('main.browse', 'daily', '0.8'),
+        ('main.about', 'monthly', '0.5'),
+        ('main.contact', 'monthly', '0.5'),
+        ('main.privacy', 'yearly', '0.3'),
+        ('main.terms', 'yearly', '0.3')
+    ]
+    
+    for rule, changefreq, priority in static_urls:
+        url = url_for(rule, _external=True)
+        pages.append({
+            'loc': url,
+            'changefreq': changefreq,
+            'priority': priority
+        })
+        
+    # Dynamic pages (Uploads)
+    # Get latest 10000 approved uploads (limit to avoid timeout)
+    uploads = Upload.query.filter_by(status='approved').order_by(Upload.uploaded_at.desc()).limit(10000).all()
+    
+    for upload in uploads:
+        url = url_for('main.file_detail', upload_id=upload.id, _external=True)
+        lastmod = upload.uploaded_at.strftime('%Y-%m-%d')
+        pages.append({
+            'loc': url,
+            'lastmod': lastmod,
+            'changefreq': 'weekly',
+            'priority': '0.7'
+        })
+        
+    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    response = current_app.make_response(sitemap_xml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
 # Language selection
 @main_bp.route('/set_language/<language>')
 def set_language(language):

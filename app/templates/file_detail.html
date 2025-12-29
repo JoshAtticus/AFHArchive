@@ -1,6 +1,31 @@
 {% extends "base.html" %}
 
+{% block title %}{{ upload.original_filename }} - {{ upload.device_manufacturer }} {{ upload.device_model }}{% endblock %}
+
+{% block meta_description %}{{ _('Download %(filename)s for %(manufacturer)s %(model)s. File size: %(size)s MB. Preserved and archived from AndroidFileHost.', filename=upload.original_filename, manufacturer=upload.device_manufacturer, model=upload.device_model, size=upload.file_size_mb) }}{% endblock %}
+
+{% block meta_keywords %}{{ upload.device_manufacturer }}, {{ upload.device_model }}, {{ upload.original_filename }}, android, rom, firmware, download, afharchive{% endblock %}
+
 {% block content %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ upload.original_filename }}",
+  "operatingSystem": "Android",
+  "applicationCategory": "UtilitiesApplication",
+  "fileSize": "{{ upload.file_size_mb }} MB",
+  "softwareVersion": "1.0",
+  "datePublished": "{{ upload.uploaded_at.isoformat() }}",
+  "description": "Android development file for {{ upload.device_manufacturer }} {{ upload.device_model }}.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
