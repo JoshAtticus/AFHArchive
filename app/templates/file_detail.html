@@ -99,7 +99,7 @@
                         {% if upload.replicas %}
                             {% for replica in upload.replicas %}
                                 {% if replica.status == 'synced' and replica.mirror.is_active %}
-                                <a href="{{ replica.mirror.url }}/download/{{ upload.id }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id=replica.mirror.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                     <div>
                                         <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
                                         <small class="text-muted ms-2">({{ replica.mirror.location }})</small>

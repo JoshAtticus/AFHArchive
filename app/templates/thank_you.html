@@ -33,8 +33,12 @@
                     {% endif %}
                     
                     <div class="mb-4">
-                        {% if in_direct_download_test %}
-                        <a href="http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}" 
+                        {% if mirror_url %}
+                        <a href="{{ mirror_url }}" class="btn btn-success btn-lg" id="downloadBtn">
+                            <i class="fas fa-download"></i> {{ _('Start Download') }}
+                        </a>
+                        {% elif in_direct_download_test %}
+                        <a href="https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}" 
                            target="_blank" class="btn btn-success btn-lg" id="downloadBtn">
                             <i class="fas fa-download"></i> {{ _('Start Download') }}
                         </a>
@@ -117,6 +121,7 @@ const progressBar = document.getElementById('progressBar');
 const countdownText = document.getElementById('countdownText');
 const downloadBtn = document.getElementById('downloadBtn');
 const inDirectDownloadTest = {{ 'true' if in_direct_download_test else 'false' }};
+const mirrorUrl = {{ mirror_url|tojson|safe }};
 
 // Update countdown and progress bar
 const countdownInterval = setInterval(function() {
@@ -132,9 +137,12 @@ const countdownInterval = setInterval(function() {
         
         // Start download with appropriate URL based on A/B test
         setTimeout(function() {
-            if (inDirectDownloadTest) {
+            if (mirrorUrl) {
+                // Download from mirror
+                window.location.href = mirrorUrl;
+            } else if (inDirectDownloadTest) {
                 // Use direct server download - open in new tab to bypass mixed content warnings
-                window.open("http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
+                window.open("https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
             } else {
                 // Use standard download
                 window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
@@ -166,8 +174,10 @@ downloadBtn.addEventListener('click', function(e) {
         downloadBtn.classList.add('btn-outline-success');
         
         // Start download immediately with appropriate URL
-        if (inDirectDownloadTest) {
-            window.open("http://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
+        if (mirrorUrl) {
+            window.location.href = mirrorUrl;
+        } else if (inDirectDownloadTest) {
+            window.open("https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
         } else {
             window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
         }

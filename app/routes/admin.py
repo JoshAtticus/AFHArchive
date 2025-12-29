@@ -192,6 +192,13 @@ def approve_upload(upload_id):
     
     db.session.commit()
     
+    # Trigger mirror sync on approval
+    try:
+        trigger_mirror_sync(upload.id)
+        current_app.logger.info(f"Triggered mirror sync for approved upload {upload.id}")
+    except Exception as e:
+        current_app.logger.error(f"Failed to trigger mirror sync for upload {upload.id}: {e}")
+    
     if was_rejected:
         flash(f'Upload "{upload.original_filename}" manually approved (was previously rejected)', 'success')
     else:

@@ -7,7 +7,7 @@ import hashlib
 import requests
 from datetime import datetime
 from app import db
-from app.models import Upload, User, Announcement, SiteConfig
+from app.models import Upload, User, Announcement, SiteConfig, Mirror, FileReplica
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
@@ -196,11 +196,6 @@ def upload():
                     current_app.logger.info(f"Autoreviewer rejected upload {upload.id} as duplicate")
                 else:
                     current_app.logger.info(f"Autoreviewer passed upload {upload.id} - no duplicates found")
-                    # Trigger mirror sync if not rejected
-                    try:
-                        trigger_mirror_sync(upload.id)
-                    except Exception as e:
-                        current_app.logger.error(f"Mirror sync trigger failed: {e}")
             except Exception as e:
                 current_app.logger.error(f'Autoreviewer error for upload {upload.id}: {str(e)}')
                 # Don't fail the upload if autoreviewer fails
@@ -276,9 +271,26 @@ def download(upload_id):
     # Check if user is in the direct download A/B test
     in_direct_download_test = is_in_test_group('direct_download')
     
+    # Check if a specific mirror was requested
+    mirror_id = request.args.get('mirror_id', type=int)
+    mirror_url = None
+    
+    if mirror_id:
+        mirror = Mirror.query.get(mirror_id)
+        if mirror and mirror.is_active:
+            # Check if file is synced to this mirror
+            replica = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=mirror.id, status='synced').first()
+            if replica:
+                # Construct mirror download URL
+                # Assuming mirror has an endpoint like /api/download/<id> or similar
+                # But wait, mirrors are just mirrors. They might not have the same routes.
+                # If the mirror runs the same code, it has /api/download/<id>
+                mirror_url = f"{mirror.url.rstrip('/')}/api/download/{upload.id}"
+    
     # Show thank you page that will auto-start download
     return render_template('thank_you.html', upload=upload, 
-                         in_direct_download_test=in_direct_download_test)
+                         in_direct_download_test=in_direct_download_test,
+                         mirror_url=mirror_url)
 
 
 @main_bp.route('/download/<int:upload_id>/direct')

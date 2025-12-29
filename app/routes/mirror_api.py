@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app, send_file, Response
-from app import db
+from app import db, socketio
 from app.models import Mirror, FileReplica, Upload
 from app.utils.mirror_utils import get_or_create_mirror_user
 import os
@@ -26,6 +26,27 @@ def heartbeat():
     mirror.last_heartbeat = datetime.utcnow()
     mirror.storage_used_mb = data.get('storage_used_mb', 0)
     db.session.commit()
+    
+    return jsonify({'status': 'ok'})
+
+@mirror_bp.route('/progress', methods=['POST'])
+def report_progress():
+    """Receive sync progress updates from mirrors"""
+    data = request.json
+    api_key = data.get('api_key')
+    upload_id = data.get('upload_id')
+    progress = data.get('progress')
+    
+    mirror = Mirror.query.filter_by(api_key=api_key).first()
+    if not mirror:
+        return jsonify({'error': 'Invalid API key'}), 401
+        
+    # Emit socket event to admin UI
+    socketio.emit('mirror_sync_progress', {
+        'mirror_id': mirror.id,
+        'upload_id': upload_id,
+        'progress': progress
+    })
     
     return jsonify({'status': 'ok'})
 
@@ -88,16 +109,44 @@ def perform_sync(job_data, app_config, app=None):
                     'Range': f'bytes={downloaded}-{end}'
                 }
                 
-                # print(f"Downloading chunk {downloaded}-{end} from {download_url}")
-                response = requests.get(download_url, headers=headers, stream=True)
-                if response.status_code not in [200, 206]:
-                    raise Exception(f"Download failed with status {response.status_code}")
-                    
-                for chunk in response.iter_content(chunk_size=8192):
-                    if chunk:
-                        f.write(chunk)
+                retries = 0
+                max_retries = 5
+                success = False
+                
+                while not success and retries < max_retries:
+                    try:
+                        response = requests.get(download_url, headers=headers, stream=True, timeout=30)
+                        if response.status_code not in [200, 206]:
+                            raise Exception(f"Download failed with status {response.status_code}")
+                            
+                        for chunk in response.iter_content(chunk_size=8192):
+                            if chunk:
+                                f.write(chunk)
+                        
+                        success = True
+                    except (requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, Exception) as e:
+                        # Catch generic Exception too for IncompleteRead which can sometimes be wrapped
+                        retries += 1
+                        print(f"Error downloading chunk {downloaded}-{end}: {e}. Retrying ({retries}/{max_retries})...")
+                        time.sleep(2 * retries)
+                        # Reset file pointer to start of this chunk to overwrite any partial data
+                        f.seek(downloaded)
+                
+                if not success:
+                    raise Exception(f"Failed to download chunk {downloaded}-{end} after {max_retries} retries")
                         
                 downloaded = end + 1
+                
+                # Report progress
+                percent = int((downloaded / file_size) * 100)
+                try:
+                    requests.post(f"{main_url}/api/mirror/progress", json={
+                        'api_key': api_key,
+                        'upload_id': file_id,
+                        'progress': percent
+                    }, timeout=5)
+                except:
+                    pass # Ignore progress report failures
                 
         # Verify MD5
         local_md5 = hashlib.md5()

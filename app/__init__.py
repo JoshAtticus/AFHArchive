@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_babel import Babel, _
 from flask_socketio import SocketIO
 from decouple import config
+from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 import glob
 
@@ -115,6 +116,9 @@ def setup_babel_directories(app):
 
 def create_app():
     app = Flask(__name__)
+    
+    # Trust X-Forwarded-* headers from Cloudflare
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
     
     # Configuration
     app.config['SECRET_KEY'] = config('SECRET_KEY')

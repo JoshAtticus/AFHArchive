@@ -9,7 +9,7 @@ gevent.monkey.patch_all()
 
 import sys
 import os
-from app import create_app, db
+from app import create_app, db, socketio
 from app.models import User, Upload, Announcement
 import shutil
 import datetime
@@ -134,7 +134,7 @@ def main():
     if debug:
         print("⚠️  Debug mode is enabled - Use 'python run.py production' for production mode")
     
-    app.run(host=host, port=port, debug=debug)
+    socketio.run(app, host=host, port=port, debug=debug)
 
 # Legacy Flask CLI commands for backward compatibility
 app = create_app()

@@ -30,13 +30,16 @@
                         <td>
                             {% for mirror in mirrors %}
                                 {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
-                                <div class="mb-1">
+                                <div class="mb-1" id="replica-{{ mirror.id }}-{{ upload.id }}">
                                     <strong>{{ mirror.name }}:</strong>
                                     {% if replica %}
                                         {% if replica.status == 'synced' %}
                                             <span class="badge bg-success">Synced</span>
                                         {% elif replica.status == 'syncing' %}
                                             <span class="badge bg-info">Syncing</span>
+                                            <div class="progress mt-1" style="height: 5px;">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                            </div>
                                         {% elif replica.status == 'error' %}
                                             <span class="badge bg-danger" title="{{ replica.error_message }}">Error</span>
                                         {% else %}
@@ -132,4 +135,48 @@
         </nav>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    var socket = io();
+    
+    socket.on('mirror_sync_progress', function(data) {
+        var mirrorId = data.mirror_id;
+        var uploadId = data.upload_id;
+        var progress = data.progress;
+        
+        var container = document.getElementById('replica-' + mirrorId + '-' + uploadId);
+        if (container) {
+            // Check if progress bar exists, if not create it
+            var progressBar = container.querySelector('.progress-bar');
+            if (!progressBar) {
+                // If status was not 'syncing' before, we might need to update the badge too
+                var progressDiv = document.createElement('div');
+                progressDiv.className = 'progress mt-1';
+                progressDiv.style.height = '5px';
+                progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ' + progress + '%"></div>';
+                container.appendChild(progressDiv);
+                
+                // Update badge to Syncing if not already
+                var badge = container.querySelector('.badge');
+                if (badge) {
+                    badge.className = 'badge bg-info';
+                    badge.innerText = 'Syncing';
+                    // Remove other classes
+                    badge.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-secondary');
+                }
+            } else {
+                progressBar.style.width = progress + '%';
+            }
+            
+            if (progress >= 100) {
+                setTimeout(function() {
+                    location.reload(); // Reload to show 'Synced' state correctly
+                }, 1000);
+            }
+        }
+    });
+</script>
 {% endblock %}
