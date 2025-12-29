@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, send_from_directory, abort
 main_bp = Blueprint('main', __name__)
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 import hashlib
+import requests
+from datetime import datetime
 from app import db
 from app.models import Upload, User, Announcement, SiteConfig
 from app.utils.file_handler import allowed_file, save_upload_file
@@ -13,6 +15,45 @@ from app.utils.ab_testing import is_in_test_group, opt_out_of_test
 from app.utils.mirror_utils import trigger_mirror_sync
 
 main_bp = Blueprint('main', __name__)
+
+def get_or_fetch_upload(upload_id):
+    """
+    Get upload from local DB, or fetch metadata from main server if this is a mirror.
+    Returns Upload object or None.
+    """
+    upload = Upload.query.get(upload_id)
+    if upload:
+        return upload
+        
+    # If not found locally, check if we are a mirror
+    main_url = current_app.config.get('MAIN_SERVER_URL')
+    if main_url:
+        try:
+            # Fetch metadata from main server
+            resp = requests.get(f"{main_url}/api/info/{upload_id}", timeout=5)
+            if resp.status_code == 200:
+                data = resp.json()
+                
+                # Create local record
+                upload = Upload(
+                    id=data['id'],
+                    filename=data['filename'],
+                    original_filename=data['original_filename'],
+                    file_path=data['filename'], # On mirror, path is filename
+                    file_size=data['file_size'],
+                    md5_hash=data['md5_hash'],
+                    device_manufacturer=data['device_manufacturer'],
+                    device_model=data['device_model'],
+                    status='approved',
+                    uploaded_at=datetime.fromisoformat(data['uploaded_at']) if data['uploaded_at'] else datetime.utcnow()
+                )
+                db.session.add(upload)
+                db.session.commit()
+                return upload
+        except Exception as e:
+            current_app.logger.error(f"Failed to fetch upload info from main server: {e}")
+            
+    return None
 
 @main_bp.route('/uploads/<path:filename>')
 def uploaded_file(filename):
@@ -207,7 +248,9 @@ def browse():
 
 @main_bp.route('/file/<int:upload_id>')
 def file_detail(upload_id):
-    upload = Upload.query.get_or_404(upload_id)
+    upload = get_or_fetch_upload(upload_id)
+    if not upload:
+        abort(404)
     
     if upload.status != 'approved':
         flash('File not available', 'error')
@@ -218,7 +261,9 @@ def file_detail(upload_id):
 
 @main_bp.route('/download/<int:upload_id>')
 def download(upload_id):
-    upload = Upload.query.get_or_404(upload_id)
+    upload = get_or_fetch_upload(upload_id)
+    if not upload:
+        abort(404)
     
     if upload.status != 'approved':
         flash('File not available for download', 'error')
@@ -235,7 +280,9 @@ def download(upload_id):
 @main_bp.route('/download/<int:upload_id>/direct')
 def download_direct(upload_id):
     """Direct download without mirror selection page"""
-    upload = Upload.query.get_or_404(upload_id)
+    upload = get_or_fetch_upload(upload_id)
+    if not upload:
+        abort(404)
     
     if upload.status != 'approved':
         flash('File not available for download', 'error')

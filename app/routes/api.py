@@ -18,6 +18,25 @@ api_bp = Blueprint('api', __name__)
 # Initialize rate limiter
 rate_limiter = RateLimiter()
 
+@api_bp.route('/info/<int:upload_id>')
+def get_upload_info(upload_id):
+    """Get metadata for an upload (public)"""
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.status != 'approved':
+        abort(404)
+        
+    return jsonify({
+        'id': upload.id,
+        'filename': upload.filename,
+        'original_filename': upload.original_filename,
+        'file_size': upload.file_size,
+        'md5_hash': upload.md5_hash,
+        'device_manufacturer': upload.device_manufacturer,
+        'device_model': upload.device_model,
+        'uploaded_at': upload.uploaded_at.isoformat() if upload.uploaded_at else None
+    })
+
 @api_bp.route('/download/<int:upload_id>')
 def download_file(upload_id):
     upload = Upload.query.get_or_404(upload_id)

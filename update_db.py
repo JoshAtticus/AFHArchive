@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Mirror, FileReplica
+from app.models import Mirror, FileReplica, SiteConfig
 
 app = create_app()
 
@@ -16,5 +16,11 @@ with app.app_context():
         print("Created 'file_replicas' table.")
     except Exception as e:
         print(f"Error creating 'file_replicas' table (might already exist): {e}")
+
+    try:
+        SiteConfig.__table__.create(db.engine)
+        print("Created 'site_config' table.")
+    except Exception as e:
+        print(f"Error creating 'site_config' table (might already exist): {e}")
         
     print("Database update complete.")
