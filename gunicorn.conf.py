@@ -25,9 +25,10 @@ timeout = int(os.getenv('GUNICORN_TIMEOUT', '300'))  # Increased for large file 
 keepalive = int(os.getenv('GUNICORN_KEEPALIVE', '30'))
 
 # Logging
-loglevel = os.getenv('GUNICORN_LOG_LEVEL', 'info')
+loglevel = os.getenv('GUNICORN_LOG_LEVEL', 'debug')
 accesslog = os.getenv('GUNICORN_ACCESS_LOG', '-')  # stdout
 errorlog = os.getenv('GUNICORN_ERROR_LOG', '-')   # stderr
+capture_output = True # Capture stdout/stderr from the app
 
 # Process naming
 proc_name = 'afharchive'

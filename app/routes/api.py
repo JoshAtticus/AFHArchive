@@ -15,8 +15,9 @@ from werkzeug.utils import secure_filename
 
 api_bp = Blueprint('api', __name__)
 
-# Initialize rate limiter
+# Initialize rate limiters
 rate_limiter = RateLimiter()
+mirror_rate_limiter = RateLimiter()
 
 @api_bp.route('/info/<int:upload_id>')
 def get_upload_info(upload_id):
@@ -48,6 +49,9 @@ def download_file(upload_id):
         mirror = Mirror.query.filter_by(api_key=mirror_key).first()
         if mirror and mirror.is_active:
             is_mirror = True
+            current_app.logger.info(f"Mirror download request from {mirror.name}")
+        else:
+            current_app.logger.warning(f"Invalid or inactive mirror key: {mirror_key}")
     
     if not is_mirror:
         if upload.status != 'approved':
@@ -103,11 +107,12 @@ def download_file(upload_id):
         try:
             if is_mirror:
                 # Rate limit for mirrors (default 12.5 Mbps)
-                f = open(file_path, 'rb')
-                if mirror_speed_limit > 0:
-                    f = FixedRateLimitedFile(f, mirror_speed_limit)
+                # Use shared pool for mirrors to handle parallel downloads
+                app_logger.info(f"Starting mirror download with limit: {mirror_speed_limit} bps (Shared Pool)")
+                f = mirror_rate_limiter.create_limited_file(file_path, mirror_speed_limit)
             else:
                 # Rate limit for users
+                app_logger.info(f"Starting user download with limit: {download_speed_limit} bps")
                 f = rate_limiter.create_limited_file(file_path, download_speed_limit)
             
             with f:

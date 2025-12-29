@@ -79,6 +79,7 @@ class FixedRateLimitedFile:
             # If we're going too fast, sleep to throttle
             if time_since_last < expected_time:
                 sleep_time = expected_time - time_since_last
+                # print(f"DEBUG: Throttling {len(data)} bytes, sleeping {sleep_time:.4f}s")
                 time.sleep(sleep_time)
         
         self.last_read_time = time.time()
