@@ -170,18 +170,22 @@ def perform_sync(job_data, app_config):
             'upload_id': file_id,
             'status': 'synced',
             'error_message': None
-        })
+        }, timeout=10)
         print(f"Sync complete for {filename}")
         
     except Exception as e:
         print(f"Sync failed for {filename}: {e}")
         # Report error
-        requests.post(f"{main_url}/api/mirror/sync_complete", json={
-            'api_key': api_key,
-            'upload_id': file_id,
-            'status': 'error',
-            'error_message': str(e)
-        })
+        try:
+            requests.post(f"{main_url}/api/mirror/sync_complete", json={
+                'api_key': api_key,
+                'upload_id': file_id,
+                'status': 'error',
+                'error_message': str(e)
+            }, timeout=10)
+        except Exception as report_error:
+            print(f"Failed to report error to main server: {report_error}")
+        
         # Clean up partial file
         if os.path.exists(local_path):
             os.remove(local_path)
@@ -205,10 +209,14 @@ def receive_sync_job():
     data = request.json
     
     # Extract config needed for the thread
+    main_server_url = current_app.config.get('MAIN_SERVER_URL', '')
+    if main_server_url:
+        main_server_url = main_server_url.rstrip('/')
+        
     app_config = {
         'UPLOAD_FOLDER': current_app.config['UPLOAD_FOLDER'],
         'MIRROR_API_KEY': current_app.config.get('MIRROR_API_KEY'),
-        'MAIN_SERVER_URL': current_app.config.get('MAIN_SERVER_URL')
+        'MAIN_SERVER_URL': main_server_url
     }
     
     if not app_config['MIRROR_API_KEY']:
@@ -221,9 +229,7 @@ def receive_sync_job():
     # Override download_url to ensure it uses the configured MAIN_SERVER_URL
     # This fixes issues where the main server sends a localhost URL
     if app_config['MAIN_SERVER_URL']:
-        # Remove trailing slash if present
-        main_url = app_config['MAIN_SERVER_URL'].rstrip('/')
-        data['download_url'] = f"{main_url}/api/mirror/download/{data.get('file_id')}"
+        data['download_url'] = f"{app_config['MAIN_SERVER_URL']}/api/mirror/download/{data.get('file_id')}"
         print(f"Using constructed download URL: {data['download_url']}")
     
     # Pass the API key to the thread so it can authenticate with the main server
