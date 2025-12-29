@@ -1132,9 +1132,77 @@ def trigger_sync(upload_id):
     # Convert to integers
     mirror_ids = [int(mid) for mid in mirror_ids]
     
-    current_app.logger.info(f"Admin triggering sync for upload {upload.id} to mirrors {mirror_ids}")
-    count = trigger_mirror_sync(upload.id, mirror_ids)
+    # Check storage space
+    valid_mirror_ids = []
+    for mid in mirror_ids:
+        mirror = Mirror.query.get(mid)
+        if mirror:
+            # Calculate free space in MB
+            limit_mb = mirror.storage_limit_gb * 1024
+            free_mb = limit_mb - mirror.storage_used_mb
+            
+            if free_mb >= upload.file_size_mb:
+                valid_mirror_ids.append(mid)
+            else:
+                flash(f'Skipped {mirror.name}: Not enough free space ({free_mb:.1f} MB free, {upload.file_size_mb} MB needed)', 'warning')
+    
+    if not valid_mirror_ids:
+        flash('No mirrors had enough space for this file', 'error')
+        return redirect(url_for('admin.mirror_files'))
+    
+    current_app.logger.info(f"Admin triggering sync for upload {upload.id} to mirrors {valid_mirror_ids}")
+    count = trigger_mirror_sync(upload.id, valid_mirror_ids)
             
     flash(f'Sync triggered for {count} mirrors', 'success')
+    return redirect(url_for('admin.mirror_files'))
+
+@admin_bp.route('/mirrors/sync/bulk', methods=['POST'])
+@login_required
+@admin_required
+def trigger_bulk_sync():
+    upload_ids = request.form.getlist('upload_ids')
+    mirror_ids = request.form.getlist('mirrors')
+    
+    if not upload_ids:
+        flash('No files selected', 'error')
+        return redirect(url_for('admin.mirror_files'))
+        
+    if not mirror_ids:
+        flash('No mirrors selected', 'error')
+        return redirect(url_for('admin.mirror_files'))
+        
+    mirror_ids = [int(mid) for mid in mirror_ids]
+    upload_ids = [int(uid) for uid in upload_ids]
+    
+    total_triggered = 0
+    skipped_space = 0
+    
+    for upload_id in upload_ids:
+        upload = Upload.query.get(upload_id)
+        if not upload:
+            continue
+            
+        # Check storage space for each mirror
+        valid_mirror_ids = []
+        for mid in mirror_ids:
+            mirror = Mirror.query.get(mid)
+            if mirror:
+                limit_mb = mirror.storage_limit_gb * 1024
+                free_mb = limit_mb - mirror.storage_used_mb
+                
+                if free_mb >= upload.file_size_mb:
+                    valid_mirror_ids.append(mid)
+                else:
+                    skipped_space += 1
+        
+        if valid_mirror_ids:
+            count = trigger_mirror_sync(upload.id, valid_mirror_ids)
+            total_triggered += count
+            
+    msg = f'Bulk sync triggered: {total_triggered} jobs created.'
+    if skipped_space > 0:
+        msg += f' {skipped_space} skipped due to insufficient space.'
+        
+    flash(msg, 'success' if skipped_space == 0 else 'warning')
     return redirect(url_for('admin.mirror_files'))
 

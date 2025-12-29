@@ -36,6 +36,8 @@ def report_progress():
     api_key = data.get('api_key')
     upload_id = data.get('upload_id')
     progress = data.get('progress')
+    downloaded_bytes = data.get('downloaded_bytes', 0)
+    total_bytes = data.get('total_bytes', 0)
     
     mirror = Mirror.query.filter_by(api_key=api_key).first()
     if not mirror:
@@ -45,7 +47,9 @@ def report_progress():
     socketio.emit('mirror_sync_progress', {
         'mirror_id': mirror.id,
         'upload_id': upload_id,
-        'progress': progress
+        'progress': progress,
+        'downloaded_bytes': downloaded_bytes,
+        'total_bytes': total_bytes
     })
     
     return jsonify({'status': 'ok'})
@@ -143,7 +147,9 @@ def perform_sync(job_data, app_config, app=None):
                     requests.post(f"{main_url}/api/mirror/progress", json={
                         'api_key': api_key,
                         'upload_id': file_id,
-                        'progress': percent
+                        'progress': percent,
+                        'downloaded_bytes': downloaded,
+                        'total_bytes': file_size
                     }, timeout=5)
                 except:
                     pass # Ignore progress report failures

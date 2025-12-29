@@ -5,91 +5,157 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="fas fa-copy"></i> File Replication Manager</h2>
+    <div>
+        <button type="button" class="btn btn-primary" id="bulkSyncBtn" disabled data-bs-toggle="modal" data-bs-target="#bulkSyncModal">
+            <i class="fas fa-sync"></i> Sync Selected
+        </button>
+    </div>
 </div>
 
 <div class="card">
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>File</th>
-                        <th>Size</th>
-                        <th>Replication Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for upload in uploads.items %}
-                    <tr>
-                        <td>
-                            {{ upload.original_filename }}<br>
-                            <small class="text-muted">{{ upload.device_manufacturer }} {{ upload.device_model }}</small>
-                        </td>
-                        <td>{{ upload.file_size_mb }} MB</td>
-                        <td>
-                            {% for mirror in mirrors %}
-                                {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
-                                <div class="mb-1" id="replica-{{ mirror.id }}-{{ upload.id }}">
-                                    <strong>{{ mirror.name }}:</strong>
-                                    {% if replica %}
-                                        {% if replica.status == 'synced' %}
-                                            <span class="badge bg-success">Synced</span>
-                                        {% elif replica.status == 'syncing' %}
-                                            <span class="badge bg-info">Syncing</span>
-                                            <div class="progress mt-1" style="height: 5px;">
-                                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                                            </div>
-                                        {% elif replica.status == 'error' %}
-                                            <span class="badge bg-danger" title="{{ replica.error_message }}">Error</span>
-                                        {% else %}
-                                            <span class="badge bg-warning">{{ replica.status }}</span>
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="badge bg-secondary">Not on mirror</span>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ upload.id }}">
-                                <i class="fas fa-sync"></i> Sync
-                            </button>
-                            
-                            <!-- Sync Modal -->
-                            <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id) }}" method="POST">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Sync {{ upload.original_filename }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Select mirrors to sync to:</p>
-                                                {% for mirror in mirrors %}
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="mirrors" value="{{ mirror.id }}" id="m{{ mirror.id }}_{{ upload.id }}">
-                                                    <label class="form-check-label" for="m{{ mirror.id }}_{{ upload.id }}">
-                                                        {{ mirror.name }} ({{ mirror.location }})
-                                                    </label>
+        <form id="bulkForm" action="{{ url_for('admin.trigger_bulk_sync') }}" method="POST">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">
+                                <input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th>File</th>
+                            <th>Size</th>
+                            <th>Replication Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for upload in uploads.items %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="form-check-input upload-checkbox" name="upload_ids" value="{{ upload.id }}">
+                            </td>
+                            <td>
+                                {{ upload.original_filename }}<br>
+                                <small class="text-muted">{{ upload.device_manufacturer }} {{ upload.device_model }}</small>
+                            </td>
+                            <td>{{ upload.file_size_mb }} MB</td>
+                            <td>
+                                {% for mirror in mirrors %}
+                                    {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
+                                    <div class="mb-1" id="replica-{{ mirror.id }}-{{ upload.id }}">
+                                        <strong>{{ mirror.name }}:</strong>
+                                        {% if replica %}
+                                            {% if replica.status == 'synced' %}
+                                                <span class="badge bg-success">Synced</span>
+                                            {% elif replica.status == 'syncing' %}
+                                                <span class="badge bg-info">Syncing</span>
+                                                <div class="progress mt-1" style="height: 15px;">
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>
                                                 </div>
-                                                {% endfor %}
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Start Sync</button>
-                                            </div>
-                                        </form>
+                                                <small class="text-muted progress-text">Starting...</small>
+                                            {% elif replica.status == 'error' %}
+                                                <span class="badge bg-danger" title="{{ replica.error_message }}">Error</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">{{ replica.status }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge bg-secondary">Not on mirror</span>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ upload.id }}">
+                                    <i class="fas fa-sync"></i> Sync
+                                </button>
+                                
+                                <!-- Sync Modal -->
+                                <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- Form inside modal but separate from bulk form -->
+                                        </div>
                                     </div>
                                 </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Bulk Sync Modal -->
+            <div class="modal fade" id="bulkSyncModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sync Selected Files</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Select mirrors to sync selected files to:</p>
+                            {% for mirror in mirrors %}
+                            {% set limit_mb = mirror.storage_limit_gb * 1024 %}
+                            {% set free_mb = limit_mb - mirror.storage_used_mb %}
+                            {% set free_gb = (free_mb / 1024) | round(2) %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="mirrors" value="{{ mirror.id }}" id="bulk_m{{ mirror.id }}">
+                                <label class="form-check-label" for="bulk_m{{ mirror.id }}">
+                                    {{ mirror.name }} ({{ mirror.location }})
+                                    <br>
+                                    <small class="text-muted">
+                                        Free Space: {{ free_gb }} GB / {{ mirror.storage_limit_gb }} GB
+                                    </small>
+                                </label>
                             </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Start Bulk Sync</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Individual Sync Modals (Moved outside the bulk form to avoid nesting) -->
+        {% for upload in uploads.items %}
+        <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id) }}" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sync {{ upload.original_filename }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Select mirrors to sync to:</p>
+                            {% for mirror in mirrors %}
+                            {% set limit_mb = mirror.storage_limit_gb * 1024 %}
+                            {% set free_mb = limit_mb - mirror.storage_used_mb %}
+                            {% set free_gb = (free_mb / 1024) | round(2) %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="mirrors" value="{{ mirror.id }}" id="m{{ mirror.id }}_{{ upload.id }}">
+                                <label class="form-check-label" for="m{{ mirror.id }}_{{ upload.id }}">
+                                    {{ mirror.name }} ({{ mirror.location }})
+                                    <br>
+                                    <small class="text-muted">
+                                        Free Space: {{ free_gb }} GB / {{ mirror.storage_limit_gb }} GB
+                                    </small>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Start Sync</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+        {% endfor %}
         
         <!-- Pagination -->
         <nav aria-label="Page navigation" class="mt-4">
@@ -142,22 +208,56 @@
 <script>
     var socket = io();
     
+    // Select All functionality
+    document.getElementById('selectAll').addEventListener('change', function() {
+        var checkboxes = document.getElementsByClassName('upload-checkbox');
+        var bulkBtn = document.getElementById('bulkSyncBtn');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+        bulkBtn.disabled = !this.checked;
+    });
+    
+    // Enable/disable bulk button based on selection
+    var checkboxes = document.getElementsByClassName('upload-checkbox');
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener('change', function() {
+            var checkedCount = document.querySelectorAll('.upload-checkbox:checked').length;
+            document.getElementById('bulkSyncBtn').disabled = checkedCount === 0;
+        });
+    }
+    
     socket.on('mirror_sync_progress', function(data) {
         var mirrorId = data.mirror_id;
         var uploadId = data.upload_id;
         var progress = data.progress;
+        var downloaded = data.downloaded_bytes || 0;
+        var total = data.total_bytes || 0;
+        
+        // Format bytes to MB
+        var downloadedMB = (downloaded / (1024 * 1024)).toFixed(1);
+        var totalMB = (total / (1024 * 1024)).toFixed(1);
+        var progressText = downloadedMB + ' MB / ' + totalMB + ' MB (' + progress + '%)';
         
         var container = document.getElementById('replica-' + mirrorId + '-' + uploadId);
         if (container) {
             // Check if progress bar exists, if not create it
             var progressBar = container.querySelector('.progress-bar');
+            var progressTextEl = container.querySelector('.progress-text');
+            
             if (!progressBar) {
                 // If status was not 'syncing' before, we might need to update the badge too
                 var progressDiv = document.createElement('div');
                 progressDiv.className = 'progress mt-1';
-                progressDiv.style.height = '5px';
-                progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ' + progress + '%"></div>';
+                progressDiv.style.height = '15px';
+                progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ' + progress + '%">' + progress + '%</div>';
                 container.appendChild(progressDiv);
+                
+                // Add text element
+                var textDiv = document.createElement('small');
+                textDiv.className = 'text-muted progress-text';
+                textDiv.innerText = progressText;
+                container.appendChild(textDiv);
                 
                 // Update badge to Syncing if not already
                 var badge = container.querySelector('.badge');
@@ -169,6 +269,10 @@
                 }
             } else {
                 progressBar.style.width = progress + '%';
+                progressBar.innerText = progress + '%';
+                if (progressTextEl) {
+                    progressTextEl.innerText = progressText;
+                }
             }
             
             if (progress >= 100) {
