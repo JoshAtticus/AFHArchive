@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Mirrors - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-server"></i> Mirrors</h2>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMirrorModal">
+        <i class="fas fa-plus"></i> Add Mirror
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>URL</th>
+                        <th>Storage</th>
+                        <th>Status</th>
+                        <th>Last Heartbeat</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mirror in mirrors %}
+                    <tr>
+                        <td>{{ mirror.name }}</td>
+                        <td>{{ mirror.location }}</td>
+                        <td>{{ mirror.url }}</td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ mirror.storage_usage_percent }}%;" 
+                                     aria-valuenow="{{ mirror.storage_usage_percent }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ mirror.storage_used_mb }}MB / {{ mirror.storage_limit_gb }}GB
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if mirror.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ mirror.last_heartbeat }}</td>
+                        <td>
+                            <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
+                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Mirror Modal -->
+<div class="modal fade" id="addMirrorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ url_for('admin.add_mirror') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Mirror</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL</label>
+                        <input type="url" name="url" class="form-control" required placeholder="https://mirror1.us.afharchive.xyz">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Storage Limit (GB)</label>
+                        <input type="number" name="storage_limit" class="form-control" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Mirror</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

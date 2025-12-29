@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}File Replication - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-copy"></i> File Replication Manager</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Size</th>
+                        <th>Replication Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for upload in uploads.items %}
+                    <tr>
+                        <td>
+                            {{ upload.original_filename }}<br>
+                            <small class="text-muted">{{ upload.device_manufacturer }} {{ upload.device_model }}</small>
+                        </td>
+                        <td>{{ upload.file_size_mb }} MB</td>
+                        <td>
+                            {% for mirror in mirrors %}
+                                {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
+                                <div class="mb-1">
+                                    <strong>{{ mirror.name }}:</strong>
+                                    {% if replica %}
+                                        {% if replica.status == 'synced' %}
+                                            <span class="badge bg-success">Synced</span>
+                                        {% elif replica.status == 'syncing' %}
+                                            <span class="badge bg-info">Syncing</span>
+                                        {% elif replica.status == 'error' %}
+                                            <span class="badge bg-danger" title="{{ replica.error_message }}">Error</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">{{ replica.status }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not on mirror</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ upload.id }}">
+                                <i class="fas fa-sync"></i> Sync
+                            </button>
+                            
+                            <!-- Sync Modal -->
+                            <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id) }}" method="POST">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Sync {{ upload.original_filename }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Select mirrors to sync to:</p>
+                                                {% for mirror in mirrors %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="mirrors" value="{{ mirror.id }}" id="m{{ mirror.id }}_{{ upload.id }}">
+                                                    <label class="form-check-label" for="m{{ mirror.id }}_{{ upload.id }}">
+                                                        {{ mirror.name }} ({{ mirror.location }})
+                                                    </label>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Start Sync</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if uploads.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.prev_num) }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                {% endif %}
+                
+                {% for page_num in uploads.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num == uploads.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('admin.mirror_files', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if uploads.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.next_num) }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}

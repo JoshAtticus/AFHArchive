@@ -135,6 +135,18 @@
                             {{ _('A/B Testing') }}
                         </a>
                     </div>
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.mirrors') }}" class="btn btn-dark btn-lg w-100">
+                            <i class="fas fa-network-wired"></i><br>
+                            Mirrors
+                        </a>
+                    </div>
+                    <div class="col-md-4 col-6 mb-3">
+                        <a href="{{ url_for('admin.mirror_files') }}" class="btn btn-dark btn-lg w-100">
+                            <i class="fas fa-copy"></i><br>
+                            File Replication
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

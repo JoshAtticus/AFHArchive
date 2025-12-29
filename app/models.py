@@ -127,3 +127,55 @@ class ABTestAssignment(db.Model):
     
     def __repr__(self):
         return f'<ABTestAssignment {self.session_id} -> {self.variant}>'
+
+
+class Mirror(db.Model):
+    __tablename__ = 'mirrors'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False, unique=True)
+    location = Column(String(100), nullable=False) # e.g. "us-east"
+    url = Column(String(255), nullable=False) # e.g. "https://mirror1.us.afharchive.xyz"
+    api_key = Column(String(100), nullable=False) # Key for the mirror to authenticate with main
+    is_active = Column(Boolean, default=True)
+    
+    # Storage management
+    storage_limit_gb = Column(Integer, default=100) # Limit in GB
+    storage_used_mb = Column(Integer, default=0) # Used in MB
+    
+    last_heartbeat = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    replicas = relationship('FileReplica', backref='mirror', lazy=True)
+    
+    def __repr__(self):
+        return f'<Mirror {self.name}>'
+        
+    @property
+    def storage_usage_percent(self):
+        if self.storage_limit_gb == 0:
+            return 0
+        limit_mb = self.storage_limit_gb * 1024
+        return round((self.storage_used_mb / limit_mb) * 100, 2)
+
+class FileReplica(db.Model):
+    __tablename__ = 'file_replicas'
+    
+    id = Column(Integer, primary_key=True)
+    upload_id = Column(Integer, ForeignKey('uploads.id'), nullable=False)
+    mirror_id = Column(Integer, ForeignKey('mirrors.id'), nullable=False)
+    
+    status = Column(String(20), default='pending') # pending, syncing, synced, error
+    error_message = Column(Text)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+    synced_at = Column(DateTime)
+    
+    # Relationships
+    upload = relationship('Upload', backref='replicas')
+    
+    def __repr__(self):
+        return f'<FileReplica {self.upload_id} on {self.mirror_id}>'
+

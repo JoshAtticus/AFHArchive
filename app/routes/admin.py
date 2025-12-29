@@ -1,13 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, Response, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import Upload, User, Announcement, ABTest, ABTestAssignment
+from app.models import Upload, User, Announcement, ABTest, ABTestAssignment, Mirror, FileReplica
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
 from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_all_pending, get_or_create_autoreviewer
 from app.utils.ab_testing import get_test_stats, cleanup_old_assignments
 from app.utils.afh_verifier import verify_md5_against_afh
+from app.utils.mirror_utils import trigger_mirror_sync
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -1014,3 +1015,86 @@ def init_direct_download_test():
         db.session.rollback()
     
     return redirect(url_for('admin.ab_tests'))
+
+
+# --- Mirror Management Routes ---
+
+@admin_bp.route('/mirrors')
+@login_required
+@admin_required
+def mirrors():
+    mirrors = Mirror.query.all()
+    return render_template('admin/mirrors.html', mirrors=mirrors)
+
+@admin_bp.route('/mirrors/add', methods=['POST'])
+@login_required
+@admin_required
+def add_mirror():
+    name = request.form.get('name')
+    location = request.form.get('location')
+    url = request.form.get('url')
+    storage_limit = request.form.get('storage_limit', type=int)
+    
+    if not name or not url:
+        flash('Name and URL are required', 'error')
+        return redirect(url_for('admin.mirrors'))
+        
+    # Generate API Key
+    api_key = secrets.token_hex(32)
+    
+    mirror = Mirror(
+        name=name,
+        location=location,
+        url=url,
+        storage_limit_gb=storage_limit,
+        api_key=api_key
+    )
+    
+    try:
+        db.session.add(mirror)
+        db.session.commit()
+        flash(f'Mirror {name} added. API Key: {api_key}', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error adding mirror: {str(e)}', 'error')
+        
+    return redirect(url_for('admin.mirrors'))
+
+@admin_bp.route('/mirrors/<int:id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def delete_mirror(id):
+    mirror = Mirror.query.get_or_404(id)
+    db.session.delete(mirror)
+    db.session.commit()
+    flash('Mirror deleted', 'success')
+    return redirect(url_for('admin.mirrors'))
+
+@admin_bp.route('/mirrors/files')
+@login_required
+@admin_required
+def mirror_files():
+    page = request.args.get('page', 1, type=int)
+    uploads = Upload.query.order_by(Upload.uploaded_at.desc()).paginate(page=page, per_page=20)
+    mirrors = Mirror.query.all()
+    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors)
+
+@admin_bp.route('/mirrors/sync/<int:upload_id>', methods=['POST'])
+@login_required
+@admin_required
+def trigger_sync(upload_id):
+    upload = Upload.query.get_or_404(upload_id)
+    mirror_ids = request.form.getlist('mirrors')
+    
+    if not mirror_ids:
+        flash('No mirrors selected', 'error')
+        return redirect(url_for('admin.mirror_files'))
+        
+    # Convert to integers
+    mirror_ids = [int(mid) for mid in mirror_ids]
+    
+    count = trigger_mirror_sync(upload.id, mirror_ids)
+            
+    flash(f'Sync triggered for {count} mirrors', 'success')
+    return redirect(url_for('admin.mirror_files'))
+

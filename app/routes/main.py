@@ -10,6 +10,7 @@ from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
 from app.utils.ab_testing import is_in_test_group, opt_out_of_test
+from app.utils.mirror_utils import trigger_mirror_sync
 
 main_bp = Blueprint('main', __name__)
 
@@ -139,6 +140,11 @@ def upload():
                     current_app.logger.info(f"Autoreviewer rejected upload {upload.id} as duplicate")
                 else:
                     current_app.logger.info(f"Autoreviewer passed upload {upload.id} - no duplicates found")
+                    # Trigger mirror sync if not rejected
+                    try:
+                        trigger_mirror_sync(upload.id)
+                    except Exception as e:
+                        current_app.logger.error(f"Mirror sync trigger failed: {e}")
             except Exception as e:
                 current_app.logger.error(f'Autoreviewer error for upload {upload.id}: {str(e)}')
                 # Don't fail the upload if autoreviewer fails
