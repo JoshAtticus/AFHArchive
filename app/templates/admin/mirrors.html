@@ -10,6 +10,25 @@
     </button>
 </div>
 
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Global Settings</h5>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('admin.update_mirror_settings') }}" method="POST" class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label class="col-form-label">Main Server Location:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" name="main_server_location" class="form-control" value="{{ main_server_location }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
@@ -52,6 +71,9 @@
                         </td>
                         <td>{{ mirror.last_heartbeat }}</td>
                         <td>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editMirrorModal{{ mirror.id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
                             <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
@@ -63,6 +85,48 @@
         </div>
     </div>
 </div>
+
+{% for mirror in mirrors %}
+<!-- Edit Mirror Modal -->
+<div class="modal fade" id="editMirrorModal{{ mirror.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ url_for('admin.edit_mirror', id=mirror.id) }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Mirror: {{ mirror.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ mirror.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-control" value="{{ mirror.location }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">URL</label>
+                        <input type="url" name="url" class="form-control" value="{{ mirror.url }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Storage Limit (GB)</label>
+                        <input type="number" name="storage_limit" class="form-control" value="{{ mirror.storage_limit_gb }}">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="is_active" id="isActive{{ mirror.id }}" {% if mirror.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="isActive{{ mirror.id }}">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 <!-- Add Mirror Modal -->
 <div class="modal fade" id="addMirrorModal" tabindex="-1">

@@ -186,3 +186,23 @@ class FileReplica(db.Model):
     def __repr__(self):
         return f'<FileReplica {self.upload_id} on {self.mirror_id}>'
 
+class SiteConfig(db.Model):
+    __tablename__ = 'site_config'
+    
+    key = Column(String(50), primary_key=True)
+    value = Column(Text)
+    
+    @staticmethod
+    def get_value(key, default=None):
+        config = SiteConfig.query.get(key)
+        return config.value if config else default
+        
+    @staticmethod
+    def set_value(key, value):
+        config = SiteConfig.query.get(key)
+        if not config:
+            config = SiteConfig(key=key)
+            db.session.add(config)
+        config.value = value
+        db.session.commit()
+

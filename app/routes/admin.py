@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app, Response, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models import Upload, User, Announcement, ABTest, ABTestAssignment, Mirror, FileReplica
+from app.models import Upload, User, Announcement, ABTest, ABTestAssignment, Mirror, FileReplica, SiteConfig
 from app.utils.decorators import admin_required
 from app.utils.file_handler import delete_upload_file, format_file_size
 from app.utils.email_utils import send_email, render_email_template
@@ -1024,7 +1024,39 @@ def init_direct_download_test():
 @admin_required
 def mirrors():
     mirrors = Mirror.query.all()
-    return render_template('admin/mirrors.html', mirrors=mirrors)
+    main_server_location = SiteConfig.get_value('main_server_location', 'Primary')
+    return render_template('admin/mirrors.html', mirrors=mirrors, main_server_location=main_server_location)
+
+@admin_bp.route('/mirrors/settings', methods=['POST'])
+@login_required
+@admin_required
+def update_mirror_settings():
+    location = request.form.get('main_server_location')
+    if location:
+        SiteConfig.set_value('main_server_location', location)
+        flash('Main server location updated', 'success')
+    return redirect(url_for('admin.mirrors'))
+
+@admin_bp.route('/mirrors/<int:id>/edit', methods=['POST'])
+@login_required
+@admin_required
+def edit_mirror(id):
+    mirror = Mirror.query.get_or_404(id)
+    
+    mirror.name = request.form.get('name')
+    mirror.location = request.form.get('location')
+    mirror.url = request.form.get('url')
+    mirror.storage_limit_gb = request.form.get('storage_limit', type=int)
+    mirror.is_active = 'is_active' in request.form
+    
+    try:
+        db.session.commit()
+        flash(f'Mirror {mirror.name} updated', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error updating mirror: {str(e)}', 'error')
+        
+    return redirect(url_for('admin.mirrors'))
 
 @admin_bp.route('/mirrors/add', methods=['POST'])
 @login_required

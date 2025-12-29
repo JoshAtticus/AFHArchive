@@ -55,7 +55,7 @@ def sync_complete():
 
 # --- Mirror Client Logic (To be run on the Mirror Server) ---
 
-def perform_sync(job_data, app_config):
+def perform_sync(job_data, app_config, app=None):
     """
     Background task to download file from Main.
     """
@@ -115,6 +115,33 @@ def perform_sync(job_data, app_config):
             'error_message': None
         }, timeout=10)
         print(f"Sync complete for {filename}")
+
+        # Update local DB if app context is provided
+        if app:
+            with app.app_context():
+                try:
+                    # Check if upload exists
+                    upload = Upload.query.get(file_id)
+                    if not upload:
+                        upload = Upload(id=file_id)
+                        db.session.add(upload)
+                    
+                    # Update fields
+                    upload.filename = filename
+                    upload.original_filename = job_data.get('original_filename', filename)
+                    upload.file_path = filename # On mirror, path is just filename in upload folder
+                    upload.file_size = file_size
+                    upload.md5_hash = md5_hash
+                    upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
+                    upload.device_model = job_data.get('device_model', 'Unknown')
+                    upload.status = 'approved'
+                    upload.uploaded_at = datetime.utcnow()
+                    
+                    db.session.commit()
+                    print(f"Local DB updated for {filename}")
+                except Exception as db_e:
+                    print(f"Failed to update local DB: {db_e}")
+                    db.session.rollback()
         
     except Exception as e:
         print(f"Sync failed for {filename}: {e}")
@@ -178,7 +205,9 @@ def receive_sync_job():
     # Pass the API key to the thread so it can authenticate with the main server
     data['api_key'] = app_config['MIRROR_API_KEY']
     
-    thread = threading.Thread(target=perform_sync, args=(data, app_config))
+    # Pass the actual app object to the thread to create a context
+    app = current_app._get_current_object()
+    thread = threading.Thread(target=perform_sync, args=(data, app_config, app))
     thread.start()
     
     return jsonify({'status': 'job_accepted'})

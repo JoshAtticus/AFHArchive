@@ -44,7 +44,10 @@ def trigger_mirror_sync(upload_id, mirror_ids=None):
                     'download_url': download_url,
                     'md5_hash': upload.md5_hash,
                     'file_size': upload.file_size,
-                    'filename': upload.filename
+                    'filename': upload.filename,
+                    'original_filename': upload.original_filename,
+                    'device_manufacturer': upload.device_manufacturer,
+                    'device_model': upload.device_model
                 },
                 timeout=5
             )

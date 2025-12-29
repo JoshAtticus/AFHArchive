@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 import os
 import hashlib
 from app import db
-from app.models import Upload, User, Announcement
+from app.models import Upload, User, Announcement, SiteConfig
 from app.utils.file_handler import allowed_file, save_upload_file
 from app.utils.decorators import admin_required
 from app.utils.autoreviewer import auto_review_upload
@@ -20,6 +20,13 @@ def uploaded_file(filename):
 
 @main_bp.route('/')
 def index():
+    # If this is a mirror server, block access to the home page
+    if current_app.config.get('MAIN_SERVER_URL'):
+        return render_template('errors/generic.html', 
+                             error_code=403, 
+                             error_title="Mirror Server", 
+                             error_message="This is a mirror server. Please visit the main site to browse files."), 403
+
     # Check if there's a file ID parameter for AFH link redirection
     fid = request.args.get('fid')
     if fid:
@@ -206,7 +213,8 @@ def file_detail(upload_id):
         flash('File not available', 'error')
         return redirect(url_for('main.index'))
     
-    return render_template('file_detail.html', upload=upload)
+    main_server_location = SiteConfig.get_value('main_server_location', 'Primary')
+    return render_template('file_detail.html', upload=upload, main_server_location=main_server_location)
 
 @main_bp.route('/download/<int:upload_id>')
 def download(upload_id):
