@@ -76,7 +76,7 @@ def start_gunicorn():
     
     # Override with environment variables if needed
     bind_host = config('GUNICORN_HOST', default='0.0.0.0')
-    bind_port = config('GUNICORN_PORT', default='8000')
+    bind_port = config('GUNICORN_PORT', default='5000')
     workers = config('GUNICORN_WORKERS', default=None)
     
     cmd.extend(['--bind', f'{bind_host}:{bind_port}'])
