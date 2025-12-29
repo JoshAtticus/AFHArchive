@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, current_app, send_file, Response
 from app import db
 from app.models import Mirror, FileReplica, Upload
 import os
-import re
 from datetime import datetime
 import requests
 import threading
@@ -53,62 +52,6 @@ def sync_complete():
         db.session.commit()
         
     return jsonify({'status': 'ok'})
-
-@mirror_bp.route('/download/<int:upload_id>', methods=['GET'])
-def download_chunk(upload_id):
-    """
-    Endpoint for mirrors to download file chunks.
-    Requires API key in header.
-    Supports Range header.
-    """
-    api_key = request.headers.get('X-Mirror-Api-Key')
-    mirror = Mirror.query.filter_by(api_key=api_key).first()
-    if not mirror:
-        # Also allow if it's a local request (loopback) for testing, or if we want to relax this
-        # But for now, let's log the error
-        current_app.logger.error(f"Mirror download unauthorized. Key: {api_key}")
-        return jsonify({'error': 'Unauthorized'}), 401
-        
-    upload = Upload.query.get_or_404(upload_id)
-    
-    file_path = upload.file_path
-    
-    # Check if file exists at the path stored in DB
-    if not os.path.exists(file_path):
-        # Fallback: Try joining UPLOAD_FOLDER with the filename
-        # This handles cases where DB path might be just the filename or relative path is different
-        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(file_path))
-        if os.path.exists(fallback_path):
-            file_path = fallback_path
-        else:
-            current_app.logger.error(f"File not found for upload {upload_id}. DB path: {upload.file_path}, Fallback: {fallback_path}")
-            return jsonify({'error': 'File not found'}), 404
-    
-    size = os.path.getsize(file_path)
-    
-    range_header = request.headers.get('Range', None)
-    if not range_header:
-        return send_file(file_path)
-        
-    byte1, byte2 = 0, None
-    
-    m = re.search(r'bytes=(\d+)-(\d*)', range_header)
-    if m:
-        g = m.groups()
-        if g[0]: byte1 = int(g[0])
-        if g[1]: byte2 = int(g[1])
-    
-    length = size - byte1
-    if byte2 is not None:
-        length = byte2 + 1 - byte1
-        
-    with open(file_path, 'rb') as f:
-        f.seek(byte1)
-        data = f.read(length)
-        
-    rv = Response(data, 206, mimetype='application/octet-stream', direct_passthrough=True)
-    rv.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(byte1, byte1 + length - 1, size))
-    return rv
 
 # --- Mirror Client Logic (To be run on the Mirror Server) ---
 

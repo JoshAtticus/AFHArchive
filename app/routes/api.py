@@ -6,7 +6,8 @@ import uuid
 import hashlib
 import json
 import threading
-from app.models import Upload, User
+import re
+from app.models import Upload, User, Mirror
 from app import db
 from app.utils.rate_limiter import RateLimiter
 from app.utils.file_handler import allowed_file, calculate_md5, safe_remove_file
@@ -21,8 +22,17 @@ rate_limiter = RateLimiter()
 def download_file(upload_id):
     upload = Upload.query.get_or_404(upload_id)
     
-    if upload.status != 'approved':
-        abort(404)
+    # Check for Mirror API Key
+    mirror_key = request.headers.get('X-Mirror-Api-Key')
+    is_mirror = False
+    if mirror_key:
+        mirror = Mirror.query.filter_by(api_key=mirror_key).first()
+        if mirror and mirror.is_active:
+            is_mirror = True
+    
+    if not is_mirror:
+        if upload.status != 'approved':
+            abort(404)
     
     # Convert relative path to absolute path
     if not os.path.isabs(upload.file_path):
@@ -34,33 +44,80 @@ def download_file(upload_id):
     
     # Check if file exists
     if not os.path.exists(file_path):
-        abort(404)
+        # Try fallback to uploads folder
+        fallback_path = os.path.join(current_app.config['UPLOAD_FOLDER'], os.path.basename(file_path))
+        if os.path.exists(fallback_path):
+            file_path = fallback_path
+        else:
+            abort(404)
     
+    file_size = os.path.getsize(file_path)
+
+    # Handle Range Header
+    range_header = request.headers.get('Range', None)
+    byte1, byte2 = 0, None
+    if range_header:
+        m = re.search(r'bytes=(\d+)-(\d*)', range_header)
+        if m:
+            g = m.groups()
+            if g[0]: byte1 = int(g[0])
+            if g[1]: byte2 = int(g[1])
+
+    length = file_size - byte1
+    if byte2 is not None:
+        length = byte2 + 1 - byte1
+    
+    # Ensure length is valid
+    if length < 0:
+        length = 0
+    if byte1 >= file_size:
+        return Response('Requested Range Not Satisfiable', 416)
+
     # Get bandwidth limit from config
     download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
     
     def generate():
         """Stream file with bandwidth limiting"""
         try:
-            with rate_limiter.create_limited_file(file_path, download_speed_limit) as limited_file:
-                while True:
-                    chunk = limited_file.read(65536)  # 64KB chunks
-                    if not chunk:
+            if is_mirror:
+                # No rate limit for mirrors
+                f = open(file_path, 'rb')
+            else:
+                # Rate limit for users
+                f = rate_limiter.create_limited_file(file_path, download_speed_limit)
+            
+            with f:
+                f.seek(byte1)
+                remaining = length
+                while remaining > 0:
+                    chunk_size = min(65536, remaining)
+                    data = f.read(chunk_size)
+                    if not data:
                         break
-                    yield chunk
+                    yield data
+                    remaining -= len(data)
         except Exception as e:
             current_app.logger.error(f'Download streaming error: {str(e)}')
     
+    headers = {
+        'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
+        'Content-Length': str(length),
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Accept-Ranges': 'bytes'
+    }
+
+    status_code = 200
+    if range_header:
+        status_code = 206
+        headers['Content-Range'] = f'bytes {byte1}-{byte1 + length - 1}/{file_size}'
+
     # Create response with proper headers
     response = Response(
         generate(),
+        status=status_code,
         mimetype='application/octet-stream',
-        headers={
-            'Content-Disposition': f'attachment; filename="{upload.original_filename}"',
-            'Content-Length': str(upload.file_size),
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive'
-        }
+        headers=headers
     )
     return response
 def complete_chunked_upload():
