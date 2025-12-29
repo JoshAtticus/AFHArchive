@@ -24,6 +24,7 @@
                             </th>
                             <th>File</th>
                             <th>Size</th>
+                            <th>Downloads</th>
                             <th>Replication Status</th>
                             <th>Actions</th>
                         </tr>
@@ -39,6 +40,7 @@
                                 <small class="text-muted">{{ upload.device_manufacturer }} {{ upload.device_model }}</small>
                             </td>
                             <td>{{ upload.file_size_mb }} MB</td>
+                            <td>{{ upload.download_count }}</td>
                             <td>
                                 <!-- Main Server Status -->
                                 <div class="mb-1">

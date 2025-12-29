@@ -66,7 +66,20 @@ def assign_to_test(test_name):
     except Exception as e:
         current_app.logger.error(f"Failed to assign/save A/B test assignment for {test_name}: {e}")
         db.session.rollback()
-        # Fallback to control group if error
+        
+        # If the error is due to missing table, try to create it (last resort)
+        if "no such table" in str(e) or "relation" in str(e) and "does not exist" in str(e):
+            try:
+                current_app.logger.info("Attempting to create missing ab_test_assignments table...")
+                ABTestAssignment.__table__.create(db.engine)
+                # Retry assignment once
+                db.session.add(assignment)
+                db.session.commit()
+                return variant
+            except Exception as e2:
+                current_app.logger.error(f"Failed to create table/retry assignment: {e2}")
+        
+        # Fallback to control group if error persists
         return 'control'
 
 

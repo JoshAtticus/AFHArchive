@@ -195,10 +195,18 @@ def upload():
                 # Check A/B test for AI review
                 use_ai = False
                 try:
+                    # Force AI review if A/B test fails or returns control, 
+                    # BUT we want to respect the test if it works.
+                    # If is_in_test_group returns False, it means Control OR Error.
+                    # If it's an error, we probably want to default to AI ON for safety?
+                    # Or default to AI OFF to avoid costs?
+                    # Let's stick to the test result, but log heavily.
                     use_ai = is_in_test_group('autoreviewer_on_upload')
                     current_app.logger.info(f"AI review enabled for this upload: {use_ai}")
                 except Exception as e:
                     current_app.logger.error(f"Error checking A/B test: {e}")
+                    # Fallback: If A/B test completely crashes, default to False (Control)
+                    use_ai = False
                 
                 duplicate_rejected = auto_review_upload(upload.id, use_ai=use_ai)
                 if duplicate_rejected:

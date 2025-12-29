@@ -1126,8 +1126,8 @@ def delete_mirror(id):
 @admin_required
 def mirror_files():
     page = request.args.get('page', 1, type=int)
-    # Only show approved uploads in the replication manager
-    uploads = Upload.query.filter_by(status='approved').order_by(Upload.uploaded_at.desc()).paginate(page=page, per_page=20)
+    # Only show approved uploads in the replication manager, sorted by popularity
+    uploads = Upload.query.filter_by(status='approved').order_by(Upload.download_count.desc()).paginate(page=page, per_page=20)
     mirrors = Mirror.query.all()
     return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors)
 
