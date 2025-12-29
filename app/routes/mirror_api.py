@@ -64,6 +64,9 @@ def download_chunk(upload_id):
     api_key = request.headers.get('X-Mirror-Api-Key')
     mirror = Mirror.query.filter_by(api_key=api_key).first()
     if not mirror:
+        # Also allow if it's a local request (loopback) for testing, or if we want to relax this
+        # But for now, let's log the error
+        current_app.logger.error(f"Mirror download unauthorized. Key: {api_key}")
         return jsonify({'error': 'Unauthorized'}), 401
         
     upload = Upload.query.get_or_404(upload_id)
@@ -216,6 +219,9 @@ def receive_sync_job():
         main_url = app_config['MAIN_SERVER_URL'].rstrip('/')
         data['download_url'] = f"{main_url}/api/mirror/download/{data.get('file_id')}"
         print(f"Using constructed download URL: {data['download_url']}")
+    
+    # Pass the API key to the thread so it can authenticate with the main server
+    data['api_key'] = app_config['MIRROR_API_KEY']
     
     thread = threading.Thread(target=perform_sync, args=(data, app_config))
     thread.start()

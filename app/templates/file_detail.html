@@ -78,7 +78,7 @@
                 </div>
                 {% endif %}
 
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
                     </a>
@@ -88,7 +88,7 @@
                 </div>
                 
                 {% if upload.replicas %}
-                <div class="mt-4">
+                <div>
                     <h5>{{ _('Available Mirrors') }}</h5>
                     <div class="list-group">
                         {% for replica in upload.replicas %}
