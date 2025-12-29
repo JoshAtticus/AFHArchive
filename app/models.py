@@ -51,6 +51,9 @@ class Upload(db.Model):
     # AFH MD5 verification status: 'match', 'mismatch', 'error', 'no_link', or None (not checked)
     afh_md5_status = Column(String(20))
     
+    # Replication status
+    is_on_main_server = Column(Boolean, default=True)
+
     # Foreign keys
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     reviewed_by = Column(Integer, ForeignKey('users.id'))

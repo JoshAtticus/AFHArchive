@@ -1141,37 +1141,106 @@ def trigger_sync(upload_id):
         flash('Cannot sync unapproved files', 'error')
         return redirect(url_for('admin.mirror_files'))
 
-    mirror_ids = request.form.getlist('mirrors')
+    mirror_ids_raw = request.form.getlist('mirrors')
+    source_mirror_id = request.form.get('source_mirror_id')
     
-    if not mirror_ids:
-        flash('No mirrors selected', 'error')
+    if source_mirror_id and source_mirror_id != 'main':
+        source_mirror_id = int(source_mirror_id)
+    else:
+        source_mirror_id = None # 'main' or None means source is main server (default)
+    
+    if not mirror_ids_raw:
+        flash('No targets selected', 'error')
         return redirect(url_for('admin.mirror_files'))
         
-    # Convert to integers
-    mirror_ids = [int(mid) for mid in mirror_ids]
+    # Separate 'main' from numeric mirror IDs
+    mirror_ids = []
+    sync_to_main_requested = False
     
-    # Check storage space
-    valid_mirror_ids = []
-    for mid in mirror_ids:
-        mirror = Mirror.query.get(mid)
-        if mirror:
-            # Calculate free space in MB
-            limit_mb = mirror.storage_limit_gb * 1024
-            free_mb = limit_mb - mirror.storage_used_mb
+    for mid in mirror_ids_raw:
+        if mid == 'main':
+            sync_to_main_requested = True
+        else:
+            mirror_ids.append(int(mid))
             
-            if free_mb >= upload.file_size_mb:
-                valid_mirror_ids.append(mid)
+    # Handle sync to main
+    if sync_to_main_requested:
+        if not source_mirror_id:
+            flash('Cannot sync to Main Server without a source mirror selected', 'error')
+        else:
+            from app.utils.mirror_utils import sync_to_main
+            success, msg = sync_to_main(upload.id, source_mirror_id)
+            if success:
+                flash(f'Main Server sync: {msg}', 'success')
             else:
-                flash(f'Skipped {mirror.name}: Not enough free space ({free_mb:.1f} MB free, {upload.file_size_mb} MB needed)', 'warning')
+                flash(f'Main Server sync failed: {msg}', 'error')
+
+    # Handle sync to mirrors
+    if mirror_ids:
+        # Check storage space
+        valid_mirror_ids = []
+        for mid in mirror_ids:
+            mirror = Mirror.query.get(mid)
+            if mirror:
+                # Calculate free space in MB
+                limit_mb = mirror.storage_limit_gb * 1024
+                free_mb = limit_mb - mirror.storage_used_mb
+                
+                if free_mb >= upload.file_size_mb:
+                    valid_mirror_ids.append(mid)
+                else:
+                    flash(f'Skipped {mirror.name}: Not enough free space ({free_mb:.1f} MB free, {upload.file_size_mb} MB needed)', 'warning')
+        
+        if valid_mirror_ids:
+            from app.utils.mirror_utils import trigger_mirror_sync
+            count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id)
+            flash(f'Sync triggered for {count} mirrors', 'success')
     
-    if not valid_mirror_ids:
-        flash('No mirrors had enough space for this file', 'error')
+    return redirect(url_for('admin.mirror_files'))
+
+@admin_bp.route('/mirrors/delete_from_main/<int:upload_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_from_main_route(upload_id):
+    from app.utils.mirror_utils import delete_from_main
+    success, msg = delete_from_main(upload_id)
+    if success:
+        flash(msg, 'success')
+    else:
+        flash(msg, 'error')
+    return redirect(url_for('admin.mirror_files'))
+
+@admin_bp.route('/mirrors/delete_replica/<int:upload_id>/<int:mirror_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_replica(upload_id, mirror_id):
+    upload = Upload.query.get_or_404(upload_id)
+    
+    # Check if we can delete (must have at least 1 copy somewhere else)
+    # Copies = Main Server + Other Mirrors
+    copies = 0
+    if upload.is_on_main_server:
+        copies += 1
+        
+    other_replicas = FileReplica.query.filter(
+        FileReplica.upload_id == upload.id,
+        FileReplica.mirror_id != mirror_id,
+        FileReplica.status == 'synced'
+    ).count()
+    copies += other_replicas
+    
+    if copies < 1:
+        flash('Cannot delete: This is the last copy of the file!', 'error')
         return redirect(url_for('admin.mirror_files'))
+
+    from app.utils.mirror_utils import trigger_mirror_delete
+    count = trigger_mirror_delete(upload, [mirror_id])
     
-    current_app.logger.info(f"Admin triggering sync for upload {upload.id} to mirrors {valid_mirror_ids}")
-    count = trigger_mirror_sync(upload.id, valid_mirror_ids)
-            
-    flash(f'Sync triggered for {count} mirrors', 'success')
+    if count > 0:
+        flash('File deleted from mirror', 'success')
+    else:
+        flash('Failed to delete file from mirror', 'error')
+        
     return redirect(url_for('admin.mirror_files'))
 
 @admin_bp.route('/mirrors/sync/bulk', methods=['POST'])

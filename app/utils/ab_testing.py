@@ -28,45 +28,46 @@ def assign_to_test(test_name):
         str: 'control' or 'test' or None if test not active
     """
     # Get the test from database
-    test = ABTest.query.filter_by(name=test_name, is_active=True).first()
-    if not test:
-        return None
-    
-    session_id = get_or_create_session_id()
-    
-    # Check if user already has an assignment for this test
-    existing_assignment = ABTestAssignment.query.filter_by(
-        session_id=session_id, 
-        test_id=test.id
-    ).first()
-    
-    if existing_assignment:
-        return existing_assignment.variant
-    
-    # Create new assignment based on hash of session_id + test_name for consistency
-    hash_input = f"{session_id}_{test_name}".encode('utf-8')
-    hash_value = int(hashlib.md5(hash_input).hexdigest()[:8], 16)
-    
-    # Determine variant based on traffic percentage
-    variant = 'test' if (hash_value % 100) < test.traffic_percentage else 'control'
-    
-    # Save assignment to database
-    assignment = ABTestAssignment(
-        session_id=session_id,
-        test_id=test.id,
-        variant=variant
-    )
-    
     try:
+        test = ABTest.query.filter_by(name=test_name, is_active=True).first()
+        if not test:
+            return None
+        
+        session_id = get_or_create_session_id()
+        
+        # Check if user already has an assignment for this test
+        existing_assignment = ABTestAssignment.query.filter_by(
+            session_id=session_id, 
+            test_id=test.id
+        ).first()
+        
+        if existing_assignment:
+            return existing_assignment.variant
+        
+        # Create new assignment based on hash of session_id + test_name for consistency
+        hash_input = f"{session_id}_{test_name}".encode('utf-8')
+        hash_value = int(hashlib.md5(hash_input).hexdigest()[:8], 16)
+        
+        # Determine variant based on traffic percentage
+        variant = 'test' if (hash_value % 100) < test.traffic_percentage else 'control'
+        
+        # Save assignment to database
+        assignment = ABTestAssignment(
+            session_id=session_id,
+            test_id=test.id,
+            variant=variant
+        )
+        
         db.session.add(assignment)
         db.session.commit()
+        
+        return variant
+        
     except Exception as e:
-        current_app.logger.error(f"Failed to save A/B test assignment: {e}")
+        current_app.logger.error(f"Failed to assign/save A/B test assignment for {test_name}: {e}")
         db.session.rollback()
-        # Fallback to control group if database error
+        # Fallback to control group if error
         return 'control'
-    
-    return variant
 
 
 def is_in_test_group(test_name):
