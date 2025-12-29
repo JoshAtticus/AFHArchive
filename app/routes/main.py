@@ -255,8 +255,22 @@ def file_detail(upload_id):
         flash('File not available', 'error')
         return redirect(url_for('main.index'))
     
+    # Filter replicas by online status
+    available_replicas = []
+    unavailable_replicas = []
+    
+    for replica in upload.replicas:
+        if replica.status == 'synced' and replica.mirror.is_active:
+            if replica.mirror.is_online:
+                available_replicas.append(replica)
+            else:
+                unavailable_replicas.append(replica)
+    
     main_server_location = SiteConfig.get_value('main_server_location', 'Primary')
-    return render_template('file_detail.html', upload=upload, main_server_location=main_server_location)
+    return render_template('file_detail.html', upload=upload, 
+                         main_server_location=main_server_location,
+                         available_replicas=available_replicas,
+                         unavailable_replicas=unavailable_replicas)
 
 @main_bp.route('/download/<int:upload_id>')
 def download(upload_id):

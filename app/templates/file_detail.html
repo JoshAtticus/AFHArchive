@@ -78,13 +78,7 @@
                 </div>
                 {% endif %}
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
-                    </a>
-                </div>
-                
-                <div>
+                <div class="mb-4">
                     <h5>{{ _('Available Mirrors') }}</h5>
                     <div class="list-group">
                         <!-- Main Server -->
@@ -96,9 +90,8 @@
                             <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
                         </a>
 
-                        {% if upload.replicas %}
-                            {% for replica in upload.replicas %}
-                                {% if replica.status == 'synced' and replica.mirror.is_active %}
+                        {% if available_replicas %}
+                            {% for replica in available_replicas %}
                                 <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id=replica.mirror.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                     <div>
                                         <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
@@ -106,10 +99,32 @@
                                     </div>
                                     <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
                                 </a>
-                                {% endif %}
                             {% endfor %}
                         {% endif %}
                     </div>
+                </div>
+
+                {% if unavailable_replicas %}
+                <div class="mb-4">
+                    <h5>{{ _('Unavailable Mirrors') }}</h5>
+                    <div class="list-group">
+                        {% for replica in unavailable_replicas %}
+                            <div class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-server text-muted"></i> {{ replica.mirror.name }}
+                                    <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                </div>
+                                <span class="badge bg-danger rounded-pill">{{ _('Offline') }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
+                    </a>
                 </div>
             </div>
         </div>
