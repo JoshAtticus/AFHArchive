@@ -120,6 +120,24 @@ def create_app():
     # Trust X-Forwarded-* headers from Cloudflare
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
     
+    # Configure Logging
+    import logging
+    import sys
+    
+    # Set up root logger to write to stdout
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    
+    # Add handler to app logger
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.DEBUG)
+    
+    # Also configure the root logger to ensure library logs are captured
+    logging.getLogger().addHandler(handler)
+    logging.getLogger().setLevel(logging.INFO)
+
     # Configuration
     app.config['SECRET_KEY'] = config('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URL', default='sqlite:///afharchive.db')
