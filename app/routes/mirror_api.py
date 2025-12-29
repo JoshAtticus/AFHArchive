@@ -121,6 +121,9 @@ def perform_sync(job_data, app_config, app=None):
                     try:
                         response = requests.get(download_url, headers=headers, stream=True, timeout=30)
                         if response.status_code not in [200, 206]:
+                            # If we get a 502/503/504, it might be temporary. Treat as retryable.
+                            if response.status_code in [502, 503, 504]:
+                                raise requests.exceptions.ConnectionError(f"Server returned {response.status_code}")
                             raise Exception(f"Download failed with status {response.status_code}")
                             
                         for chunk in response.iter_content(chunk_size=8192):
@@ -131,8 +134,9 @@ def perform_sync(job_data, app_config, app=None):
                     except (requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, Exception) as e:
                         # Catch generic Exception too for IncompleteRead which can sometimes be wrapped
                         retries += 1
-                        print(f"Error downloading chunk {downloaded}-{end}: {e}. Retrying ({retries}/{max_retries})...")
-                        time.sleep(2 * retries)
+                        wait_time = 5 * retries # Increase wait time (5, 10, 15, 20, 25 seconds)
+                        print(f"Error downloading chunk {downloaded}-{end}: {e}. Retrying ({retries}/{max_retries}) in {wait_time}s...")
+                        time.sleep(wait_time)
                         # Reset file pointer to start of this chunk to overwrite any partial data
                         f.seek(downloaded)
                 

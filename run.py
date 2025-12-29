@@ -134,7 +134,8 @@ def main():
     if debug:
         print("⚠️  Debug mode is enabled - Use 'python run.py production' for production mode")
     
-    socketio.run(app, host=host, port=port, debug=debug)
+    # Use allow_unsafe_werkzeug=True to avoid crash with gevent in debug mode
+    socketio.run(app, host=host, port=port, debug=debug, allow_unsafe_werkzeug=True)
 
 # Legacy Flask CLI commands for backward compatibility
 app = create_app()
