@@ -8,7 +8,7 @@ from app.utils.email_utils import send_email, render_email_template
 from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_all_pending, get_or_create_autoreviewer
 from app.utils.ab_testing import get_test_stats, cleanup_old_assignments
 from app.utils.afh_verifier import verify_md5_against_afh
-from app.utils.mirror_utils import trigger_mirror_sync
+from app.utils.mirror_utils import trigger_mirror_sync, trigger_mirror_delete
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -324,6 +324,17 @@ def check_afh_md5(upload_id):
 @admin_required
 def delete_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
+    
+    # Identify mirrors that have this file
+    replicas = FileReplica.query.filter_by(upload_id=upload.id).all()
+    mirror_ids = [r.mirror_id for r in replicas]
+    
+    # Trigger deletion on mirrors
+    if mirror_ids:
+        trigger_mirror_delete(upload, mirror_ids)
+    
+    # Delete associated file replicas first to avoid foreign key constraints
+    FileReplica.query.filter_by(upload_id=upload.id).delete()
     
     # Try to delete the file from disk
     file_deleted = delete_upload_file(upload.file_path)

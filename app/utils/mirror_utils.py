@@ -84,3 +84,36 @@ def trigger_mirror_sync(upload_id, mirror_ids=None):
             db.session.commit()
             
     return count
+
+def trigger_mirror_delete(upload, mirror_ids=None):
+    """
+    Triggers deletion of a file from specified mirrors.
+    """
+    if not mirror_ids:
+        return 0
+        
+    mirrors = Mirror.query.filter(Mirror.id.in_(mirror_ids)).all()
+    count = 0
+    
+    for mirror in mirrors:
+        try:
+            current_app.logger.info(f"Triggering delete for {upload.filename} on {mirror.url}")
+            
+            resp = requests.post(
+                f"{mirror.url}/api/mirror/job/delete",
+                json={
+                    'filename': upload.filename
+                },
+                timeout=5
+            )
+            
+            if resp.status_code in [200, 404]:
+                count += 1
+                current_app.logger.info(f"Delete triggered successfully for {mirror.name}")
+            else:
+                current_app.logger.error(f"Mirror {mirror.name} rejected delete job: {resp.status_code} - {resp.text}")
+                
+        except Exception as e:
+            current_app.logger.error(f"Error triggering delete to {mirror.name}: {e}")
+            
+    return count

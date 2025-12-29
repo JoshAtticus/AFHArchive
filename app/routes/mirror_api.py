@@ -296,6 +296,47 @@ def receive_sync_job():
     
     return jsonify({'status': 'job_accepted'})
 
+@mirror_bp.route('/job/delete', methods=['POST'])
+def receive_delete_job():
+    """
+    Endpoint for Main to trigger file deletion on this Mirror.
+    Expects: {
+        'filename': '...'
+    }
+    """
+    data = request.json
+    filename = data.get('filename')
+    
+    if not filename:
+        return jsonify({'error': 'Filename required'}), 400
+        
+    # Security check: Ensure we are configured as a mirror
+    if not current_app.config.get('MIRROR_API_KEY'):
+        return jsonify({'error': 'This server is not configured as a mirror'}), 400
+        
+    upload_dir = current_app.config['UPLOAD_FOLDER']
+    file_path = os.path.join(upload_dir, filename)
+    
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Deleted file {filename} from mirror storage")
+        else:
+            print(f"File {filename} not found on disk, proceeding to DB deletion")
+            
+        # Always remove from local DB if it exists
+        with current_app.app_context():
+            upload = Upload.query.filter_by(filename=filename).first()
+            if upload:
+                db.session.delete(upload)
+                db.session.commit()
+                print(f"Deleted upload record for {filename} from mirror DB")
+        
+        return jsonify({'status': 'deleted'})
+    except Exception as e:
+        print(f"Error deleting file {filename}: {e}")
+        return jsonify({'error': str(e)}), 500
+
 import fcntl
 import sys
 
