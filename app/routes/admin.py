@@ -265,7 +265,23 @@ def send_announcement():
         else:
             flash('No delivery method selected. Announcement not sent.', 'warning')
         return redirect(url_for('admin.dashboard'))
-    return render_template('admin/announcement.html')
+    
+    # Get current active announcement to display
+    current_announcement = Announcement.query.order_by(Announcement.created_at.desc()).first()
+    if current_announcement and not current_announcement.is_active:
+        current_announcement = None
+    
+    return render_template('admin/announcement.html', current_announcement=current_announcement)
+
+@admin_bp.route('/announcement/<int:announcement_id>/take-down', methods=['POST'])
+@login_required
+@admin_required
+def take_down_announcement(announcement_id):
+    announcement = Announcement.query.get_or_404(announcement_id)
+    db.session.delete(announcement)
+    db.session.commit()
+    flash('Announcement has been taken down', 'success')
+    return redirect(url_for('admin.send_announcement'))
 
 @admin_bp.route('/upload/<int:upload_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -387,12 +403,13 @@ def remove_admin(user_id):
 @login_required
 @admin_required
 def delete_user(user_id):
+    page = request.args.get('page', 1, type=int)
     user = User.query.get_or_404(user_id)
     
     # Prevent deleting self
     if user.id == current_user.id:
         flash('Cannot delete your own account', 'error')
-        return redirect(url_for('admin.users'))
+        return redirect(url_for('admin.users', page=page))
     
     # Delete all uploads by this user first
     uploads = Upload.query.filter_by(user_id=user.id).all()
@@ -406,7 +423,7 @@ def delete_user(user_id):
     db.session.commit()
     
     flash(f'User "{user.name}" and all their uploads have been deleted', 'info')
-    return redirect(url_for('admin.users'))
+    return redirect(url_for('admin.users', page=page))
 
 @admin_bp.route('/user/<int:user_id>/send-email', methods=['GET', 'POST'])
 @login_required
@@ -844,7 +861,7 @@ def ai_review_batch():
                         socketio.emit('ai_review_progress', {
                             'status': 'error',
                             'message': f'Batch review failed: {str(e)}'
-                        }, namespace='/autoreviewer')
+                        }, namespace='/autoreviewer', broadcast=True)
                     except:
                         pass
         
@@ -852,12 +869,22 @@ def ai_review_batch():
         thread = threading.Thread(target=run_batch_review, daemon=True)
         thread.start()
         
-        flash('AI batch review started. Check the progress below.', 'info')
+        # Return JSON response for AJAX call
+        return jsonify({
+            'status': 'started',
+            'message': 'AI batch review started successfully'
+        })
         
     except ImportError:
-        flash('AI autoreviewer not available. Install google-genai package.', 'error')
+        return jsonify({
+            'status': 'error',
+            'message': 'AI autoreviewer not available. Install google-genai package.'
+        }), 500
     except ValueError as e:
-        flash(f'AI autoreviewer not configured: {str(e)}', 'error')
+        return jsonify({
+            'status': 'error',
+            'message': f'AI autoreviewer not configured: {str(e)}'
+        }), 500
     except Exception as e:
         current_app.logger.error(f'AI batch review error: {str(e)}')
         flash(f'AI batch review failed: {str(e)}', 'error')
@@ -1121,6 +1148,27 @@ def delete_mirror(id):
     flash('Mirror deleted', 'success')
     return redirect(url_for('admin.mirrors'))
 
+@admin_bp.route('/mirrors/sync-status', methods=['GET'])
+@login_required
+@admin_required
+def get_sync_status():
+    """Get current sync status for all files"""
+    from app.models import FileReplica
+    
+    # Get all replicas that are currently syncing
+    syncing_replicas = FileReplica.query.filter_by(status='syncing').all()
+    
+    status_data = []
+    for replica in syncing_replicas:
+        status_data.append({
+            'mirror_id': replica.mirror_id,
+            'upload_id': replica.upload_id,
+            'status': 'syncing',
+            'progress': 0  # Initial progress, will be updated by live updates
+        })
+    
+    return jsonify(status_data)
+
 @admin_bp.route('/mirrors/files')
 @login_required
 @admin_required
@@ -1136,10 +1184,11 @@ def mirror_files():
 @admin_required
 def trigger_sync(upload_id):
     upload = Upload.query.get_or_404(upload_id)
+    page = request.args.get('page', 1, type=int)
     
     if upload.status != 'approved':
         flash('Cannot sync unapproved files', 'error')
-        return redirect(url_for('admin.mirror_files'))
+        return redirect(url_for('admin.mirror_files', page=page))
 
     mirror_ids_raw = request.form.getlist('mirrors')
     source_mirror_id = request.form.get('source_mirror_id')
@@ -1151,7 +1200,7 @@ def trigger_sync(upload_id):
     
     if not mirror_ids_raw:
         flash('No targets selected', 'error')
-        return redirect(url_for('admin.mirror_files'))
+        return redirect(url_for('admin.mirror_files', page=page))
         
     # Separate 'main' from numeric mirror IDs
     mirror_ids = []
@@ -1196,24 +1245,26 @@ def trigger_sync(upload_id):
             count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id)
             flash(f'Sync triggered for {count} mirrors', 'success')
     
-    return redirect(url_for('admin.mirror_files'))
+    return redirect(url_for('admin.mirror_files', page=page))
 
 @admin_bp.route('/mirrors/delete_from_main/<int:upload_id>', methods=['POST'])
 @login_required
 @admin_required
 def delete_from_main_route(upload_id):
+    page = request.args.get('page', 1, type=int)
     from app.utils.mirror_utils import delete_from_main
     success, msg = delete_from_main(upload_id)
     if success:
         flash(msg, 'success')
     else:
         flash(msg, 'error')
-    return redirect(url_for('admin.mirror_files'))
+    return redirect(url_for('admin.mirror_files', page=page))
 
 @admin_bp.route('/mirrors/delete_replica/<int:upload_id>/<int:mirror_id>', methods=['POST'])
 @login_required
 @admin_required
 def delete_replica(upload_id, mirror_id):
+    page = request.args.get('page', 1, type=int)
     upload = Upload.query.get_or_404(upload_id)
     
     # Check if we can delete (must have at least 1 copy somewhere else)
@@ -1231,7 +1282,7 @@ def delete_replica(upload_id, mirror_id):
     
     if copies < 1:
         flash('Cannot delete: This is the last copy of the file!', 'error')
-        return redirect(url_for('admin.mirror_files'))
+        return redirect(url_for('admin.mirror_files', page=page))
 
     from app.utils.mirror_utils import trigger_mirror_delete
     count = trigger_mirror_delete(upload, [mirror_id])
@@ -1241,22 +1292,29 @@ def delete_replica(upload_id, mirror_id):
     else:
         flash('Failed to delete file from mirror', 'error')
         
-    return redirect(url_for('admin.mirror_files'))
+    return redirect(url_for('admin.mirror_files', page=page))
 
 @admin_bp.route('/mirrors/sync/bulk', methods=['POST'])
 @login_required
 @admin_required
 def trigger_bulk_sync():
+    page = request.args.get('page', 1, type=int)
     upload_ids = request.form.getlist('upload_ids')
     mirror_ids = request.form.getlist('mirrors')
+    source_mirror_id = request.form.get('source_mirror_id')
+    
+    if source_mirror_id and source_mirror_id != 'main':
+        source_mirror_id = int(source_mirror_id)
+    else:
+        source_mirror_id = None # 'main' or None means source is main server (default)
     
     if not upload_ids:
         flash('No files selected', 'error')
-        return redirect(url_for('admin.mirror_files'))
+        return redirect(url_for('admin.mirror_files', page=page))
         
     if not mirror_ids:
         flash('No mirrors selected', 'error')
-        return redirect(url_for('admin.mirror_files'))
+        return redirect(url_for('admin.mirror_files', page=page))
         
     mirror_ids = [int(mid) for mid in mirror_ids]
     upload_ids = [int(uid) for uid in upload_ids]
@@ -1283,7 +1341,7 @@ def trigger_bulk_sync():
                     skipped_space += 1
         
         if valid_mirror_ids:
-            count = trigger_mirror_sync(upload.id, valid_mirror_ids)
+            count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id)
             total_triggered += count
             
     msg = f'Bulk sync triggered: {total_triggered} jobs created.'
@@ -1291,5 +1349,5 @@ def trigger_bulk_sync():
         msg += f' {skipped_space} skipped due to insufficient space.'
         
     flash(msg, 'success' if skipped_space == 0 else 'warning')
-    return redirect(url_for('admin.mirror_files'))
+    return redirect(url_for('admin.mirror_files', page=page))
 

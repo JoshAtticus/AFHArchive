@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, send_from_directory, abort
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, send_from_directory, abort, jsonify
 main_bp = Blueprint('main', __name__)
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
@@ -255,12 +255,38 @@ def browse():
         page=page, per_page=20, error_out=False
     )
     
-    # Get unique manufacturers and models for filters
-    manufacturers = db.session.query(Upload.device_manufacturer).filter_by(status='approved').distinct().all()
-    manufacturers = [m[0] for m in manufacturers]
+    # Get unique manufacturers for the dropdown
+    manufacturers = db.session.query(Upload.device_manufacturer).filter_by(status='approved').distinct().order_by(Upload.device_manufacturer).all()
+    manufacturers = [m[0] for m in manufacturers if m[0]]
+    
+    # Get models for selected manufacturer (if any)
+    models = []
+    if manufacturer:
+        models_query = db.session.query(Upload.device_model).filter_by(
+            status='approved',
+            device_manufacturer=manufacturer
+        ).distinct().order_by(Upload.device_model).all()
+        models = [m[0] for m in models_query if m[0]]
     
     return render_template('browse.html', uploads=uploads, manufacturers=manufacturers, 
-                         current_manufacturer=manufacturer, current_model=model, current_search=search)
+                         models=models, current_manufacturer=manufacturer, 
+                         current_model=model, current_search=search)
+
+@main_bp.route('/api/models')
+def get_models():
+    """API endpoint to get models for a manufacturer"""
+    manufacturer = request.args.get('manufacturer', '')
+    
+    if not manufacturer:
+        return jsonify([])
+    
+    models_query = db.session.query(Upload.device_model).filter_by(
+        status='approved',
+        device_manufacturer=manufacturer
+    ).distinct().order_by(Upload.device_model).all()
+    
+    models = [m[0] for m in models_query if m[0]]
+    return jsonify(models)
 
 @main_bp.route('/file/<int:upload_id>')
 def file_detail(upload_id):

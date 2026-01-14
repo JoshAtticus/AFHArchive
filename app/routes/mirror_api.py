@@ -43,14 +43,14 @@ def report_progress():
     if not mirror:
         return jsonify({'error': 'Invalid API key'}), 401
         
-    # Emit socket event to admin UI
+    # Emit socket event to admin UI - broadcast to ALL connected clients
     socketio.emit('mirror_sync_progress', {
         'mirror_id': mirror.id,
         'upload_id': upload_id,
         'progress': progress,
         'downloaded_bytes': downloaded_bytes,
         'total_bytes': total_bytes
-    })
+    }, broadcast=True)
     
     return jsonify({'status': 'ok'})
 
@@ -76,6 +76,14 @@ def sync_complete():
             replica.synced_at = datetime.utcnow()
         replica.updated_at = datetime.utcnow()
         db.session.commit()
+        
+        # Emit completion event to admin UI
+        socketio.emit('mirror_sync_complete', {
+            'mirror_id': mirror.id,
+            'upload_id': upload_id,
+            'status': status,
+            'error_message': error_msg
+        }, broadcast=True)
         
     return jsonify({'status': 'ok'})
 

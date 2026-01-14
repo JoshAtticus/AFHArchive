@@ -51,10 +51,14 @@
                         <td>{{ mirror.location }}</td>
                         <td>{{ mirror.url }}</td>
                         <td>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar" role="progressbar" style="width: {{ mirror.storage_usage_percent }}%;" 
-                                     aria-valuenow="{{ mirror.storage_usage_percent }}" aria-valuemin="0" aria-valuemax="100">
-                                    {{ mirror.storage_used_mb }}MB / {{ mirror.storage_limit_gb }}GB
+                            <div style="position: relative;">
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ mirror.storage_usage_percent }}%;" 
+                                         aria-valuenow="{{ mirror.storage_usage_percent }}" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-weight: 500; color: #000;">
+                                    {{ mirror.storage_used_mb }}MB / {{ mirror.storage_limit_gb }}GB ({{ mirror.storage_usage_percent }}%)
                                 </div>
                             </div>
                         </td>

@@ -9,11 +9,11 @@
 </div>
 
 <div class="search-filters">
-    <form method="GET" class="row g-3">
+    <form method="GET" class="row g-3" id="browseForm">
         <div class="col-md-3">
             <label for="manufacturer" class="form-label">{{ _('Manufacturer') }}</label>
-            <select class="form-select" id="manufacturer" name="manufacturer">
-                <option value="">{{ _('All Manufacturers') }}</option>
+            <select class="form-select" id="manufacturer" name="manufacturer" onchange="loadModels()">
+                <option value="">{{ _('Select Manufacturer') }}</option>
                 {% for manufacturer in manufacturers %}
                 <option value="{{ manufacturer }}" {% if manufacturer == current_manufacturer %}selected{% endif %}>
                     {{ manufacturer }}
@@ -23,8 +23,14 @@
         </div>
         <div class="col-md-3">
             <label for="model" class="form-label">{{ _('Model') }}</label>
-            <input type="text" class="form-control" id="model" name="model" 
-                   value="{{ current_model }}" placeholder="{{ _('Device model') }}">
+            <select class="form-select" id="model" name="model" {% if not current_manufacturer %}disabled{% endif %}>
+                <option value="">{{ _('Select Model') }}</option>
+                {% for model in models %}
+                <option value="{{ model }}" {% if model == current_model %}selected{% endif %}>
+                    {{ model }}
+                </option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-md-4">
             <label for="search" class="form-label">{{ _('Search') }}</label>
@@ -39,6 +45,42 @@
         </div>
     </form>
 </div>
+
+<script>
+function loadModels() {
+    const manufacturer = document.getElementById('manufacturer').value;
+    const modelSelect = document.getElementById('model');
+    
+    if (!manufacturer) {
+        modelSelect.disabled = true;
+        modelSelect.innerHTML = '<option value="">{{ _("Select Model") }}</option>';
+        return;
+    }
+    
+    // Show loading state
+    modelSelect.disabled = true;
+    modelSelect.innerHTML = '<option value="">{{ _("Loading...") }}</option>';
+    
+    // Fetch models for the selected manufacturer
+    fetch(`{{ url_for('main.get_models') }}?manufacturer=${encodeURIComponent(manufacturer)}`)
+        .then(response => response.json())
+        .then(models => {
+            modelSelect.innerHTML = '<option value="">{{ _("All Models") }}</option>';
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+            });
+            modelSelect.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error loading models:', error);
+            modelSelect.innerHTML = '<option value="">{{ _("Error loading models") }}</option>';
+            modelSelect.disabled = false;
+        });
+}
+</script>
 
 {% if uploads.items %}
 <div class="row">

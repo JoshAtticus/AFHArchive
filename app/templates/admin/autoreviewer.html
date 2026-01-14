@@ -276,8 +276,18 @@ function initSocketIO() {
     socket = io('/autoreviewer', {
         transports: ['websocket', 'polling'],
         reconnection: true,
-        reconnectionAttempts: 5
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+        pingTimeout: 60000,
+        pingInterval: 25000
     });
+    
+    // Keep-alive mechanism to prevent Cloudflare from closing the connection
+    var keepAliveInterval = setInterval(function() {
+        if (socket && socket.connected) {
+            socket.emit('ping');
+        }
+    }, 30000); // Send ping every 30 seconds
     
     socket.on('connect', function() {
         console.log('Connected to AI review progress updates');
@@ -286,12 +296,6 @@ function initSocketIO() {
     
     socket.on('connect_error', (error) => {
         console.error('Socket connection error:', error);
-        // Don't spam the log with connection errors
-        if (socket.active) { 
-             // temporary error
-        } else {
-             addLogEntry('Connection error: ' + error.message, 'warning');
-        }
     });
     
     socket.on('disconnect', function() {
@@ -307,6 +311,14 @@ function initSocketIO() {
     socket.on('error', function(error) {
         console.error('Socket error:', error);
         addLogEntry('Error: ' + error.message, 'danger');
+    });
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+        clearInterval(keepAliveInterval);
+        if (socket) {
+            socket.disconnect();
+        }
     });
 }
 
@@ -505,11 +517,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: new URLSearchParams(new FormData(form))
+                credentials: 'same-origin'
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.status !== 'started') {
+                if (data.status === 'started') {
+                    addLogEntry('AI review started successfully', 'success');
+                } else if (data.status === 'error') {
+                    addLogEntry('Error: ' + data.message, 'danger');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-robot"></i> {{ _("Run AI Review") }}';
+                } else {
                     addLogEntry('Server response: ' + (data.message || 'Unknown response'), 'warning');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-robot"></i> {{ _("Run AI Review") }}';

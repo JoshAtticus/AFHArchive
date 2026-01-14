@@ -207,6 +207,7 @@ function showNotification(message, type='info') {
 function toggleAdmin(userId, makeAdmin) {
     const action = makeAdmin ? 'make-admin' : 'remove-admin';
     const message = makeAdmin ? 'make this user an admin' : 'remove admin privileges from this user';
+    const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
     
     if (confirm(`Are you sure you want to ${message}?`)) {
         fetch(`/admin/user/${userId}/${action}`, {
@@ -219,7 +220,7 @@ function toggleAdmin(userId, makeAdmin) {
         .then(data => {
             if (data.success) {
                 showNotification('User updated successfully. Reloading...', 'success');
-                setTimeout(() => location.reload(), 1000);
+                setTimeout(() => window.location.href = `?page=${currentPage}`, 1000);
             } else {
                 showNotification('Error: ' + data.message, 'error');
             }
@@ -231,8 +232,10 @@ function toggleAdmin(userId, makeAdmin) {
 }
 
 function deleteUser(userId, userName) {
+    const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
     document.getElementById('deleteUserName').textContent = userName;
-    document.getElementById('deleteUserForm').action = `/admin/user/${userId}/delete`;
+    const deleteForm = document.getElementById('deleteUserForm');
+    deleteForm.action = `/admin/user/${userId}/delete?page=${currentPage}`;
     
     const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
     modal.show();
