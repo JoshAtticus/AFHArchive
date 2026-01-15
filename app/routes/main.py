@@ -14,7 +14,6 @@ from app.utils.autoreviewer import auto_review_upload
 from app.utils.ab_testing import is_in_test_group, opt_out_of_test
 from app.utils.mirror_utils import trigger_mirror_sync, get_or_create_mirror_user
 
-main_bp = Blueprint('main', __name__)
 
 def get_or_fetch_upload(upload_id):
     """
@@ -467,7 +466,7 @@ def sitemap():
     
     for upload in uploads:
         url = url_for('main.file_detail', upload_id=upload.id, _external=True)
-        lastmod = upload.uploaded_at.strftime('%Y-%m-%d')
+        lastmod = upload.uploaded_at.strftime('%Y-%m-%d') if upload.uploaded_at else datetime.utcnow().strftime('%Y-%m-%d')
         pages.append({
             'loc': url,
             'lastmod': lastmod,
@@ -476,8 +475,8 @@ def sitemap():
         })
         
     sitemap_xml = render_template('sitemap.xml', pages=pages)
-    response = current_app.make_response(sitemap_xml)
-    response.headers["Content-Type"] = "application/xml"
+    response = current_app.make_response(sitemap_xml.strip())
+    response.headers["Content-Type"] = "application/xml; charset=utf-8"
     return response
 
 # Language selection
