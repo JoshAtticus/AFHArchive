@@ -476,7 +476,17 @@ def sitemap():
         
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     response = current_app.make_response(sitemap_xml.strip())
-    response.headers["Content-Type"] = "application/xml; charset=utf-8"
+    response.headers["Content-Type"] = "application/xml"
+    
+    # Add stability headers to match known-good configuration
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
+    
+    # Ensure no Vary: Cookie header is sent, as this confuses search engines for static content
+    response.headers["Vary"] = None
+    if 'set-cookie' in response.headers:
+        del response.headers['set-cookie']
     return response
 
 # Language selection
