@@ -558,13 +558,25 @@ def server_tools():
             'chunks_count': chunks_count,
             'database_size': db_size
         }
+
+        uploads_enabled = SiteConfig.get_bool('uploads_enabled', True)
         
     except Exception as e:
         current_app.logger.error(f"Error getting server stats: {str(e)}")
         server_stats = {}
         flash(f'Error retrieving server statistics: {str(e)}', 'warning')
     
-    return render_template('admin/server_tools.html', stats=server_stats)
+    return render_template('admin/server_tools.html', stats=server_stats, uploads_enabled=uploads_enabled)
+
+
+@admin_bp.route('/server-tools/uploads', methods=['POST'])
+@login_required
+@admin_required
+def set_uploads_enabled():
+    enabled = request.form.get('uploads_enabled') in {'1', 'true', 'on', 'yes'}
+    SiteConfig.set_bool('uploads_enabled', enabled)
+    flash('New uploads enabled' if enabled else 'New uploads disabled', 'success')
+    return redirect(url_for('admin.server_tools'))
 
 @admin_bp.route('/server-tools/clear-chunks', methods=['POST'])
 @login_required

@@ -209,3 +209,14 @@ class SiteConfig(db.Model):
         config.value = value
         db.session.commit()
 
+    @staticmethod
+    def get_bool(key, default=False):
+        value = SiteConfig.get_value(key, None)
+        if value is None:
+            return default
+        return str(value).strip().lower() in {'1', 'true', 'yes', 'y', 'on'}
+
+    @staticmethod
+    def set_bool(key, value: bool):
+        SiteConfig.set_value(key, '1' if value else '0')
+

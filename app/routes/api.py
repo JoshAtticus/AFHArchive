@@ -7,7 +7,7 @@ import hashlib
 import json
 import threading
 import re
-from app.models import Upload, User, Mirror
+from app.models import Upload, User, Mirror, SiteConfig
 from app import db
 from app.utils.rate_limiter import RateLimiter, FixedRateLimitedFile
 from app.utils.file_handler import allowed_file, calculate_md5, safe_remove_file
@@ -18,6 +18,10 @@ api_bp = Blueprint('api', __name__)
 # Initialize rate limiters
 rate_limiter = RateLimiter()
 mirror_rate_limiter = RateLimiter()
+
+
+def _uploads_enabled() -> bool:
+    return SiteConfig.get_bool('uploads_enabled', True)
 
 @api_bp.route('/info/<int:upload_id>')
 def get_upload_info(upload_id):
@@ -366,6 +370,9 @@ def upload_status(upload_id):
 def upload_chunk():
     """Handle individual chunk upload"""
     try:
+        if not _uploads_enabled():
+            return jsonify({'error': 'New uploads are temporarily disabled'}), 403
+
         # Get chunk metadata
         chunk_index = int(request.form.get('chunkIndex', 0))
         total_chunks = int(request.form.get('totalChunks', 1))
@@ -413,6 +420,9 @@ def upload_chunk():
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record"""
     try:
+        if not _uploads_enabled():
+            return jsonify({'error': 'New uploads are temporarily disabled'}), 403
+
         data = request.get_json()
         upload_id = data.get('uploadId', '')
         total_chunks = int(data.get('totalChunks', 0))
@@ -531,6 +541,9 @@ def cleanup_chunks_dir(chunks_dir):
 def init_chunked_upload():
     """Initialize a chunked upload session"""
     try:
+        if not _uploads_enabled():
+            return jsonify({'error': 'New uploads are temporarily disabled'}), 403
+
         data = request.get_json()
         filename = data.get('filename', '')
         file_size = int(data.get('fileSize', 0))

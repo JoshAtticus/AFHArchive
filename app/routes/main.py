@@ -133,6 +133,12 @@ def handle_afh_redirect(fid):
 @main_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    uploads_enabled = SiteConfig.get_bool('uploads_enabled', True)
+
+    if not uploads_enabled and request.method == 'POST':
+        flash('New uploads are temporarily disabled by an administrator.', 'warning')
+        return redirect(url_for('main.upload'))
+
     if request.method == 'POST':
         # Check if file was uploaded
         if 'file' not in request.files:
@@ -224,7 +230,9 @@ def upload():
             flash('Upload failed. Please try again.', 'error')
             return redirect(request.url)
     
-    return render_template('upload.html')
+    if not uploads_enabled:
+        flash('New uploads are temporarily disabled by an administrator.', 'warning')
+    return render_template('upload.html', uploads_enabled=uploads_enabled)
 
 @main_bp.route('/my-uploads')
 @login_required

@@ -3,6 +3,7 @@
 {% block title %}{{ _('Upload File') }} - AFHArchive{% endblock %}
 
 {% block content %}
+{% set uploads_enabled = uploads_enabled if uploads_enabled is defined else True %}
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
@@ -10,6 +11,13 @@
                 <h3><i class="fas fa-upload"></i> {{ _('Upload File to AFHArchive') }}</h3>
             </div>
             <div class="card-body">
+                {% if not uploads_enabled %}
+                <div class="alert alert-warning">
+                    <h5 class="mb-1"><i class="fas fa-pause-circle"></i> {{ _('Uploads are currently disabled') }}</h5>
+                    <div class="text-muted">{{ _('New uploads have been temporarily paused by an administrator. Please try again later.') }}</div>
+                </div>
+                {% endif %}
+
                 <div class="alert alert-warning">
                     <h5><i class="fas fa-exclamation-triangle"></i> {{ _('Important Guidelines') }}</h5>
                     <ul class="mb-0">
@@ -26,7 +34,7 @@
                     <div class="mb-3">
                         <label for="file" class="form-label">{{ _('Select File') }} *</label>
                         <input type="file" class="form-control" id="file" name="file" required 
-                               accept=".zip,.apk,.img,.tar,.gz,.xz,.7z,.rar,.md5">
+                               accept=".zip,.apk,.img,.tar,.gz,.xz,.7z,.rar,.md5" {% if not uploads_enabled %}disabled{% endif %}>
                         <div class="form-text">{{ _('Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ') }}</div>
                     </div>
 
@@ -52,14 +60,14 @@
                             <div class="mb-3">
                                 <label for="device_manufacturer" class="form-label">{{ _('Device Manufacturer') }} *</label>
                                 <input type="text" class="form-control" id="device_manufacturer" name="device_manufacturer" 
-                                       placeholder="{{ _('e.g., Samsung, Google, OnePlus') }}" required>
+                                       placeholder="{{ _('e.g., Samsung, Google, OnePlus') }}" required {% if not uploads_enabled %}disabled{% endif %}>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="device_model" class="form-label">{{ _('Device Model') }} *</label>
                                 <input type="text" class="form-control" id="device_model" name="device_model" 
-                                       placeholder="{{ _('e.g., Galaxy S21, Pixel 6, Generic') }}" required>
+                                       placeholder="{{ _('e.g., Galaxy S21, Pixel 6, Generic') }}" required {% if not uploads_enabled %}disabled{% endif %}>
                             </div>
                         </div>
                     </div>
@@ -67,24 +75,24 @@
                     <div class="mb-3">
                         <label for="afh_link" class="form-label">{{ _('Original AndroidFileHost Link') }}</label>
                         <input type="url" class="form-control" id="afh_link" name="afh_link" 
-                               placeholder="{{ _('https://androidfilehost.com/?fid=...') }}">
+                               placeholder="{{ _('https://androidfilehost.com/?fid=...') }}" {% if not uploads_enabled %}disabled{% endif %}>
                         <div class="form-text">{{ _('If you have the original AFH link, please provide it') }}</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="xda_thread" class="form-label">{{ _('XDA Thread Link') }}</label>
                         <input type="url" class="form-control" id="xda_thread" name="xda_thread" 
-                               placeholder="{{ _('https://forum.xda-developers.com/...') }}">
+                               placeholder="{{ _('https://forum.xda-developers.com/...') }}" {% if not uploads_enabled %}disabled{% endif %}>
                         <div class="form-text">{{ _('Link to the XDA thread where this file was discussed') }}</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="notes" class="form-label">{{ _('Additional Notes') }}</label>
                         <textarea class="form-control" id="notes" name="notes" rows="4" 
-                                  placeholder="{{ _('Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately.') }}"></textarea>
+                                  placeholder="{{ _('Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately.') }}" {% if not uploads_enabled %}disabled{% endif %}></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg" id="upload-btn">
+                    <button type="submit" class="btn btn-primary btn-lg" id="upload-btn" {% if not uploads_enabled %}disabled{% endif %}>
                         <i class="fas fa-upload"></i> {{ _('Upload File') }}
                     </button>
                     <button type="button" class="btn btn-secondary btn-lg" id="cancel-btn" style="display: none;">

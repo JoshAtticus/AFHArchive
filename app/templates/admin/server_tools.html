@@ -10,6 +10,40 @@
     </a>
 </div>
 
+<!-- Upload Controls -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-upload"></i> {{ _('Uploads') }}</h5>
+            </div>
+            <div class="card-body">
+                {% set uploads_enabled = uploads_enabled if uploads_enabled is defined else True %}
+                {% if uploads_enabled %}
+                    <div class="alert alert-success mb-3">
+                        <strong>{{ _('Status:') }}</strong> {{ _('New uploads are enabled') }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning mb-3">
+                        <strong>{{ _('Status:') }}</strong> {{ _('New uploads are disabled') }}
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('admin.set_uploads_enabled') }}" class="d-flex align-items-center gap-3 flex-wrap">
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="uploads_enabled" name="uploads_enabled" value="1" {% if uploads_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="uploads_enabled">{{ _('Enable new uploads') }}</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> {{ _('Save') }}
+                    </button>
+                    <small class="text-muted">{{ _('Disabling uploads prevents creation of new upload records (web + API chunked uploads).') }}</small>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- System Overview -->
 <div class="row mb-4">
     <div class="col-md-6">
