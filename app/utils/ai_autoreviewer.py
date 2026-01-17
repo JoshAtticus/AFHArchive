@@ -389,7 +389,7 @@ def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
                 'total': stats['total'],
                 'processed': 0,
                 'message': f'Starting AI review of {stats["total"]} uploads...'
-            }, namespace='/autoreviewer', broadcast=True)
+            }, namespace='/autoreviewer')
         except Exception as e:
             current_app.logger.error(f"Error emitting progress: {e}")
     
@@ -421,7 +421,7 @@ def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
                             'model': upload.device_model
                         },
                         'message': f'Reviewing upload {idx}/{stats["total"]}: {upload.original_filename}...'
-                    }, namespace='/autoreviewer', broadcast=True)
+                    }, namespace='/autoreviewer')
                 except Exception as e:
                     current_app.logger.error(f"Error emitting progress: {e}")
             
@@ -464,7 +464,7 @@ def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
                         },
                         'stats': stats.copy(),
                         'message': f'Completed {idx}/{stats["total"]}: {action}'
-                    }, namespace='/autoreviewer', broadcast=True)
+                    }, namespace='/autoreviewer')
                 except Exception as e:
                     current_app.logger.error(f"Error emitting progress: {e}")
                     
@@ -488,7 +488,7 @@ def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
                         },
                         'stats': stats.copy(),
                         'message': f'Error on {idx}/{stats["total"]}: {str(e)}'
-                    }, namespace='/autoreviewer', broadcast=True)
+                    }, namespace='/autoreviewer')
                 except Exception as emit_error:
                     current_app.logger.error(f"Error emitting progress: {emit_error}")
     
@@ -503,7 +503,7 @@ def ai_review_batch(upload_ids=None, status='pending', emit_progress=False):
                 'processed': stats['processed'],
                 'stats': stats,
                 'message': f'Batch review complete! Processed {stats["processed"]} uploads: {stats["approved"]} approved, {stats["rejected"]} rejected, {stats["updated"]} updated, {stats["errors"]} errors'
-            }, namespace='/autoreviewer', broadcast=True)
+            }, namespace='/autoreviewer')
         except Exception as e:
             current_app.logger.error(f"Error emitting final progress: {e}")
     

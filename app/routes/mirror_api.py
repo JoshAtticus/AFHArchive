@@ -50,7 +50,7 @@ def report_progress():
         'progress': progress,
         'downloaded_bytes': downloaded_bytes,
         'total_bytes': total_bytes
-    }, broadcast=True)
+    })
     
     return jsonify({'status': 'ok'})
 
@@ -83,7 +83,7 @@ def sync_complete():
             'upload_id': upload_id,
             'status': status,
             'error_message': error_msg
-        }, broadcast=True)
+        })
         
     return jsonify({'status': 'ok'})
 

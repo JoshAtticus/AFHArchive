@@ -873,7 +873,7 @@ def ai_review_batch():
                         socketio.emit('ai_review_progress', {
                             'status': 'error',
                             'message': f'Batch review failed: {str(e)}'
-                        }, namespace='/autoreviewer', broadcast=True)
+                        }, namespace='/autoreviewer')
                     except:
                         pass
         
