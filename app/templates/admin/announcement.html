@@ -12,7 +12,7 @@
 <div class="card mb-4">
     <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="fas fa-info-circle"></i> {{ _('Current Active Announcement') }}</h5>
-        <form method="POST" action="{{ url_for('admin.take_down_announcement', announcement_id=current_announcement.id) }}" class="d-inline" onsubmit="return confirm('{{ _("Are you sure you want to take down this announcement?") }}');">
+        <form method="POST" action="{{ url_for('admin.take_down_announcement', announcement_id=current_announcement.id) }}" class="d-inline">
             <button type="submit" class="btn btn-sm btn-danger">
                 <i class="fas fa-times"></i> {{ _('Take Down') }}
             </button>

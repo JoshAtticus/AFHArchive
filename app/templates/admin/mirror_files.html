@@ -49,7 +49,7 @@
                                         <span class="badge bg-success">Present</span>
                                         {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
                                         {% if synced_count >= 2 %}
-                                            <form action="{{ url_for('admin.delete_from_main_route', upload_id=upload.id, page=uploads.page) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this file from the Main Server?');">
+                                            <form action="{{ url_for('admin.delete_from_main_route', upload_id=upload.id, page=uploads.page) }}" method="POST" class="d-inline">
                                                 <button type="submit" class="btn btn-sm py-0 px-1 btn-outline-danger ms-1" title="Delete from Main Server">
                                                     <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                                                 </button>
@@ -91,7 +91,7 @@
                                             {% endif %}
 
                                             <!-- Delete from Mirror Button -->
-                                            <form action="{{ url_for('admin.delete_replica', upload_id=upload.id, mirror_id=mirror.id, page=uploads.page) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this file from {{ mirror.name }}?');">
+                                            <form action="{{ url_for('admin.delete_replica', upload_id=upload.id, mirror_id=mirror.id, page=uploads.page) }}" method="POST" class="d-inline">
                                                 <button type="submit" class="btn btn-sm py-0 px-1 btn-outline-danger ms-1" title="Delete from Mirror">
                                                     <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                                                 </button>

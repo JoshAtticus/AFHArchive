@@ -107,8 +107,7 @@
                             <p class="text-muted small">
                                 {{ _('Check all pending uploads for duplicates based on MD5 hash.') }}
                             </p>
-                            <form method="POST" action="{{ url_for('admin.run_autoreviewer_batch') }}" 
-                                  onsubmit="return confirm('Are you sure you want to run autoreviewer on all pending uploads? This may reject multiple files.')">
+                            <form method="POST" action="{{ url_for('admin.run_autoreviewer_batch') }}">
                                 <button type="submit" class="btn btn-warning w-100">
                                     <i class="fas fa-play"></i> {{ _('Run Duplicate Check') }}
                                 </button>
@@ -119,8 +118,7 @@
                             <p class="text-muted small">
                                 {{ _('Use AI to review all pending uploads for quality and accuracy.') }}
                             </p>
-                            <form method="POST" action="{{ url_for('admin.ai_review_batch') }}" id="aiBatchForm"
-                                  onsubmit="return confirm('Are you sure you want to run AI review on all pending uploads? The AI may approve, reject, or update uploads.')">
+                            <form method="POST" action="{{ url_for('admin.ai_review_batch') }}" id="aiBatchForm">
                                 <button type="submit" class="btn btn-info w-100" id="aiBatchBtn">
                                     <i class="fas fa-robot"></i> {{ _('Run AI Review') }}
                                 </button>

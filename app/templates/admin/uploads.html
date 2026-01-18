@@ -90,7 +90,7 @@
                         </a>
                         {% if upload.is_pending %}
                         <form method="POST" action="{{ url_for('admin.approve_upload', upload_id=upload.id) }}" 
-                              style="display: inline;" onsubmit="return confirm('Approve this upload?')">
+                              style="display: inline;">
                             <button type="submit" class="btn btn-success" title="Approve">
                                 <i class="fas fa-check"></i>
                             </button>

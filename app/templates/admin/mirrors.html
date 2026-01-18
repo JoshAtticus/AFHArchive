@@ -78,7 +78,7 @@
                             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editMirrorModal{{ mirror.id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
+                            <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
