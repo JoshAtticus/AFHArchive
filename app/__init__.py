@@ -257,5 +257,7 @@ def create_app():
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(mirror_bp)
     app.register_blueprint(errors_bp)
+
+    from app import socketio_events  # noqa: F401
     
     return app
