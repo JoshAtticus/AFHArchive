@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # Email Configuration
 EMAIL_PROVIDER = config('EMAIL_PROVIDER', default='resend').lower()
-DEFAULT_FROM = config('DEFAULT_FROM_EMAIL', default='AFHArchive <afh@emails.joshattic.us>')
+DEFAULT_FROM = config('DEFAULT_FROM_EMAIL', default='AFHArchive <mail@afharchive.xyz')
 DEFAULT_REPLY_TO = config('DEFAULT_REPLY_TO', default='support@afharchive.xyz')
 PROD_BASE_URL = 'https://afharchive.xyz'
 
