@@ -33,15 +33,16 @@
                 <h2><i class="fas fa-file-archive"></i> {{ upload.original_filename }}</h2>
             </div>
             <div class="card-body">
+                <!-- Status: {{ upload.afh_md5_status }} -->
                 {% if upload.afh_md5_status == 'mismatch' %}
                 <div class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>{{ _('Warning:') }}</strong> {{ _("This file's MD5 hash does NOT match the original file on AndroidFileHost.") }}
+                    <strong>Warning:</strong> This file's MD5 hash does NOT match the original file on AndroidFileHost.
                 </div>
                 {% elif upload.afh_md5_status == 'error' %}
                 <div class="alert alert-warning" role="alert">
                     <i class="fas fa-exclamation-circle"></i>
-                    <strong>{{ _('Warning:') }}</strong> {{ _("Could not verify this file's MD5 hash against AndroidFileHost.") }}
+                    <strong>Warning:</strong> Could not verify this file's MD5 hash against AndroidFileHost.
                 </div>
                 {% endif %}
 

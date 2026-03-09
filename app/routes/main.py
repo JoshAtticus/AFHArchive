@@ -46,6 +46,10 @@ def get_or_fetch_upload(upload_id):
                     md5_hash=data['md5_hash'],
                     device_manufacturer=data['device_manufacturer'],
                     device_model=data['device_model'],
+                    afh_link=data.get('afh_link'),
+                    xda_thread=data.get('xda_thread'),
+                    notes=data.get('notes'),
+                    afh_md5_status=data.get('afh_md5_status'),
                     status='approved',
                     uploaded_at=datetime.fromisoformat(data['uploaded_at']) if data['uploaded_at'] else datetime.utcnow(),
                     user_id=mirror_user.id

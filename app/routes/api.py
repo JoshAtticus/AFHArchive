@@ -39,7 +39,11 @@ def get_upload_info(upload_id):
         'md5_hash': upload.md5_hash,
         'device_manufacturer': upload.device_manufacturer,
         'device_model': upload.device_model,
-        'uploaded_at': upload.uploaded_at.isoformat() if upload.uploaded_at else None
+        'uploaded_at': upload.uploaded_at.isoformat() if upload.uploaded_at else None,
+        'afh_link': upload.afh_link,
+        'xda_thread': upload.xda_thread,
+        'notes': upload.notes,
+        'afh_md5_status': upload.afh_md5_status
     })
 
 @api_bp.route('/download/<int:upload_id>')

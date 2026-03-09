@@ -225,6 +225,10 @@ def perform_sync(job_data, app_config, app=None):
                     upload.md5_hash = md5_hash
                     upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
                     upload.device_model = job_data.get('device_model', 'Unknown')
+                    upload.afh_link = job_data.get('afh_link')
+                    upload.xda_thread = job_data.get('xda_thread')
+                    upload.notes = job_data.get('notes')
+                    upload.afh_md5_status = job_data.get('afh_md5_status')
                     upload.status = 'approved'
                     upload.uploaded_at = datetime.utcnow()
                     

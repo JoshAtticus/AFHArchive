@@ -75,7 +75,11 @@ def trigger_mirror_sync(upload_id, mirror_ids=None, source_mirror_id=None):
                     'filename': upload.filename,
                     'original_filename': upload.original_filename,
                     'device_manufacturer': upload.device_manufacturer,
-                    'device_model': upload.device_model
+                    'device_model': upload.device_model,
+                    'afh_link': upload.afh_link,
+                    'xda_thread': upload.xda_thread,
+                    'notes': upload.notes,
+                    'afh_md5_status': upload.afh_md5_status
                 },
                 timeout=5
             )
