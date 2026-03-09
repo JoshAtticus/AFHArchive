@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2026-03-09 19:56\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -20,27 +20,27 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "À propos"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "À propos d'AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "C'est quoi AFHArchive ?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive est une plateforme communautaire dédiée à la préservation et au partage des firmwares Android, des ROM personnalisées et des fichiers de développement."
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "Règles communautaires"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFHArchive s'engage à maintenir une communauté respectueuse et solidaire. Nous encourageons les utilisateurs à :"
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
@@ -56,7 +56,7 @@ msgstr ""
 
 #: app/templates/about.html:26
 msgid "Open Source"
-msgstr ""
+msgstr "Open Source"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
@@ -64,61 +64,61 @@ msgstr ""
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
-msgstr ""
+msgstr "Voir sur GitHub"
 
 #: app/templates/about.html:32
 msgid "Contact Information"
-msgstr ""
+msgstr "Informations de contact"
 
 #: app/templates/about.html:33
 msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
-msgstr ""
+msgstr "Pour des questions, suggestions, ou de l'aide, merci de visiter notre page de contact ou de nous contacter via notre repo GitHub."
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
-msgstr ""
+msgstr "Contactez-nous"
 
 #: app/templates/base.html:31
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: app/templates/base.html:34
 msgid "Browse"
-msgstr ""
+msgstr "Explorer"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
-msgstr ""
+msgstr "Aidez à traduire AFHArchive"
 
 #: app/templates/admin/users.html:18 app/templates/base.html:100
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: app/templates/base.html:105 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
-msgstr ""
+msgstr "Téléverser un fichier"
 
 #: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
-msgstr ""
+msgstr "Mes téléversements"
 
 #: app/templates/base.html:109
 msgid "Admin Panel"
-msgstr ""
+msgstr "Panel Administrateur"
 
 #: app/templates/base.html:112
 msgid "Logout"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: app/templates/auth/login.html:3 app/templates/base.html:117
 msgid "Login"
-msgstr ""
+msgstr "Se connecter"
 
 #: app/templates/base.html:142
 msgid "Source on"
@@ -126,7 +126,7 @@ msgstr ""
 
 #: app/templates/base.html:142
 msgid "Our Privacy Policy"
-msgstr ""
+msgstr "Notre Police de Confidentialité"
 
 #: app/templates/base.html:142 app/templates/contact.html:78
 msgid "Terms of Service"
@@ -134,15 +134,15 @@ msgstr ""
 
 #: app/templates/base.html:142
 msgid "Status Page"
-msgstr ""
+msgstr "Page de statut"
 
 #: app/templates/browse.html:3 app/templates/errors/404.html:31
 msgid "Browse Files"
-msgstr ""
+msgstr "Explorer les fichiers"
 
 #: app/templates/browse.html:7
 msgid "Browse Archive"
-msgstr ""
+msgstr "Explorer l'archive"
 
 #: app/templates/admin/uploads.html:25 app/templates/browse.html:13
 msgid "Manufacturer"
@@ -154,73 +154,73 @@ msgstr ""
 
 #: app/templates/browse.html:24
 msgid "Model"
-msgstr ""
+msgstr "Modèle"
 
 #: app/templates/browse.html:26
 msgid "Device model"
-msgstr ""
+msgstr "Modèle de l'appareil"
 
 #: app/templates/admin/uploads.html:36 app/templates/browse.html:29
 #: app/templates/errors/404.html:22
 msgid "Search"
-msgstr ""
+msgstr "Rechercher"
 
 #: app/templates/admin/uploads.html:38 app/templates/browse.html:31
 msgid "Filename search"
-msgstr ""
+msgstr "Rechercher un nom de fichier"
 
 #: app/templates/admin/uploads.html:43 app/templates/browse.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 #: app/templates/browse.html:53 app/templates/index.html:42
 msgid "Device:"
-msgstr ""
+msgstr "Appareil :"
 
 #: app/templates/browse.html:54 app/templates/file_detail.html:29
 #: app/templates/index.html:43
 msgid "Size:"
-msgstr ""
+msgstr "Taille :"
 
 #: app/templates/browse.html:55 app/templates/file_detail.html:37
 #: app/templates/index.html:44
 msgid "Downloads:"
-msgstr ""
+msgstr "Téléchargements :"
 
 #: app/templates/browse.html:56
 msgid "MD5:"
-msgstr ""
+msgstr "MD5 :"
 
 #: app/templates/browse.html:62 app/templates/file_detail.html:55
 msgid "Original AFH Link"
-msgstr ""
+msgstr "Lien AFH original"
 
 #: app/templates/admin/dashboard.html:25 app/templates/admin/dashboard.html:44
 #: app/templates/admin/dashboard.html:63 app/templates/admin/dashboard.html:82
 #: app/templates/browse.html:68 app/templates/index.html:47
 msgid "View Details"
-msgstr ""
+msgstr "Voir les détails"
 
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
 #: app/templates/my_uploads.html:22 app/templates/thank_you.html:75
 msgid "Uploaded"
-msgstr ""
+msgstr "Téléversé"
 
 #: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: app/templates/admin/uploads.html:148 app/templates/browse.html:117
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: app/templates/browse.html:126
 msgid "No files found"
-msgstr ""
+msgstr "Aucun fichier trouvé"
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
-msgstr ""
+msgstr "Essayez d'ajuster vos filtres de recherche ou explorez tous les fichiers."
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
