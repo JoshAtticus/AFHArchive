@@ -291,12 +291,19 @@ def receive_sync_job():
     # Start background thread
     print(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
     
-    # Override download_url to ensure it uses the configured MAIN_SERVER_URL
-    # This fixes issues where the main server sends a localhost URL
-    if app_config['MAIN_SERVER_URL']:
-        # Use the dedicated mirror sync endpoint
+    # Override download_url to ensure it uses the configured MAIN_SERVER_URL if none provided
+    # Only override if the provided URL looks like a generic main server URL (or is missing)
+    # AND we have a better one configured locally.
+    # However, if it's a P2P sync (from another mirror), we should respect the provided URL.
+    
+    provided_url = data.get('download_url', '')
+    
+    # If no URL provided, or if we want to force main server fallback when appropriate
+    if not provided_url and app_config['MAIN_SERVER_URL']:
         data['download_url'] = f"{app_config['MAIN_SERVER_URL']}/api/mirror_sync/{data.get('file_id')}"
-        print(f"Using constructed download URL: {data['download_url']}")
+        print(f"Using constructed fallback URL: {data['download_url']}")
+    elif provided_url:
+        print(f"Using provided download URL: {provided_url}")
     
     # Pass the API key to the thread so it can authenticate with the main server
     data['api_key'] = app_config['MIRROR_API_KEY']

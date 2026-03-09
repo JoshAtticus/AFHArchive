@@ -212,10 +212,10 @@
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-center">
-                    {% if upload.uploader.avatar_url %}
-                    <img src="{{ upload.uploader.avatar_url }}" alt="{{ upload.uploader.name }}" class="rounded-circle me-2" width="32" height="32">
+                    {% if upload.uploader.display_avatar_url %}
+                    <img src="{{ upload.uploader.display_avatar_url }}" alt="{{ upload.uploader.display_name }}" class="rounded-circle me-2" width="32" height="32">
                     {% endif %}
-                    <span>{{ upload.uploader.name }}</span>
+                    <span>{{ upload.uploader.display_name }}</span>
                 </div>
             </div>
         </div>

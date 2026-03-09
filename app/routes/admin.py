@@ -28,27 +28,37 @@ def schedule_upload_notification(user, approved_uploads, rejected_uploads):
     user_id = user.id
     batch = pending_email_batches[user_id]
     
-    # Serialize upload data immediately while still in session context
-    for upload in approved_uploads:
-        upload_data = {
-            'id': upload.id,
-            'original_filename': upload.original_filename,
-            'device_manufacturer': upload.device_manufacturer,
-            'device_model': upload.device_model,
-            'reviewed_at': upload.reviewed_at
-        }
-        batch['approved'].append(upload_data)
+    # Check user preferences
+    send_approvals = user.email_opt_in_approvals
+    send_rejections = user.email_opt_in_rejections
     
-    for upload in rejected_uploads:
-        upload_data = {
-            'id': upload.id,
-            'original_filename': upload.original_filename,
-            'device_manufacturer': upload.device_manufacturer,
-            'device_model': upload.device_model,
-            'rejection_reason': upload.rejection_reason,
-            'reviewed_at': upload.reviewed_at
-        }
-        batch['rejected'].append(upload_data)
+    # Serialize upload data immediately while still in session context
+    if send_approvals:
+        for upload in approved_uploads:
+            upload_data = {
+                'id': upload.id,
+                'original_filename': upload.original_filename,
+                'device_manufacturer': upload.device_manufacturer,
+                'device_model': upload.device_model,
+                'reviewed_at': upload.reviewed_at
+            }
+            batch['approved'].append(upload_data)
+    
+    if send_rejections:
+        for upload in rejected_uploads:
+            upload_data = {
+                'id': upload.id,
+                'original_filename': upload.original_filename,
+                'device_manufacturer': upload.device_manufacturer,
+                'device_model': upload.device_model,
+                'rejection_reason': upload.rejection_reason,
+                'reviewed_at': upload.reviewed_at
+            }
+            batch['rejected'].append(upload_data)
+    
+    # Only proceed if we have items to notify about
+    if not batch['approved'] and not batch['rejected']:
+        return
     
     if batch['timer']:
         batch['timer'].cancel()
@@ -261,8 +271,11 @@ def send_announcement():
         # Send email if requested
         if send_email_flag:
             html = render_email_template('announcement.html', message=message)
+            count = 0
             for user in users:
-                send_email(user.email, subject, html)
+                if user.email_opt_in_announcements:
+                    send_email(user.email, subject, html)
+                    count += 1
 
         # Post to homepage if requested
         if send_homepage:
@@ -271,9 +284,9 @@ def send_announcement():
             db.session.commit()
 
         if send_email_flag and send_homepage:
-            flash('Announcement sent to selected users and posted to homepage', 'success')
+            flash(f'Announcement sent to {count} users and posted to homepage', 'success')
         elif send_email_flag:
-            flash('Announcement sent to selected users', 'success')
+            flash(f'Announcement sent to {count} users', 'success')
         elif send_homepage:
             flash('Announcement posted to homepage', 'success')
         else:

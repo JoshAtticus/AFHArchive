@@ -244,6 +244,21 @@ def my_uploads():
     uploads = Upload.query.filter_by(user_id=current_user.id).order_by(Upload.uploaded_at.desc()).all()
     return render_template('my_uploads.html', uploads=uploads)
 
+@main_bp.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        current_user.hide_profile = 'hide_profile' in request.form
+        current_user.email_opt_in_announcements = 'email_opt_in_announcements' in request.form
+        current_user.email_opt_in_approvals = 'email_opt_in_approvals' in request.form
+        current_user.email_opt_in_rejections = 'email_opt_in_rejections' in request.form
+        
+        db.session.commit()
+        flash('Settings updated successfully', 'success')
+        return redirect(url_for('main.settings'))
+        
+    return render_template('settings.html')
+
 @main_bp.route('/browse')
 def browse():
     page = request.args.get('page', 1, type=int)

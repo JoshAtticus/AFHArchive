@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Settings') }} - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-cog"></i> {{ _('Account Settings') }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('main.settings') }}">
+                    <h5 class="mb-3">{{ _('Privacy Settings') }}</h5>
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="hide_profile" name="hide_profile" {% if current_user.hide_profile %}checked{% endif %}>
+                            <label class="form-check-label" for="hide_profile">
+                                <strong>{{ _('Hide Profile from Public') }}</strong>
+                                <p class="text-muted small mb-0">
+                                    {{ _('When enabled, your name will be displayed as "An AFHArchive Contributor" and your profile picture will be hidden on all your uploads.') }}
+                                </p>
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="mb-3">{{ _('Email Notifications') }}</h5>
+                    <div class="mb-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="email_opt_in_announcements" name="email_opt_in_announcements" {% if current_user.email_opt_in_announcements %}checked{% endif %}>
+                            <label class="form-check-label" for="email_opt_in_announcements">
+                                {{ _('Announcements and Updates') }}
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="email_opt_in_approvals" name="email_opt_in_approvals" {% if current_user.email_opt_in_approvals %}checked{% endif %}>
+                            <label class="form-check-label" for="email_opt_in_approvals">
+                                {{ _('Upload Approvals') }} ({{ _('Includes "Some Uploads Approved" emails') }})
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="email_opt_in_rejections" name="email_opt_in_rejections" {% if current_user.email_opt_in_rejections %}checked{% endif %}>
+                            <label class="form-check-label" for="email_opt_in_rejections">
+                                {{ _('Upload Rejections') }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ _('Save Changes') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -124,6 +124,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ url_for('main.upload') }}">{{ _('Upload File') }}</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('main.my_uploads') }}">{{ _('My Uploads') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.settings') }}">{{ _('Settings') }}</a></li>
                                 {% if current_user.is_admin %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">{{ _('Admin Panel') }}</a></li>

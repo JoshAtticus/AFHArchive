@@ -18,11 +18,31 @@ class User(UserMixin, db.Model):
     is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    # Privacy Settings
+    hide_profile = Column(Boolean, default=False)
+    
+    # Email Preferences
+    email_opt_in_announcements = Column(Boolean, default=True)
+    email_opt_in_approvals = Column(Boolean, default=True)
+    email_opt_in_rejections = Column(Boolean, default=True)
+    
     # Relationship with uploads
     uploads = relationship('Upload', foreign_keys='Upload.user_id', backref='uploader', lazy=True)
     
     def __repr__(self):
         return f'<User {self.email}>'
+
+    @property
+    def display_name(self):
+        if self.hide_profile:
+            return "An AFHArchive Contributor"
+        return self.name
+
+    @property
+    def display_avatar_url(self):
+        if self.hide_profile:
+            return "https://id.joshattic.us/static/uploads/default.png"
+        return self.avatar_url
 
 class Upload(db.Model):
     __tablename__ = 'uploads'
