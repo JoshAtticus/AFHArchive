@@ -17,7 +17,7 @@
   "fileSize": "{{ upload.file_size_mb }} MB",
   "softwareVersion": "1.0",
   "datePublished": "{{ upload.uploaded_at.isoformat() }}",
-  "description": "Android development file for {{ upload.device_manufacturer }} {{ upload.device_model }}.",
+  "description": "Download {{ upload.original_filename }} for {{ upload.device_manufacturer }} {{ upload.device_model }}.",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -33,6 +33,18 @@
                 <h2><i class="fas fa-file-archive"></i> {{ upload.original_filename }}</h2>
             </div>
             <div class="card-body">
+                {% if upload.afh_md5_status == 'mismatch' %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    <strong>{{ _('Warning:') }}</strong> {{ _("This file's MD5 hash does NOT match the original file on AndroidFileHost.") }}
+                </div>
+                {% elif upload.afh_md5_status == 'error' %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <strong>{{ _('Warning:') }}</strong> {{ _("Could not verify this file's MD5 hash against AndroidFileHost.") }}
+                </div>
+                {% endif %}
+
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h5>{{ _('Device Information') }}</h5>

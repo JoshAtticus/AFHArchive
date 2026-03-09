@@ -159,10 +159,8 @@ def uploads():
 def view_upload(upload_id):
     upload = Upload.query.get_or_404(upload_id)
     
-    # Automatically check AFH MD5 if not already checked and AFH link exists
-    if upload.afh_link and upload.afh_md5_status is None:
-        upload.afh_md5_status = verify_md5_against_afh(upload)
-        db.session.commit()
+    # Removed automatic AFH MD5 check on load to prevent timeouts
+    # Admin can manually trigger check if needed
     
     mirrors = Mirror.query.all()
     return render_template('admin/upload_detail.html', upload=upload, mirrors=mirrors)
@@ -193,12 +191,28 @@ def approve_upload(upload_id):
     
     db.session.commit()
     
-    # Trigger mirror sync on approval
+    # Trigger mirror sync on approval (asynchronously)
     try:
-        trigger_mirror_sync(upload.id)
-        current_app.logger.info(f"Triggered mirror sync for approved upload {upload.id}")
+        # Import threading here to ensure we have it
+        import threading
+        
+        # Capture app context for the thread
+        app = current_app._get_current_object()
+        
+        def run_sync_async(app_obj, upload_id_val):
+            with app_obj.app_context():
+                try:
+                    trigger_mirror_sync(upload_id_val)
+                    app_obj.logger.info(f"Triggered mirror sync for approved upload {upload_id_val}")
+                except Exception as e:
+                    app_obj.logger.error(f"Failed to trigger mirror sync for upload {upload_id_val}: {e}")
+        
+        # Start thread
+        sync_thread = threading.Thread(target=run_sync_async, args=(app, upload.id))
+        sync_thread.start()
+        
     except Exception as e:
-        current_app.logger.error(f"Failed to trigger mirror sync for upload {upload.id}: {e}")
+        current_app.logger.error(f"Failed to start mirror sync thread for upload {upload.id}: {e}")
     
     if was_rejected:
         flash(f'Upload "{upload.original_filename}" manually approved (was previously rejected)', 'success')
@@ -1229,12 +1243,25 @@ def trigger_sync(upload_id):
         if not source_mirror_id:
             flash('Cannot sync to Main Server without a source mirror selected', 'error')
         else:
+            # Run sync to main in background as it involves file transfer
             from app.utils.mirror_utils import sync_to_main
-            success, msg = sync_to_main(upload.id, source_mirror_id)
-            if success:
-                flash(f'Main Server sync: {msg}', 'success')
-            else:
-                flash(f'Main Server sync failed: {msg}', 'error')
+            import threading
+            
+            app = current_app._get_current_object()
+            
+            def run_sync_to_main_async(app_obj, upload_id_val, source_id_val):
+                with app_obj.app_context():
+                    try:
+                        success, msg = sync_to_main(upload_id_val, source_id_val)
+                        if success:
+                            app_obj.logger.info(f"Background Main Server sync success: {msg}")
+                        else:
+                            app_obj.logger.error(f"Background Main Server sync failed: {msg}")
+                    except Exception as e:
+                        app_obj.logger.error(f"Background Main Server sync error: {e}")
+            
+            threading.Thread(target=run_sync_to_main_async, args=(app, upload.id, source_mirror_id)).start()
+            flash('Sync to Main Server started in background', 'info')
 
     # Handle sync to mirrors
     if mirror_ids:
@@ -1254,8 +1281,20 @@ def trigger_sync(upload_id):
         
         if valid_mirror_ids:
             from app.utils.mirror_utils import trigger_mirror_sync
-            count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id)
-            flash(f'Sync triggered for {count} mirrors', 'success')
+            import threading
+            
+            app = current_app._get_current_object()
+            
+            def run_trigger_mirror_sync_async(app_obj, upload_id_val, target_ids, source_id_val):
+                with app_obj.app_context():
+                    try:
+                        count = trigger_mirror_sync(upload_id_val, target_ids, source_mirror_id=source_id_val)
+                        app_obj.logger.info(f"Background mirror sync triggered for {count} mirrors")
+                    except Exception as e:
+                        app_obj.logger.error(f"Background mirror sync trigger error: {e}")
+            
+            threading.Thread(target=run_trigger_mirror_sync_async, args=(app, upload.id, valid_mirror_ids, source_mirror_id)).start()
+            flash(f'Sync triggering for {len(valid_mirror_ids)} mirrors in background', 'info')
     
     return redirect(url_for('admin.mirror_files', page=page))
 
