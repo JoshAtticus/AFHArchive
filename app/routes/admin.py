@@ -1293,19 +1293,25 @@ def get_sync_status():
 def mirror_files():
     page = request.args.get('page', 1, type=int)
     sort_by = request.args.get('sort', 'downloads')
+    order = request.args.get('order', 'desc')
     
     query = Upload.query.filter_by(status='approved')
     
     if sort_by == 'size':
-        query = query.order_by(Upload.file_size.desc())
+        sort_column = Upload.file_size
     elif sort_by == 'date':
-        query = query.order_by(Upload.uploaded_at.desc())
+        sort_column = Upload.uploaded_at
     else: # default to downloads
-        query = query.order_by(Upload.download_count.desc())
+        sort_column = Upload.download_count
+        
+    if order == 'asc':
+        query = query.order_by(sort_column.asc())
+    else:
+        query = query.order_by(sort_column.desc())
         
     uploads = query.paginate(page=page, per_page=20)
     mirrors = Mirror.query.all()
-    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors, current_sort=sort_by)
+    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors, current_sort=sort_by, current_order=order)
 
 @admin_bp.route('/mirrors/sync/<int:upload_id>', methods=['POST'])
 @login_required

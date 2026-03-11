@@ -50,15 +50,14 @@
                         <td>{{ mirror.name }}</td>
                         <td>{{ mirror.location }}</td>
                         <td>{{ mirror.url }}</td>
-                        <td>
-                            <div style="position: relative;">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ mirror.storage_usage_percent }}%;" 
-                                         aria-valuenow="{{ mirror.storage_usage_percent }}" aria-valuemin="0" aria-valuemax="100">
-                                    </div>
-                                </div>
-                                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-weight: 500; color: #000;">
-                                    {{ mirror.storage_used_mb }}MB / {{ mirror.storage_limit_gb }}GB ({{ mirror.storage_usage_percent }}%)
+                        <td style="min-width: 150px;">
+                            <div class="small fw-bold mb-1">
+                                {{ (mirror.storage_used_mb / 1024)|round(2) }} GB / {{ mirror.storage_limit_gb }} GB
+                                <span class="text-muted fw-normal">({{ mirror.storage_usage_percent }}%)</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ mirror.storage_usage_percent }}%;" 
+                                     aria-valuenow="{{ mirror.storage_usage_percent }}" aria-valuemin="0" aria-valuemax="100">
                                 </div>
                             </div>
                         </td>
@@ -73,7 +72,13 @@
                                 <span class="badge bg-secondary">Disabled</span>
                             {% endif %}
                         </td>
-                        <td>{{ mirror.last_heartbeat }}</td>
+                        <td>
+                            {% if mirror.last_heartbeat %}
+                                <span class="relative-time" data-time="{{ mirror.last_heartbeat.isoformat() }}">{{ mirror.last_heartbeat }}</span>
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{{ url_for('admin.view_mirror_logs', id=mirror.id) }}" class="btn btn-sm btn-dark" title="View Logs"><i class="fas fa-terminal"></i></a>
                             <form action="{{ url_for('admin.update_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to run git pull and restart this mirror?');">
@@ -171,4 +176,57 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getRelativeTime(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) {
+            return 'just now';
+        }
+        
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+        }
+        
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+        }
+        
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 30) {
+            return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+        }
+        
+        const diffInMonths = Math.floor(diffInDays / 30);
+        if (diffInMonths < 12) {
+            return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
+        }
+        
+        const diffInYears = Math.floor(diffInDays / 365);
+        return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
+    }
+
+    function updateRelativeTimes() {
+        document.querySelectorAll('.relative-time').forEach(element => {
+            const timeStr = element.getAttribute('data-time');
+            if (timeStr) {
+                const date = new Date(timeStr + 'Z'); // Ensure UTC parsing
+                if (!isNaN(date.getTime())) {
+                    element.textContent = getRelativeTime(date);
+                }
+            }
+        });
+    }
+
+    updateRelativeTimes();
+    setInterval(updateRelativeTimes, 60000); // Update every minute
+});
+</script>
 {% endblock %}
