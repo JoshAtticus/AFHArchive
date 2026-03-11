@@ -137,6 +137,10 @@ def handle_afh_redirect(fid):
 @main_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    if getattr(current_user, 'is_banned', False):
+        flash('Your account has been banned from uploading files.', 'error')
+        return redirect(url_for('main.index'))
+
     uploads_enabled = SiteConfig.get_bool('uploads_enabled', True)
 
     if not uploads_enabled and request.method == 'POST':
@@ -195,6 +199,14 @@ def upload():
             
             db.session.add(upload)
             db.session.commit()
+            
+            # Check MD5 if AFH link provided
+            try:
+                from app.utils.afh_verifier import verify_md5_against_afh
+                upload.afh_md5_status = verify_md5_against_afh(upload)
+                db.session.commit()
+            except Exception as e:
+                current_app.logger.error(f'MD5 verification error on upload {upload.id}: {str(e)}')
             
             # Trigger autoreviewer to check for duplicates
             # This must happen after the commit so the upload ID exists

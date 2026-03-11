@@ -426,6 +426,134 @@ def remove_admin(user_id):
     db.session.commit()
     return jsonify({'success': True, 'message': f'Admin privileges removed from {user.name}'})
 
+@admin_bp.route('/user/<int:user_id>/ban', methods=['POST'])
+@login_required
+@admin_required
+def ban_user(user_id):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.get_or_404(user_id)
+    reason = request.form.get('reason', '').strip()
+    
+    if user.id == current_user.id:
+        flash('Cannot ban your own account.', 'error')
+        return redirect(url_for('admin.users', page=page))
+        
+    user.is_banned = True
+    user.ban_reason = reason
+    db.session.commit()
+    
+    # Notify user
+    subject = "AFHArchive - Account Banned from Uploading"
+    if reason:
+        message = f"<p>Hello {user.name},</p><p>Your account has been banned from uploading files to AFHArchive.</p><p><strong>Reason:</strong> {reason}</p><p>If you believe this is an error, please contact support.</p>"
+    else:
+        message = f"<p>Hello {user.name},</p><p>Your account has been banned from uploading files to AFHArchive.</p><p>If you believe this is an error, please contact support.</p>"
+        
+    from app.utils.email_utils import send_email
+    try:
+        html_body = render_template('emails/custom_email.html', custom_message=message, custom_subject="Account Banned")
+        send_email(user.email, subject, html_body)
+        flash(f'User {user.name} banned and notified successfully.', 'success')
+    except Exception as e:
+        flash(f'User {user.name} banned, but failed to send email notification.', 'warning')
+        
+    return redirect(url_for('admin.users', page=page))
+
+@admin_bp.route('/user/<int:user_id>/unban', methods=['POST'])
+@login_required
+@admin_required
+def unban_user(user_id):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.get_or_404(user_id)
+    
+    user.is_banned = False
+    user.ban_reason = None
+    db.session.commit()
+    
+    # Notify user
+    subject = "AFHArchive - Account Ban Lifted"
+    message = f"<p>Hello {user.name},</p><p>Your account ban has been lifted. You may now resume uploading files to AFHArchive.</p>"
+        
+    from app.utils.email_utils import send_email
+    try:
+        html_body = render_template('emails/custom_email.html', custom_message=message, custom_subject="Ban Lifted")
+        send_email(user.email, subject, html_body)
+        flash(f'User {user.name} unbanned and notified successfully.', 'success')
+    except Exception as e:
+        flash(f'User {user.name} unbanned, but failed to send email notification.', 'warning')
+        
+    return redirect(url_for('admin.users', page=page))
+
+@admin_bp.route('/md5_health')
+@login_required
+@admin_required
+def md5_health():
+    """Show MD5 health status page"""
+    from sqlalchemy import or_
+    
+    # 1. Hashes that explicitly don't match
+    mismatched = Upload.query.filter_by(afh_md5_status='mismatch').all()
+    
+    # 2. No AFH Link
+    no_link = Upload.query.filter(or_(Upload.afh_link == None, Upload.afh_link == '', Upload.afh_md5_status == 'no_link')).all()
+    
+    # 3. Unverified or Error (Unable to verify)
+    unverified = Upload.query.filter(or_(
+        Upload.afh_md5_status == None,
+        Upload.afh_md5_status == 'error'
+    )).all()
+    
+    return render_template('admin/md5_health.html',
+                           mismatched=mismatched,
+                           no_link=no_link,
+                           unverified=unverified)
+
+@admin_bp.route('/md5_health/bulk_recheck', methods=['POST'])
+@login_required
+@admin_required
+def trigger_bulk_md5_check():
+    """Bulk recheck all unverified or error MD5 hashes"""
+    from sqlalchemy import or_
+    import threading
+    
+    # We want to re-check those with None, 'error', or 'mismatch' to be safe
+    # Though usually we just want unverified. Let's do 'error' and None.
+    uploads_to_check = Upload.query.filter(
+        or_(
+            Upload.afh_md5_status == None,
+            Upload.afh_md5_status == 'error'
+        ),
+        Upload.afh_link != None,
+        Upload.afh_link != ''
+    ).all()
+    
+    if not uploads_to_check:
+        flash('No unverified or errored uploads with AFH links found to check.', 'info')
+        return redirect(url_for('admin.md5_health'))
+        
+    # We will spin off a thread to run this bulk check so we don't timeout the response
+    app_copy = current_app._get_current_object()
+    
+    def run_bulk_check(app):
+        with app.app_context():
+            from app.utils.afh_verifier import verify_md5_against_afh
+            updated_count = 0
+            # Get fresh objects in the new session
+            for upload in uploads_to_check:
+                u = Upload.query.get(upload.id)
+                if u and u.afh_link:
+                    u.afh_md5_status = verify_md5_against_afh(u)
+                    updated_count += 1
+            db.session.commit()
+            app.logger.info(f"Bulk MD5 recheck completed. Checked {updated_count} uploads.")
+            
+    thread = threading.Thread(target=run_bulk_check, args=(app_copy,))
+    thread.daemon = True
+    thread.start()
+    
+    flash(f'Started background re-check of {len(uploads_to_check)} uploads. Check back later!', 'success')
+    return redirect(url_for('admin.md5_health'))
+
 @admin_bp.route('/user/<int:user_id>/delete', methods=['POST'])
 @login_required
 @admin_required

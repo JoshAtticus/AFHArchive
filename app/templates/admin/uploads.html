@@ -55,6 +55,7 @@
                 <th>{{ _('User') }}</th>
                 <th>{{ _('Device') }}</th>
                 <th>{{ _('Size') }}</th>
+                <th>{{ _('MD5 Match') }}</th>
                 <th>{{ _('Status') }}</th>
                 <th>{{ _('Uploaded') }}</th>
                 <th>{{ _('Actions') }}</th>
@@ -72,6 +73,19 @@
                 <td>{{ upload.uploader.name }}</td>
                 <td>{{ upload.device_manufacturer }} {{ upload.device_model }}</td>
                 <td>{{ upload.file_size_mb }} MB</td>
+                <td>
+                    {% if upload.afh_md5_status == 'match' %}
+                        <span class="badge bg-success">Match</span>
+                    {% elif upload.afh_md5_status == 'mismatch' %}
+                        <span class="badge bg-danger">Mismatch</span>
+                    {% elif upload.afh_md5_status == 'no_link' %}
+                        <span class="badge bg-secondary">No Link</span>
+                    {% elif upload.afh_md5_status == 'error' %}
+                        <span class="badge bg-warning text-dark">Error</span>
+                    {% else %}
+                        <span class="badge bg-light text-dark">Unverified</span>
+                    {% endif %}
+                </td>
                 <td>
                     {% if upload.is_pending %}
                         <span class="badge status-badge status-pending">Pending</span>

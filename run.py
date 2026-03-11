@@ -39,6 +39,12 @@ def auto_migrate():
                 print("Flask-Migrate not installed, falling back to db.create_all()...")
                 db.create_all()
                 print("✓ Database tables created/updated!")
+            
+            # Run custom script migrations
+            from app.utils.migration_runner import run_custom_migrations
+            print("Running custom script migrations...")
+            run_custom_migrations(app)
+            
             return True
         except Exception as e:
             print(f"✗ Error during migration: {e}")
@@ -52,6 +58,11 @@ def init_database():
             # Create all tables
             db.create_all()
             print("✓ Database tables created successfully")
+            
+            # Run custom migrations
+            from app.utils.migration_runner import run_custom_migrations
+            run_custom_migrations(app)
+            
             return True
         except Exception as e:
             print(f"✗ Error creating database tables: {e}")
@@ -121,6 +132,14 @@ def main():
     # Run the Flask development server
     app = create_app()
     
+    # Auto-initialize and migrate in dev database if needed
+    from decouple import config
+    if config('AUTO_INIT_DB', default=True, cast=bool):
+        with app.app_context():
+            db.create_all()
+            from app.utils.migration_runner import run_custom_migrations
+            run_custom_migrations(app)
+
     # Start mirror client if configured
     from app.routes.mirror_api import start_mirror_client
     start_mirror_client(app)

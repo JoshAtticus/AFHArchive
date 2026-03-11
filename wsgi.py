@@ -35,6 +35,10 @@ def init_db_if_needed():
             # Try to create tables (this is safe if they already exist)
             db.create_all()
             application.logger.info("Database tables verified/created")
+            
+            # Run custom migrations
+            from app.utils.migration_runner import run_custom_migrations
+            run_custom_migrations(application)
         except Exception as e:
             application.logger.error(f"Error initializing database: {e}")
 

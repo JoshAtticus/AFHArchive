@@ -101,6 +101,13 @@
                 
                 <hr>
                 
+                <p><strong>Uploads Removed Notice:</strong></p>
+                <button class="btn btn-sm btn-outline-warning w-100 mb-2" onclick="useTemplate('removed')">
+                    Use Template
+                </button>
+                
+                <hr>
+                
                 <p><strong>Custom Message:</strong></p>
                 <button class="btn btn-sm btn-outline-primary w-100 mb-2" onclick="useTemplate('custom')">
                     Use Template
@@ -179,6 +186,20 @@ AFHArchive Admin Team</p>`;
 
 <p>Thank you for your understanding,<br>
 AFHArchive Admin Team</p>`;
+    } else if (type === 'removed') {
+        subjectField.value = 'Notice Regarding Your Recent Uploads';
+        messageField.value = `<p>Hello {{ user.name }},</p>
+
+<p>Unfortunately, we have removed [AMOUNT] of your uploads as they do not meet our uploading requirements.</p>
+
+<ul>
+    <li>[Add reason here...]</li>
+</ul>
+
+<p>As this is your first warning, no other action has been taken at this time, however if you continue to upload files that do not meet our uploading guidelines, we may take further action against your account.</p>
+
+<p>Thank you,<br>
+- The AFHArchive Team</p>`;
     } else if (type === 'custom') {
         subjectField.value = 'Message from AFHArchive Admin';
         messageField.value = `<p>Hi {{ user.name }},</p>

@@ -373,6 +373,9 @@ def upload_status(upload_id):
 @login_required
 def upload_chunk():
     """Handle individual chunk upload"""
+    if getattr(current_user, 'is_banned', False):
+        return jsonify({'error': 'Your account has been banned from uploading files.'}), 403
+
     try:
         if not _uploads_enabled():
             return jsonify({'error': 'New uploads are temporarily disabled'}), 403
@@ -423,6 +426,9 @@ def upload_chunk():
 @login_required
 def complete_chunked_upload():
     """Assemble chunks into final file and create upload record"""
+    if getattr(current_user, 'is_banned', False):
+        return jsonify({'error': 'Your account has been banned from uploading files.'}), 403
+
     try:
         if not _uploads_enabled():
             return jsonify({'error': 'New uploads are temporarily disabled'}), 403
@@ -518,6 +524,14 @@ def complete_chunked_upload():
         db.session.add(upload)
         db.session.commit()
         
+        # Check MD5 if AFH link provided
+        try:
+            from app.utils.afh_verifier import verify_md5_against_afh
+            upload.afh_md5_status = verify_md5_against_afh(upload)
+            db.session.commit()
+        except Exception as e:
+            current_app.logger.error(f'MD5 verification error on upload {upload.id}: {str(e)}')
+        
         # Clean up chunks
         cleanup_chunks_dir(chunks_dir)
         
@@ -544,6 +558,9 @@ def cleanup_chunks_dir(chunks_dir):
 @login_required
 def init_chunked_upload():
     """Initialize a chunked upload session"""
+    if getattr(current_user, 'is_banned', False):
+        return jsonify({'error': 'Your account has been banned from uploading files.'}), 403
+
     try:
         if not _uploads_enabled():
             return jsonify({'error': 'New uploads are temporarily disabled'}), 403

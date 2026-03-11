@@ -16,6 +16,8 @@ class User(UserMixin, db.Model):
     name = Column(String(100), nullable=False)
     avatar_url = Column(String(200))
     is_admin = Column(Boolean, default=False)
+    is_banned = Column(Boolean, default=False)
+    ban_reason = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Privacy Settings

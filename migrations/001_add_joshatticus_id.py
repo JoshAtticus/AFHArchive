@@ -36,7 +36,6 @@ def migrate():
             
         except Exception as e:
             print(f"✗ Error adding column: {e}")
-            print("If you're using SQLite, ALTER TABLE cannot add a UNIQUE column directly; a UNIQUE INDEX was created instead (or recreate the DB if this fails).")
 
 if __name__ == '__main__':
     migrate()
