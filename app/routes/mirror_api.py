@@ -255,6 +255,53 @@ def perform_sync(job_data, app_config, app=None):
         if os.path.exists(local_path):
             os.remove(local_path)
 
+@mirror_bp.route('/update', methods=['POST'])
+def receive_update_job():
+    """
+    Endpoint for Main to trigger a git pull and server restart.
+    Expects: {'api_key': '...'}
+    """
+    data = request.json
+    api_key_provided = data.get('api_key')
+    
+    app_config_api_key = current_app.config.get('MIRROR_API_KEY')
+    if not app_config_api_key or app_config_api_key != api_key_provided:
+        return jsonify({'error': 'Invalid API Key'}), 401
+        
+    current_app.logger.info("Received remote update command. Running git pull...")
+    
+    try:
+        import subprocess
+        result = subprocess.run(['git', 'pull'], capture_output=True, text=True, check=True)
+        current_app.logger.info(f"Git pull result: {result.stdout}")
+        
+        # Schedule restart
+        def delayed_restart():
+            import time
+            import os
+            import signal
+            time.sleep(2)
+            try:
+                if hasattr(os, 'kill'):
+                    os.kill(os.getpid(), signal.SIGTERM)
+                else:
+                    subprocess.run(['taskkill', '/f', '/pid', str(os.getpid())], check=False)
+            except:
+                pass
+                
+        threading.Thread(target=delayed_restart, daemon=True).start()
+        
+        return jsonify({
+            'status': 'update_initiated',
+            'git_output': result.stdout
+        })
+    except subprocess.CalledProcessError as e:
+        current_app.logger.error(f"Git pull failed: {e.stderr}")
+        return jsonify({'error': 'Git pull failed', 'details': e.stderr}), 500
+    except Exception as e:
+        current_app.logger.error(f"Update failed: {e}")
+        return jsonify({'error': 'Update failed', 'details': str(e)}), 500
+
 @mirror_bp.route('/job/sync', methods=['POST'])
 def receive_sync_job():
     """

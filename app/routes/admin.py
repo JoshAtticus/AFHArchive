@@ -1187,6 +1187,28 @@ def delete_mirror(id):
     flash('Mirror deleted', 'success')
     return redirect(url_for('admin.mirrors'))
 
+@admin_bp.route('/mirrors/<int:id>/update', methods=['POST'])
+@login_required
+@admin_required
+def update_mirror(id):
+    mirror = Mirror.query.get_or_404(id)
+    
+    try:
+        resp = requests.post(
+            f"{mirror.url.rstrip('/')}/api/mirror/update",
+            json={'api_key': mirror.api_key},
+            timeout=15
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            flash(f"Mirror {mirror.name} update initiated. Git output: {data.get('git_output', '')}", 'success')
+        else:
+            flash(f"Mirror {mirror.name} update failed: {resp.text}", 'error')
+    except Exception as e:
+        flash(f"Error triggering update on {mirror.name}: {str(e)}", 'error')
+        
+    return redirect(url_for('admin.mirrors'))
+
 @admin_bp.route('/mirrors/sync-status', methods=['GET'])
 @login_required
 @admin_required
