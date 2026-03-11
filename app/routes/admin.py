@@ -1213,10 +1213,20 @@ def get_sync_status():
 @admin_required
 def mirror_files():
     page = request.args.get('page', 1, type=int)
-    # Only show approved uploads in the replication manager, sorted by popularity
-    uploads = Upload.query.filter_by(status='approved').order_by(Upload.download_count.desc()).paginate(page=page, per_page=20)
+    sort_by = request.args.get('sort', 'downloads')
+    
+    query = Upload.query.filter_by(status='approved')
+    
+    if sort_by == 'size':
+        query = query.order_by(Upload.file_size.desc())
+    elif sort_by == 'date':
+        query = query.order_by(Upload.uploaded_at.desc())
+    else: # default to downloads
+        query = query.order_by(Upload.download_count.desc())
+        
+    uploads = query.paginate(page=page, per_page=20)
     mirrors = Mirror.query.all()
-    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors)
+    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors, current_sort=sort_by)
 
 @admin_bp.route('/mirrors/sync/<int:upload_id>', methods=['POST'])
 @login_required

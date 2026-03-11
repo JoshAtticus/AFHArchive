@@ -6,6 +6,11 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="fas fa-copy"></i> File Replication Manager</h2>
     <div>
+        <div class="btn-group me-2" role="group" aria-label="Sort">
+            <a href="{{ url_for('admin.mirror_files', sort='downloads', page=1) }}" class="btn btn-outline-secondary {% if current_sort == 'downloads' %}active{% endif %}">Downloads</a>
+            <a href="{{ url_for('admin.mirror_files', sort='size', page=1) }}" class="btn btn-outline-secondary {% if current_sort == 'size' %}active{% endif %}">Size</a>
+            <a href="{{ url_for('admin.mirror_files', sort='date', page=1) }}" class="btn btn-outline-secondary {% if current_sort == 'date' %}active{% endif %}">Date</a>
+        </div>
         <button type="button" class="btn btn-primary" id="bulkSyncBtn" disabled data-bs-toggle="modal" data-bs-target="#bulkSyncModal">
             <i class="fas fa-sync"></i> Sync Selected
         </button>
@@ -229,7 +234,7 @@
             <ul class="pagination justify-content-center">
                 {% if uploads.has_prev %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.prev_num) }}">Previous</a>
+                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.prev_num, sort=current_sort) }}">Previous</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled">
@@ -245,7 +250,7 @@
                         </li>
                         {% else %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('admin.mirror_files', page=page_num) }}">{{ page_num }}</a>
+                            <a class="page-link" href="{{ url_for('admin.mirror_files', page=page_num, sort=current_sort) }}">{{ page_num }}</a>
                         </li>
                         {% endif %}
                     {% else %}
@@ -257,7 +262,7 @@
                 
                 {% if uploads.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.next_num) }}">Next</a>
+                    <a class="page-link" href="{{ url_for('admin.mirror_files', page=uploads.next_num, sort=current_sort) }}">Next</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled">
