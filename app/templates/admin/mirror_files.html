@@ -18,12 +18,15 @@
         <button type="button" class="btn btn-primary" id="bulkSyncBtn" disabled data-bs-toggle="modal" data-bs-target="#bulkSyncModal">
             <i class="fas fa-sync"></i> Sync Selected
         </button>
+        <button type="button" class="btn btn-danger ms-2" id="bulkDeleteBtn" disabled data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
+            <i class="fas fa-trash"></i> Delete Selected
+        </button>
     </div>
 </div>
 
 <div class="card">
     <div class="card-body">
-        <form id="bulkForm" action="{{ url_for('admin.trigger_bulk_sync', page=uploads.page) }}" method="POST">
+        <form id="bulkForm" action="{{ url_for('admin.trigger_bulk_sync', page=uploads.page, sort=current_sort, order=current_order) }}" method="POST">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -58,7 +61,7 @@
                                         <span class="badge bg-success">Present</span>
                                         {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
                                         {% if synced_count >= 2 %}
-                                            <form action="{{ url_for('admin.delete_from_main_route', upload_id=upload.id, page=uploads.page) }}" method="POST" class="d-inline">
+                                            <form action="{{ url_for('admin.delete_from_main_route', upload_id=upload.id, page=uploads.page, sort=current_sort, order=current_order) }}" method="POST" class="d-inline">
                                                 <button type="submit" class="btn btn-sm py-0 px-1 btn-outline-danger ms-1" title="Delete from Main Server">
                                                     <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                                                 </button>
@@ -100,7 +103,7 @@
                                             {% endif %}
 
                                             <!-- Delete from Mirror Button -->
-                                            <form action="{{ url_for('admin.delete_replica', upload_id=upload.id, mirror_id=mirror.id, page=uploads.page) }}" method="POST" class="d-inline">
+                                            <form action="{{ url_for('admin.delete_replica', upload_id=upload.id, mirror_id=mirror.id, page=uploads.page, sort=current_sort, order=current_order) }}" method="POST" class="d-inline">
                                                 <button type="submit" class="btn btn-sm py-0 px-1 btn-outline-danger ms-1" title="Delete from Mirror">
                                                     <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
                                                 </button>
@@ -166,6 +169,42 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Bulk Delete Modal -->
+            <div class="modal fade" id="bulkDeleteModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Selected Files</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Select targets to delete from:</p>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="delete_targets" value="main" id="bulk_del_main">
+                                <label class="form-check-label text-danger" for="bulk_del_main">
+                                    Main Server
+                                </label>
+                            </div>
+                            {% for mirror in mirrors %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="delete_targets" value="{{ mirror.id }}" id="bulk_del_{{ mirror.id }}">
+                                <label class="form-check-label text-danger" for="bulk_del_{{ mirror.id }}">
+                                    {{ mirror.name }} ({{ mirror.location }})
+                                </label>
+                            </div>
+                            {% endfor %}
+                            <div class="alert alert-warning mt-3">
+                                <strong>Warning:</strong> A file cannot be deleted from its last remaining location.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" formaction="{{ url_for('admin.trigger_bulk_delete', page=uploads.page, sort=current_sort, order=current_order) }}" class="btn btn-danger">Delete from Selected</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
         
         <!-- Individual Sync Modals (Moved outside the bulk form to avoid nesting) -->
@@ -173,7 +212,7 @@
         <div class="modal fade" id="syncModal{{ upload.id }}" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id, page=uploads.page) }}" method="POST">
+                    <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id, page=uploads.page, sort=current_sort, order=current_order) }}" method="POST">
                         <div class="modal-header">
                             <h5 class="modal-title">Sync {{ upload.original_filename }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -359,10 +398,12 @@
     document.getElementById('selectAll').addEventListener('change', function() {
         var checkboxes = document.getElementsByClassName('upload-checkbox');
         var bulkBtn = document.getElementById('bulkSyncBtn');
+        var bulkDelBtn = document.getElementById('bulkDeleteBtn');
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = this.checked;
         }
         bulkBtn.disabled = !this.checked;
+        bulkDelBtn.disabled = !this.checked;
     });
     
     // Enable/disable bulk button based on selection
@@ -371,6 +412,7 @@
         checkboxes[i].addEventListener('change', function() {
             var checkedCount = document.querySelectorAll('.upload-checkbox:checked').length;
             document.getElementById('bulkSyncBtn').disabled = checkedCount === 0;
+            document.getElementById('bulkDeleteBtn').disabled = checkedCount === 0;
         });
     }
     

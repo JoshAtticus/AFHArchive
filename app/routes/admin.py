@@ -1322,7 +1322,7 @@ def trigger_sync(upload_id):
     
     if upload.status != 'approved':
         flash('Cannot sync unapproved files', 'error')
-        return redirect(url_for('admin.mirror_files', page=page))
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
     mirror_ids_raw = request.form.getlist('mirrors')
     source_mirror_id = request.form.get('source_mirror_id')
@@ -1334,7 +1334,7 @@ def trigger_sync(upload_id):
     
     if not mirror_ids_raw:
         flash('No targets selected', 'error')
-        return redirect(url_for('admin.mirror_files', page=page))
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
         
     # Separate 'main' from numeric mirror IDs
     mirror_ids = []
@@ -1404,7 +1404,7 @@ def trigger_sync(upload_id):
             threading.Thread(target=run_trigger_mirror_sync_async, args=(app, upload.id, valid_mirror_ids, source_mirror_id)).start()
             flash(f'Sync triggering for {len(valid_mirror_ids)} mirrors in background', 'info')
     
-    return redirect(url_for('admin.mirror_files', page=page))
+    return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
 @admin_bp.route('/mirrors/delete_from_main/<int:upload_id>', methods=['POST'])
 @login_required
@@ -1417,7 +1417,7 @@ def delete_from_main_route(upload_id):
         flash(msg, 'success')
     else:
         flash(msg, 'error')
-    return redirect(url_for('admin.mirror_files', page=page))
+    return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
 @admin_bp.route('/mirrors/delete_replica/<int:upload_id>/<int:mirror_id>', methods=['POST'])
 @login_required
@@ -1441,7 +1441,7 @@ def delete_replica(upload_id, mirror_id):
     
     if copies < 1:
         flash('Cannot delete: This is the last copy of the file!', 'error')
-        return redirect(url_for('admin.mirror_files', page=page))
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
     from app.utils.mirror_utils import trigger_mirror_delete
     count = trigger_mirror_delete(upload, [mirror_id])
@@ -1451,7 +1451,7 @@ def delete_replica(upload_id, mirror_id):
     else:
         flash('Failed to delete file from mirror', 'error')
         
-    return redirect(url_for('admin.mirror_files', page=page))
+    return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
 @admin_bp.route('/mirrors/sync/bulk', methods=['POST'])
 @login_required
@@ -1469,11 +1469,11 @@ def trigger_bulk_sync():
     
     if not upload_ids:
         flash('No files selected', 'error')
-        return redirect(url_for('admin.mirror_files', page=page))
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
         
     if not mirror_ids:
         flash('No mirrors selected', 'error')
-        return redirect(url_for('admin.mirror_files', page=page))
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
         
     mirror_ids = [int(mid) for mid in mirror_ids]
     upload_ids = [int(uid) for uid in upload_ids]
@@ -1508,5 +1508,81 @@ def trigger_bulk_sync():
         msg += f' {skipped_space} skipped due to insufficient space.'
         
     flash(msg, 'success' if skipped_space == 0 else 'warning')
-    return redirect(url_for('admin.mirror_files', page=page))
+    return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
+
+
+@admin_bp.route('/mirrors/delete_bulk', methods=['POST'])
+@login_required
+@admin_required
+def trigger_bulk_delete():
+    page = request.args.get('page', 1, type=int)
+    upload_ids = request.form.getlist('upload_ids')
+    delete_targets = request.form.getlist('delete_targets')
+
+    if not upload_ids:
+        flash('No files selected', 'error')
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
+
+    if not delete_targets:
+        flash('No targets selected', 'error')
+        return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
+
+    upload_ids = [int(uid) for uid in upload_ids]
+    mirror_ids_to_delete = [int(tid) for tid in delete_targets if tid != 'main']
+    delete_from_main_flag = 'main' in delete_targets
+
+    from app.utils.mirror_utils import trigger_mirror_delete, delete_from_main
+
+    total_deleted_mirrors = 0
+    total_deleted_main = 0
+    skipped = 0
+
+    for upload_id in upload_ids:
+        upload = Upload.query.get(upload_id)
+        if not upload:
+            continue
+
+        copies = 0
+        if upload.is_on_main_server:
+            copies += 1
+
+        other_replicas = FileReplica.query.filter(
+            FileReplica.upload_id == upload.id,
+            FileReplica.status == 'synced'
+        ).all()
+        copies += len(other_replicas)
+
+        # Count how many we are trying to delete
+        deletions = 0
+        if delete_from_main_flag and upload.is_on_main_server:
+            deletions += 1
+        for rep in other_replicas:
+            if rep.mirror_id in mirror_ids_to_delete:
+                deletions += 1
+
+        if copies - deletions < 1:
+            skipped += 1
+            continue
+
+        if delete_from_main_flag and upload.is_on_main_server:
+            success, _ = delete_from_main(upload.id)
+            if success:
+                total_deleted_main += 1
+
+        if mirror_ids_to_delete:
+            count = trigger_mirror_delete(upload, mirror_ids_to_delete)
+            total_deleted_mirrors += count
+
+    msg = []
+    if total_deleted_main > 0:
+        msg.append(f'Deleted {total_deleted_main} files from main server')
+    if total_deleted_mirrors > 0:
+        msg.append(f'Deleted {total_deleted_mirrors} replicas from mirrors')
+    if skipped > 0:
+        msg.append(f'Skipped {skipped} files (cannot delete last remaining copy)')
+    if not msg:
+        msg = ['No files were deleted.']
+
+    flash(', '.join(msg), 'success' if skipped == 0 else 'warning')
+    return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
 
