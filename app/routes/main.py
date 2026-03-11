@@ -471,6 +471,9 @@ def robots_txt():
         "Disallow: /my-uploads",
         "Disallow: /download/",
         "Disallow: /api/",
+        "Disallow: /browse",
+        "Disallow: /settings",
+        "Disallow: /login",
         f"Sitemap: {url_for('main.sitemap', _external=True)}"
     ]
     return "\n".join(lines), 200, {'Content-Type': 'text/plain'}
