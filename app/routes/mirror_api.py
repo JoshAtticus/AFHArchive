@@ -23,15 +23,28 @@ def heartbeat():
     if not mirror:
         return jsonify({'error': 'Invalid API key'}), 401
         
-    mirror.last_heartbeat = datetime.utcnow()
-    mirror.storage_used_mb = data.get('storage_used_mb', 0)
     try:
+        mirror.last_heartbeat = datetime.utcnow()
+        mirror.storage_used_mb = data.get('storage_used_mb', 0)
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         current_app.logger.warning(f"Database locked or busy in heartbeat for mirror {mirror.id}, ignoring: {e}")
+        
+    # Send back the list of all mirrors so the mirror can replicate API keys locally
+    active_mirrors = Mirror.query.all()
+    mirrors_data = []
+    for m in active_mirrors:
+        mirrors_data.append({
+            'name': m.name,
+            'api_key': m.api_key,
+            'url': m.url,
+            'location': m.location,
+            'storage_limit_gb': m.storage_limit_gb,
+            'is_active': m.is_active
+        })
     
-    return jsonify({'status': 'ok'})
+    return jsonify({'status': 'ok', 'mirrors': mirrors_data})
 
 @mirror_bp.route('/progress', methods=['POST'])
 def report_progress():
@@ -515,6 +528,36 @@ def mirror_heartbeat_loop(app):
                 
                 if resp.status_code == 200:
                     print(f"Heartbeat sent successfully to {main_url}")
+                    
+                    # Update local mirrors table to reflect master server's state
+                    mirrors_data = resp.json().get('mirrors', [])
+                    if mirrors_data:
+                        # Synchronize the list of mirrors
+                        try:
+                            # Keep track of active IDs to find deleted ones (optional, but good for completeness)
+                            seen_keys = set()
+                            
+                            for m in mirrors_data:
+                                seen_keys.add(m['api_key'])
+                                local_mirror = Mirror.query.filter_by(api_key=m['api_key']).first()
+                                if not local_mirror:
+                                    local_mirror = Mirror(api_key=m['api_key'])
+                                    db.session.add(local_mirror)
+                                    
+                                local_mirror.name = m['name']
+                                local_mirror.url = m['url']
+                                local_mirror.location = m['location']
+                                local_mirror.storage_limit_gb = m['storage_limit_gb']
+                                local_mirror.is_active = m['is_active']
+                            
+                            # Do not delete missing ones immediately as it might drop replica references,
+                            # but we can optionally mark them inactive.
+                            
+                            db.session.commit()
+                        except Exception as sync_e:
+                            db.session.rollback()
+                            print(f"Error syncing mirrors from heartbeat: {sync_e}")
+                            
                 else:
                     print(f"Heartbeat failed: {resp.status_code} - {resp.text}")
                     
