@@ -534,20 +534,25 @@ def trigger_bulk_md5_check():
     # We will spin off a thread to run this bulk check so we don't timeout the response
     app_copy = current_app._get_current_object()
     
-    def run_bulk_check(app):
+    def run_bulk_check(app, upload_ids):
         with app.app_context():
             from app.utils.afh_verifier import verify_md5_against_afh
             updated_count = 0
-            # Get fresh objects in the new session
-            for upload in uploads_to_check:
-                u = Upload.query.get(upload.id)
+            for uid in upload_ids:
+                u = Upload.query.get(uid)
                 if u and u.afh_link:
                     u.afh_md5_status = verify_md5_against_afh(u)
-                    updated_count += 1
-            db.session.commit()
+                    try:
+                        db.session.commit()
+                        updated_count += 1
+                    except Exception as e:
+                        db.session.rollback()
+                        app.logger.error(f"Error committing MD5 status for {uid}: {e}")
             app.logger.info(f"Bulk MD5 recheck completed. Checked {updated_count} uploads.")
             
-    thread = threading.Thread(target=run_bulk_check, args=(app_copy,))
+    # Extract IDs to avoid keeping objects tied to outer session
+    ids_to_check = [u.id for u in uploads_to_check]
+    thread = threading.Thread(target=run_bulk_check, args=(app_copy, ids_to_check))
     thread.daemon = True
     thread.start()
     

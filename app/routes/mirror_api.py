@@ -25,7 +25,11 @@ def heartbeat():
         
     mirror.last_heartbeat = datetime.utcnow()
     mirror.storage_used_mb = data.get('storage_used_mb', 0)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.warning(f"Database locked or busy in heartbeat for mirror {mirror.id}, ignoring: {e}")
     
     return jsonify({'status': 'ok'})
 
@@ -75,7 +79,11 @@ def sync_complete():
         if status == 'synced':
             replica.synced_at = datetime.utcnow()
         replica.updated_at = datetime.utcnow()
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.warning(f"Database locked or busy in sync_complete for replica {replica.id}, ignoring: {e}")
         
         # Emit completion event to admin UI
         socketio.emit('mirror_sync_complete', {
@@ -272,22 +280,37 @@ def receive_update_job():
     
     try:
         import subprocess
+        import os
+        
+        # Fix git dubious ownership safely before pulling
+        repo_dir = os.path.abspath(os.getcwd())
+        subprocess.run(['git', 'config', '--global', '--add', 'safe.directory', repo_dir], capture_output=True)
+        subprocess.run(['git', 'config', '--global', '--add', 'safe.directory', '*'], capture_output=True)
+
         result = subprocess.run(['git', 'pull'], capture_output=True, text=True, check=True)
         current_app.logger.info(f"Git pull result: {result.stdout}")
         
         # Schedule restart
         def delayed_restart():
             import time
-            import os
             import signal
+            import sys
             time.sleep(2)
             try:
-                if hasattr(os, 'kill'):
+                if hasattr(os, 'getppid') and hasattr(signal, 'SIGTERM'):
+                    # In Gunicorn, the worker must kill the master (parent) process for a full restart, 
+                    # especially since preload_app=True prevents SIGHUP from updating the code.
+                    parent_pid = os.getppid()
+                    if parent_pid > 1:
+                        os.kill(parent_pid, signal.SIGTERM)
+                    os.kill(os.getpid(), signal.SIGTERM)
+                elif hasattr(os, 'kill'):
                     os.kill(os.getpid(), signal.SIGTERM)
                 else:
                     subprocess.run(['taskkill', '/f', '/pid', str(os.getpid())], check=False)
-            except:
-                pass
+                os._exit(0)
+            except Exception:
+                os._exit(1)
                 
         threading.Thread(target=delayed_restart, daemon=True).start()
         
