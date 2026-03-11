@@ -222,7 +222,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <form method="POST" action="{{ url_for('admin.restart_server') }}" class="d-inline">
                             <button type="submit" class="btn btn-danger w-100 mb-2" 
                                     onclick="return confirm('{{ _('Are you sure you want to restart the server? This will temporarily interrupt service.') }}')">
@@ -233,7 +233,15 @@
                         <small class="text-muted">{{ _('Gracefully restarts the server application') }}</small>
                     </div>
                     
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('admin.view_local_logs') }}" class="btn btn-dark w-100 mb-2">
+                            <i class="fas fa-terminal"></i><br>
+                            {{ _('View Server Logs') }}
+                        </a>
+                        <small class="text-muted">{{ _('View the latest application logs') }}</small>
+                    </div>
+                    
+                    <div class="col-md-4">
                         <button type="button" class="btn btn-secondary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#systemInfoModal">
                             <i class="fas fa-info"></i><br>
                             {{ _('Detailed System Info') }}

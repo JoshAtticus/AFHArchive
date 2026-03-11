@@ -302,6 +302,40 @@ def receive_update_job():
         current_app.logger.error(f"Update failed: {e}")
         return jsonify({'error': 'Update failed', 'details': str(e)}), 500
 
+@mirror_bp.route('/logs', methods=['POST'])
+def receive_logs_job():
+    """
+    Endpoint for Main to fetch the last N lines of logs from this Mirror.
+    Expects: {'api_key': '...', 'lines': 500}
+    """
+    data = request.json
+    api_key_provided = data.get('api_key')
+    
+    app_config_api_key = current_app.config.get('MIRROR_API_KEY')
+    if not app_config_api_key or app_config_api_key != api_key_provided:
+        return jsonify({'error': 'Invalid API Key'}), 401
+    
+    lines_count = min(int(data.get('lines', 500)), 5000)
+    
+    log_path = os.path.join('logs', 'afharchive.log')
+    logs = ""
+    
+    try:
+        if os.path.exists(log_path):
+            with open(log_path, 'r', encoding='utf-8', errors='replace') as f:
+                lines = f.readlines()
+                logs = "".join(lines[-lines_count:])
+        else:
+            logs = "Log file not found on the server."
+            
+        return jsonify({
+            'status': 'success',
+            'logs': logs
+        })
+    except Exception as e:
+        current_app.logger.error(f"Failed to read logs: {e}")
+        return jsonify({'error': 'Failed to read logs', 'details': str(e)}), 500
+
 @mirror_bp.route('/job/sync', methods=['POST'])
 def receive_sync_job():
     """

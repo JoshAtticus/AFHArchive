@@ -1102,6 +1102,63 @@ def init_direct_download_test():
     return redirect(url_for('admin.ab_tests'))
 
 
+# --- Log Management Routes ---
+
+@admin_bp.route('/server-tools/logs')
+@login_required
+@admin_required
+def view_local_logs():
+    """View logs for the main server"""
+    lines_count = request.args.get('lines', 500, type=int)
+    log_path = os.path.join('logs', 'afharchive.log')
+    logs = ""
+    
+    try:
+        if os.path.exists(log_path):
+            with open(log_path, 'r', encoding='utf-8', errors='replace') as f:
+                lines = f.readlines()
+                logs = "".join(lines[-lines_count:])
+        else:
+            logs = "Log file not found on the main server."
+    except Exception as e:
+        logs = f"Error reading local logs: {str(e)}"
+        
+    return render_template('admin/logs.html', 
+                         server_name="Main Server", 
+                         logs=logs, 
+                         lines=lines_count,
+                         return_url=url_for('admin.server_tools'))
+
+@admin_bp.route('/mirrors/<int:id>/logs')
+@login_required
+@admin_required
+def view_mirror_logs(id):
+    """View logs from a specific mirror"""
+    mirror = Mirror.query.get_or_404(id)
+    lines_count = request.args.get('lines', 500, type=int)
+    logs = ""
+    
+    try:
+        resp = requests.post(
+            f"{mirror.url.rstrip('/')}/api/mirror/logs",
+            json={'api_key': mirror.api_key, 'lines': lines_count},
+            timeout=10
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            logs = data.get('logs', 'No logs returned.')
+        else:
+            logs = f"Failed to fetch logs from mirror. Status: {resp.status_code}\n{resp.text}"
+    except Exception as e:
+        logs = f"Error fetching logs from mirror {mirror.name}:\n{str(e)}"
+        
+    return render_template('admin/logs.html', 
+                         server_name=mirror.name, 
+                         logs=logs, 
+                         lines=lines_count,
+                         return_url=url_for('admin.mirrors'))
+
+
 # --- Mirror Management Routes ---
 
 @admin_bp.route('/mirrors')

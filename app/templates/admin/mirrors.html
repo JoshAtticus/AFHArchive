@@ -75,13 +75,14 @@
                         </td>
                         <td>{{ mirror.last_heartbeat }}</td>
                         <td>
-                            <form action="{{ url_for('admin.update_mirror', id=mirror.id) }}" method="POST" class="d-inline">
+                            <a href="{{ url_for('admin.view_mirror_logs', id=mirror.id) }}" class="btn btn-sm btn-dark" title="View Logs"><i class="fas fa-terminal"></i></a>
+                            <form action="{{ url_for('admin.update_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to run git pull and restart this mirror?');">
                                 <button type="submit" class="btn btn-sm btn-info" title="Update Mirror (Git Pull & Restart)"><i class="fas fa-sync-alt"></i></button>
                             </form>
                             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editMirrorModal{{ mirror.id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline">
+                            <form action="{{ url_for('admin.delete_mirror', id=mirror.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this mirror?');">
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>

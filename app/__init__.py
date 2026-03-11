@@ -123,6 +123,7 @@ def create_app():
     # Configure Logging
     import logging
     import sys
+    from logging.handlers import RotatingFileHandler
     
     # Set up root logger to write to stdout
     handler = logging.StreamHandler(sys.stdout)
@@ -130,12 +131,20 @@ def create_app():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     
+    # Set up file handler
+    os.makedirs('logs', exist_ok=True)
+    file_handler = RotatingFileHandler('logs/afharchive.log', maxBytes=10485760, backupCount=10)
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+    
     # Add handler to app logger
     app.logger.addHandler(handler)
+    app.logger.addHandler(file_handler)
     app.logger.setLevel(logging.DEBUG)
     
     # Also configure the root logger to ensure library logs are captured
     logging.getLogger().addHandler(handler)
+    logging.getLogger().addHandler(file_handler)
     logging.getLogger().setLevel(logging.INFO)
 
     # Configuration

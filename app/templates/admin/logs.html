@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Server Logs - AFHArchive{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-terminal"></i> {{ server_name }} Logs</h2>
+    <a href="{{ return_url }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+</div>
+
+<div class="card bg-dark text-light border-0 shadow">
+    <div class="card-header bg-dark border-bottom border-secondary d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-file-alt"></i> afharchive.log (Last {{ lines }} lines)</span>
+        <button class="btn btn-sm btn-outline-light" onclick="window.location.reload()">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <pre class="m-0 p-3 bg-dark" style="max-height: 70vh; overflow-y: auto; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;"><code class="text-light">{{ logs }}</code></pre>
+    </div>
+</div>
+
+<script>
+    // Auto-scroll to bottom of logs on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const preElement = document.querySelector('pre');
+        if (preElement) {
+            preElement.scrollTop = preElement.scrollHeight;
+        }
+    });
+</script>
+{% endblock %}
