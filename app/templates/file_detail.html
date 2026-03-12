@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 
+{% macro render_speed_tag(speed_mbps) %}
+    {% set title_text = (speed_mbps|string + ' Mbps') if speed_mbps < 1000 else ((speed_mbps / 1000)|round(1)|string + ' Gbps') %}
+    {% if speed_mbps < 50 %}
+        <span class="badge bg-secondary ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Slow</span>
+    {% elif speed_mbps < 150 %}
+        <span class="badge bg-primary ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Standard</span>
+    {% elif speed_mbps < 1000 %}
+        <span class="badge bg-success ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Fast</span>
+    {% elif speed_mbps < 2000 %}
+        <span class="badge bg-success ms-2" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);" title="{{ title_text }}" data-bs-toggle="tooltip">Turbo</span>
+    {% else %}
+        {% set turbo_mult = (speed_mbps // 1000) %}
+        <span class="badge bg-success ms-2" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);" title="{{ title_text }}" data-bs-toggle="tooltip">{{ turbo_mult }}X Turbo</span>
+    {% endif %}
+{% endmacro %}
+
 {% block title %}{{ upload.original_filename }} - {{ upload.device_manufacturer }} {{ upload.device_model }}{% endblock %}
 
 {% block meta_description %}{{ _('Download %(filename)s for %(manufacturer)s %(model)s. File size: %(size)s MB. Preserved and archived from AndroidFileHost.', filename=upload.original_filename, manufacturer=upload.device_manufacturer, model=upload.device_model, size=upload.file_size_mb) }}{% endblock %}
@@ -125,6 +141,7 @@
                             <div>
                                 <i class="fas fa-server text-primary"></i> {{ _('Main Server') }}
                                 <small class="text-muted ms-2">({{ main_server_location }})</small>
+                                {{ render_speed_tag(main_server_port_speed_mbps|default(1000, true)) }}
                             </div>
                             <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
                         </a>
@@ -136,6 +153,7 @@
                                     <div>
                                         <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
                                         <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                        {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true)) }}
                                     </div>
                                     <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
                                 </a>
@@ -153,6 +171,7 @@
                                 <div>
                                     <i class="fas fa-server text-muted"></i> {{ replica.mirror.name }}
                                     <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                    {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true)) }}
                                 </div>
                                 <span class="badge bg-danger rounded-pill">{{ _('Offline') }}</span>
                             </div>
@@ -224,4 +243,15 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+});
+</script>
 {% endblock %}

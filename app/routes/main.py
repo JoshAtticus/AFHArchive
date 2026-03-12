@@ -348,8 +348,11 @@ def file_detail(upload_id):
                 unavailable_replicas.append(replica)
     
     main_server_location = SiteConfig.get_value('main_server_location', 'Primary')
+    main_server_port_speed_mbps = int(SiteConfig.get_value('main_server_port_speed_mbps', '1000'))
+    
     return render_template('file_detail.html', upload=upload, 
                          main_server_location=main_server_location,
+                         main_server_port_speed_mbps=main_server_port_speed_mbps,
                          available_replicas=available_replicas,
                          unavailable_replicas=unavailable_replicas)
 

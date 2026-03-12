@@ -29,6 +29,12 @@
                 <input type="number" name="main_server_download_speed_limit_kbps" class="form-control" value="{{ main_server_download_speed_limit_kbps|default('0') }}" placeholder="0 for unlimited">
             </div>
             <div class="col-auto">
+                <label class="col-form-label ms-3">Main Server Port Speed (Mbps):</label>
+            </div>
+            <div class="col-auto">
+                <input type="number" name="main_server_port_speed_mbps" class="form-control" value="{{ main_server_port_speed_mbps|default('1000') }}" placeholder="1000 for 1Gbps">
+            </div>
+            <div class="col-auto">
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
@@ -137,6 +143,11 @@
                         <input type="number" name="download_speed_limit_kbps" class="form-control" value="{{ mirror.download_speed_limit_kbps }}" placeholder="0 for default/unlimited">
                         <div class="form-text">Limit per connection. Set to 0 to use server default (10MB/s).</div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Port Speed (Mbps)</label>
+                        <input type="number" name="port_speed_mbps" class="form-control" value="{{ mirror.port_speed_mbps|default(100) }}" placeholder="1000 for 1Gbps">
+                        <div class="form-text">Used for UI tags (e.g., 100 for Standard, 1000 for Turbo).</div>
+                    </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" name="is_active" id="isActive{{ mirror.id }}" {% if mirror.is_active %}checked{% endif %}>
                         <label class="form-check-label" for="isActive{{ mirror.id }}">Active</label>
@@ -182,6 +193,11 @@
                         <label class="form-label">Download Speed Limit (KB/s)</label>
                         <input type="number" name="download_speed_limit_kbps" class="form-control" value="0" placeholder="0 for default/unlimited">
                         <div class="form-text">Limit per connection. Set to 0 to use server default (10MB/s).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Port Speed (Mbps)</label>
+                        <input type="number" name="port_speed_mbps" class="form-control" value="1000" placeholder="1000 for 1Gbps">
+                        <div class="form-text">Used for UI tags (e.g., 100 for Standard, 1000 for Turbo).</div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -45,6 +45,7 @@ def heartbeat():
             'location': m.location,
             'storage_limit_gb': m.storage_limit_gb,
             'download_speed_limit_kbps': getattr(m, 'download_speed_limit_kbps', 0),
+            'port_speed_mbps': getattr(m, 'port_speed_mbps', 10),
             'is_active': m.is_active
         })
     
@@ -393,9 +394,6 @@ def receive_sync_job():
         'filename': '...'
     }
     """
-    # Security check: In a real app, verify signature or IP. 
-    # Here we rely on the fact that this endpoint is hidden or protected by network/auth if possible.
-    # But wait, we should probably have a shared secret for incoming jobs too.
     
     data = request.json
     
@@ -416,11 +414,6 @@ def receive_sync_job():
         
     # Start background thread
     print(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
-    
-    # Override download_url to ensure it uses the configured MAIN_SERVER_URL if none provided
-    # Only override if the provided URL looks like a generic main server URL (or is missing)
-    # AND we have a better one configured locally.
-    # However, if it's a P2P sync (from another mirror), we should respect the provided URL.
     
     provided_url = data.get('download_url', '')
     
@@ -563,6 +556,7 @@ def mirror_heartbeat_loop(app):
                                 local_mirror.location = m['location']
                                 local_mirror.storage_limit_gb = m['storage_limit_gb']
                                 local_mirror.download_speed_limit_kbps = m.get('download_speed_limit_kbps', 0)
+                                local_mirror.port_speed_mbps = m.get('port_speed_mbps', 100)
                                 local_mirror.is_active = m['is_active']
                             
                             # Do not delete missing ones immediately as it might drop replica references,

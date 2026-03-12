@@ -171,6 +171,9 @@ class Mirror(db.Model):
     # Optional speed limit for user downloads from this mirror (0 = use app default / unlimited)
     download_speed_limit_kbps = Column(Integer, default=0)
     
+    # Server's max upload speed (Port speed) in Mbps, for UI tags
+    port_speed_mbps = Column(Integer, default=100)
+    
     last_heartbeat = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     
