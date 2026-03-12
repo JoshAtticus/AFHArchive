@@ -107,21 +107,30 @@ def download_file(upload_id):
 
     # Get bandwidth limit from config
     download_speed_limit = current_app.config['DOWNLOAD_SPEED_LIMIT']
-    
+    mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
+
     # Check if we are running as a Mirror Node and have our own specific transfer limit configured
     self_api_key = current_app.config.get('MIRROR_API_KEY')
     if self_api_key:
         self_mirror = Mirror.query.filter_by(api_key=self_api_key).first()
-        if self_mirror and hasattr(self_mirror, 'download_speed_limit_kbps') and self_mirror.download_speed_limit_kbps and self_mirror.download_speed_limit_kbps > 0:
-            download_speed_limit = self_mirror.download_speed_limit_kbps * 1024 # Convert KB/s to Bytes/s
+        if self_mirror and hasattr(self_mirror, 'download_speed_limit_kbps') and self_mirror.download_speed_limit_kbps is not None:
+            custom_limit = self_mirror.download_speed_limit_kbps * 1024 # Convert KB/s to Bytes/s
+            if self_mirror.download_speed_limit_kbps == 0:
+                custom_limit = 0 # 0 means unlimited
+            download_speed_limit = custom_limit
+            mirror_speed_limit = custom_limit
             
     # Check if there is an admin override for the Main server specifically
     if not self_api_key:
         main_limit_kbps = SiteConfig.get_value('main_server_download_speed_limit_kbps')
-        if main_limit_kbps and main_limit_kbps.isdigit() and int(main_limit_kbps) > 0:
-            download_speed_limit = int(main_limit_kbps) * 1024 # Convert KB/s to Bytes/s
+        if main_limit_kbps and main_limit_kbps.isdigit():
+            val = int(main_limit_kbps)
+            custom_limit = val * 1024
+            if val == 0:
+                custom_limit = 0 # 0 means unlimited
+            download_speed_limit = custom_limit
+            mirror_speed_limit = custom_limit
 
-    mirror_speed_limit = current_app.config.get('MIRROR_SYNC_SPEED_LIMIT', 1638400)
     # Capture logger to avoid context issues in generator
     app_logger = current_app.logger 
     
