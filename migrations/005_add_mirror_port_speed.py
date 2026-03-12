@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-def upgrade():
+def migrate():
     # Get the base directory
     base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     db_path = os.path.join(base_dir, 'instance', 'afharchive.db')
@@ -32,4 +32,4 @@ def upgrade():
         conn.close()
 
 if __name__ == '__main__':
-    upgrade()
+    migrate()
