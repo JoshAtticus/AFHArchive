@@ -1300,16 +1300,27 @@ def view_mirror_logs(id):
 def mirrors():
     mirrors = Mirror.query.all()
     main_server_location = SiteConfig.get_value('main_server_location', 'Primary')
-    return render_template('admin/mirrors.html', mirrors=mirrors, main_server_location=main_server_location)
+    main_server_download_speed_limit_kbps = SiteConfig.get_value('main_server_download_speed_limit_kbps', '0')
+    return render_template('admin/mirrors.html', 
+                           mirrors=mirrors, 
+                           main_server_location=main_server_location,
+                           main_server_download_speed_limit_kbps=main_server_download_speed_limit_kbps)
 
 @admin_bp.route('/mirrors/settings', methods=['POST'])
 @login_required
 @admin_required
 def update_mirror_settings():
     location = request.form.get('main_server_location')
-    if location:
+    if location is not None:
         SiteConfig.set_value('main_server_location', location)
-        flash('Main server location updated', 'success')
+        
+    speed_limit = request.form.get('main_server_download_speed_limit_kbps')
+    if speed_limit is not None:
+        if str(speed_limit).strip() == '':
+            speed_limit = '0'
+        SiteConfig.set_value('main_server_download_speed_limit_kbps', str(speed_limit))
+        
+    flash('Main server settings updated', 'success')
     return redirect(url_for('admin.mirrors'))
 
 @admin_bp.route('/mirrors/<int:id>/edit', methods=['POST'])
@@ -1322,6 +1333,7 @@ def edit_mirror(id):
     mirror.location = request.form.get('location')
     mirror.url = request.form.get('url')
     mirror.storage_limit_gb = request.form.get('storage_limit', type=int)
+    mirror.download_speed_limit_kbps = request.form.get('download_speed_limit_kbps', type=int, default=0)
     mirror.is_active = 'is_active' in request.form
     
     try:
@@ -1341,6 +1353,7 @@ def add_mirror():
     location = request.form.get('location')
     url = request.form.get('url')
     storage_limit = request.form.get('storage_limit', type=int)
+    download_speed_limit_kbps = request.form.get('download_speed_limit_kbps', type=int, default=0)
     
     if not name or not url:
         flash('Name and URL are required', 'error')
@@ -1354,6 +1367,7 @@ def add_mirror():
         location=location,
         url=url,
         storage_limit_gb=storage_limit,
+        download_speed_limit_kbps=download_speed_limit_kbps,
         api_key=api_key
     )
     

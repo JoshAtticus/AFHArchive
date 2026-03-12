@@ -23,6 +23,12 @@
                 <input type="text" name="main_server_location" class="form-control" value="{{ main_server_location }}">
             </div>
             <div class="col-auto">
+                <label class="col-form-label ms-3">Main Server Speed Limit (KB/s):</label>
+            </div>
+            <div class="col-auto">
+                <input type="number" name="main_server_download_speed_limit_kbps" class="form-control" value="{{ main_server_download_speed_limit_kbps|default('0') }}" placeholder="0 for unlimited">
+            </div>
+            <div class="col-auto">
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
@@ -126,6 +132,11 @@
                         <label class="form-label">Storage Limit (GB)</label>
                         <input type="number" name="storage_limit" class="form-control" value="{{ mirror.storage_limit_gb }}">
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Download Speed Limit (KB/s)</label>
+                        <input type="number" name="download_speed_limit_kbps" class="form-control" value="{{ mirror.download_speed_limit_kbps }}" placeholder="0 for default/unlimited">
+                        <div class="form-text">Limit per connection. Set to 0 to use server default (10MB/s).</div>
+                    </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" name="is_active" id="isActive{{ mirror.id }}" {% if mirror.is_active %}checked{% endif %}>
                         <label class="form-check-label" for="isActive{{ mirror.id }}">Active</label>
@@ -166,6 +177,11 @@
                     <div class="mb-3">
                         <label class="form-label">Storage Limit (GB)</label>
                         <input type="number" name="storage_limit" class="form-control" value="100">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Download Speed Limit (KB/s)</label>
+                        <input type="number" name="download_speed_limit_kbps" class="form-control" value="0" placeholder="0 for default/unlimited">
+                        <div class="form-text">Limit per connection. Set to 0 to use server default (10MB/s).</div>
                     </div>
                 </div>
                 <div class="modal-footer">

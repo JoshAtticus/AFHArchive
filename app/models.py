@@ -168,6 +168,9 @@ class Mirror(db.Model):
     storage_limit_gb = Column(Integer, default=100) # Limit in GB
     storage_used_mb = Column(Integer, default=0) # Used in MB
     
+    # Optional speed limit for user downloads from this mirror (0 = use app default / unlimited)
+    download_speed_limit_kbps = Column(Integer, default=0)
+    
     last_heartbeat = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     

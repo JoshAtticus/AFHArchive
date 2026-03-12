@@ -41,6 +41,7 @@ def heartbeat():
             'url': m.url,
             'location': m.location,
             'storage_limit_gb': m.storage_limit_gb,
+            'download_speed_limit_kbps': getattr(m, 'download_speed_limit_kbps', 0),
             'is_active': m.is_active
         })
     
@@ -548,6 +549,7 @@ def mirror_heartbeat_loop(app):
                                 local_mirror.url = m['url']
                                 local_mirror.location = m['location']
                                 local_mirror.storage_limit_gb = m['storage_limit_gb']
+                                local_mirror.download_speed_limit_kbps = m.get('download_speed_limit_kbps', 0)
                                 local_mirror.is_active = m['is_active']
                             
                             # Do not delete missing ones immediately as it might drop replica references,
