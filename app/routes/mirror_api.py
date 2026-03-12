@@ -65,8 +65,8 @@ def report_progress():
     if not mirror:
         return jsonify({'error': 'Invalid API key'}), 401
         
-    # Optional: Log the progress received
-    # current_app.logger.debug(f"Received progress from {mirror.name}: {progress}%")
+    # Log the progress received so we know Main is getting it
+    current_app.logger.info(f"Received progress from {mirror.name}: {progress}%")
     
     # Store the progress in the database so sync-status endpoint has it
     try:
@@ -135,7 +135,7 @@ def perform_sync(job_data, app_config, app_obj=None):
     # Use a specific logger to avoid duplicate log lines from Flask's default propagation
     logger = logging.getLogger("mirror_sync")
     if not logger.handlers:
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
         # Assuming there's already a root handler, but if not we can add one
     
     file_id = job_data['file_id']
@@ -220,7 +220,7 @@ def perform_sync(job_data, app_config, app_obj=None):
                         speed = downloaded / max((time.time() - start_download_time), 0.001)
                         logger.debug(f"Download progress: {percent}% ({downloaded}/{file_size} bytes) - Speed: {speed/1024/1024:.2f} MB/s")
                         try:
-                            requests.post(f"{main_url}/api/mirror/progress", json={
+                            requests.post(f"{main_url.rstrip('/')}/api/mirror/progress", json={
                                 'api_key': api_key,
                                 'upload_id': file_id,
                                 'progress': percent,
@@ -252,7 +252,7 @@ def perform_sync(job_data, app_config, app_obj=None):
             raise Exception(error_msg)
             
         # Report success
-        requests.post(f"{main_url}/api/mirror/sync_complete", json={
+        requests.post(f"{main_url.rstrip('/')}/api/mirror/sync_complete", json={
             'api_key': api_key,
             'upload_id': file_id,
             'status': 'synced',
@@ -261,8 +261,8 @@ def perform_sync(job_data, app_config, app_obj=None):
         print(f"Sync complete for {filename}")
 
         # Update local DB if app context is provided
-        if app:
-            with app.app_context():
+        if app_obj:
+            with app_obj.app_context():
                 try:
                     # Check if upload exists
                     upload = Upload.query.get(file_id)
@@ -297,7 +297,7 @@ def perform_sync(job_data, app_config, app_obj=None):
         logger.error(f"Sync failed for {filename}: {e}")
         # Report error
         try:
-            requests.post(f"{main_url}/api/mirror/sync_complete", json={
+            requests.post(f"{main_url.rstrip('/')}/api/mirror/sync_complete", json={
                 'api_key': api_key,
                 'upload_id': file_id,
                 'status': 'error',

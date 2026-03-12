@@ -401,8 +401,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script>
     var socket = io({
-        transports: ['websocket'],
-        upgrade: false,
         reconnection: true,
         reconnectionAttempts: 10,
         reconnectionDelay: 1000,
@@ -446,29 +444,35 @@
         .then(data => {
             console.log('Loaded current sync status:', data);
             data.forEach(function(sync) {
-                var container = document.getElementById('replica-' + sync.mirror_id + '-' + sync.upload_id);
-                if (container) {
-                    // Update UI to show syncing state
-                    var badge = container.querySelector('.badge');
-                    if (badge) {
-                        badge.className = 'badge bg-info';
-                        badge.innerText = 'Syncing';
-                    }
-                    
-                    // Add progress bar if not exists
-                    if (!container.querySelector('.progress-bar')) {
-                        var progressDiv = document.createElement('div');
-                        progressDiv.className = 'progress mt-1';
-                        progressDiv.style.height = '15px';
-                        progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>';
-                        container.appendChild(progressDiv);
+                
+                function initLoadingUI(containerId) {
+                    var container = document.getElementById(containerId);
+                    if (container) {
+                        // Update UI to show syncing state
+                        var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                        if (badge) {
+                            badge.className = 'badge bg-info';
+                            badge.innerText = 'Syncing';
+                        }
                         
-                        var textDiv = document.createElement('small');
-                        textDiv.className = 'text-muted progress-text';
-                        textDiv.innerText = 'Connecting...';
-                        container.appendChild(textDiv);
+                        // Add progress bar if not exists
+                        if (!container.querySelector('.progress-bar')) {
+                            var progressDiv = document.createElement('div');
+                            progressDiv.className = 'progress mt-1';
+                            progressDiv.style.height = '15px';
+                            progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%">0%</div>';
+                            container.appendChild(progressDiv);
+                            
+                            var textDiv = document.createElement('small');
+                            textDiv.className = 'text-muted progress-text';
+                            textDiv.innerText = 'Connecting...';
+                            container.appendChild(textDiv);
+                        }
                     }
                 }
+
+                initLoadingUI('replica-' + sync.mirror_id + '-' + sync.upload_id);
+                initLoadingUI('active-replica-' + sync.mirror_id + '-' + sync.upload_id);
             });
         })
         .catch(error => console.error('Error loading sync status:', error));
@@ -507,42 +511,47 @@
         var totalMB = (total / (1024 * 1024)).toFixed(1);
         var progressText = downloadedMB + ' MB / ' + totalMB + ' MB (' + progress + '%)';
         
-        var container = document.getElementById('replica-' + mirrorId + '-' + uploadId);
-        if (container) {
-            // Check if progress bar exists, if not create it
-            var progressBar = container.querySelector('.progress-bar');
-            var progressTextEl = container.querySelector('.progress-text');
-            
-            if (!progressBar) {
-                // If status was not 'syncing' before, we might need to update the badge too
-                var progressDiv = document.createElement('div');
-                progressDiv.className = 'progress mt-1';
-                progressDiv.style.height = '15px';
-                progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ' + progress + '%">' + progress + '%</div>';
-                container.appendChild(progressDiv);
+        function updateProgressUI(containerId) {
+            var container = document.getElementById(containerId);
+            if (container) {
+                // Check if progress bar exists, if not create it
+                var progressBar = container.querySelector('.progress-bar');
+                var progressTextEl = container.querySelector('.progress-text');
                 
-                // Add text element
-                var textDiv = document.createElement('small');
-                textDiv.className = 'text-muted progress-text';
-                textDiv.innerText = progressText;
-                container.appendChild(textDiv);
-                
-                // Update badge to Syncing if not already
-                var badge = container.querySelector('.badge');
-                if (badge) {
-                    badge.className = 'badge bg-info';
-                    badge.innerText = 'Syncing';
-                    // Remove other classes
-                    badge.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-secondary');
-                }
-            } else {
-                progressBar.style.width = progress + '%';
-                progressBar.innerText = progress + '%';
-                if (progressTextEl) {
-                    progressTextEl.innerText = progressText;
+                if (!progressBar) {
+                    // If status was not 'syncing' before, we might need to update the badge too
+                    var progressDiv = document.createElement('div');
+                    progressDiv.className = 'progress mt-1';
+                    progressDiv.style.height = '15px';
+                    progressDiv.innerHTML = '<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ' + progress + '%">' + progress + '%</div>';
+                    container.appendChild(progressDiv);
+                    
+                    // Add text element
+                    var textDiv = document.createElement('small');
+                    textDiv.className = 'text-muted progress-text';
+                    textDiv.innerText = progressText;
+                    container.appendChild(textDiv);
+                    
+                    // Update badge to Syncing if not already in the active tab (or main table)
+                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    if (badge) {
+                        badge.className = 'badge bg-info';
+                        badge.innerText = 'Syncing';
+                        // Remove other classes
+                        badge.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-secondary');
+                    }
+                } else {
+                    progressBar.style.width = progress + '%';
+                    progressBar.innerText = progress + '%';
+                    if (progressTextEl) {
+                        progressTextEl.innerText = progressText;
+                    }
                 }
             }
         }
+        
+        updateProgressUI('replica-' + mirrorId + '-' + uploadId);
+        updateProgressUI('active-replica-' + mirrorId + '-' + uploadId);
     });
     
     // Listen for sync completion event
@@ -552,47 +561,48 @@
         var uploadId = data.upload_id;
         var status = data.status;
         
-        var container = document.getElementById('replica-' + mirrorId + '-' + uploadId);
-        if (container) {
-            if (status === 'synced') {
-                // Show completion briefly before reload
-                var progressBar = container.querySelector('.progress-bar');
-                if (progressBar) {
-                    progressBar.style.width = '100%';
-                    progressBar.innerText = '100%';
-                    progressBar.classList.remove('progress-bar-animated');
-                    progressBar.classList.add('bg-success');
+        function updateCompleteUI(containerId) {
+            var container = document.getElementById(containerId);
+            if (container) {
+                if (status === 'synced') {
+                    // Show completion briefly before reload
+                    var progressBar = container.querySelector('.progress-bar');
+                    if (progressBar) {
+                        progressBar.style.width = '100%';
+                        progressBar.innerText = '100%';
+                        progressBar.classList.remove('progress-bar-animated');
+                        progressBar.classList.add('bg-success');
+                    }
+                    
+                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    if (badge) {
+                        badge.className = 'badge bg-success';
+                        badge.innerText = 'Synced';
+                    }
+                } else if (status === 'error') {
+                    // Show error state
+                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    if (badge) {
+                        badge.className = 'badge bg-danger';
+                        badge.innerText = 'Error';
+                    }
+                    
+                    if (data.error_message) {
+                        var errorDiv = document.createElement('div');
+                        errorDiv.className = 'text-danger small mt-1';
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + data.error_message;
+                        container.appendChild(errorDiv);
+                    }
                 }
-                
-                var badge = container.querySelector('.badge');
-                if (badge) {
-                    badge.className = 'badge bg-success';
-                    badge.innerText = 'Synced';
-                }
-                
-                setTimeout(function() {
-                    location.reload();
-                }, 500);
-            } else if (status === 'error') {
-                // Show error state
-                var badge = container.querySelector('.badge');
-                if (badge) {
-                    badge.className = 'badge bg-danger';
-                    badge.innerText = 'Error';
-                }
-                
-                if (data.error_message) {
-                    var errorDiv = document.createElement('div');
-                    errorDiv.className = 'text-danger small mt-1';
-                    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + data.error_message;
-                    container.appendChild(errorDiv);
-                }
-                
-                setTimeout(function() {
-                    location.reload();
-                }, 2000);
             }
         }
+        
+        updateCompleteUI('replica-' + mirrorId + '-' + uploadId);
+        updateCompleteUI('active-replica-' + mirrorId + '-' + uploadId);
+        
+        setTimeout(function() {
+            location.reload();
+        }, status === 'synced' ? 500 : 2000);
     });
 
     function cancelSync(uploadId, mirrorId) {
