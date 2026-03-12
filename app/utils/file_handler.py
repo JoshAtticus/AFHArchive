@@ -21,10 +21,12 @@ def allowed_file(filename):
 
 def calculate_md5(file_path):
     """Calculate MD5 hash of a file"""
+    import time
     hash_md5 = hashlib.md5()
     with open(file_path, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
+        for chunk in iter(lambda: f.read(65536), b""):
             hash_md5.update(chunk)
+            time.sleep(0) # Yield control to event loop
     return hash_md5.hexdigest()
 
 def save_upload_file(file):

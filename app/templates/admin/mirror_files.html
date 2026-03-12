@@ -375,9 +375,9 @@
                         <tr>
                             <td>{{ sync.upload_id }}</td>
                             <td>{{ sync.mirror_id }}</td>
-                            <td>
+                            <td id="active-replica-{{ sync.mirror_id }}-{{ sync.upload_id }}">
                                 <span class="badge bg-warning">{{ sync.status }}</span>
-                                <div id="active-replica-{{ sync.mirror_id }}-{{ sync.upload_id }}" class="mt-1 small text-muted"></div>
+                                <div class="mt-1 small text-muted"></div>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-outline-danger" onclick="cancelSync({{ sync.upload_id }}, {{ sync.mirror_id }})">Cancel</button>
@@ -449,7 +449,7 @@
                     var container = document.getElementById(containerId);
                     if (container) {
                         // Update UI to show syncing state
-                        var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                        var badge = container.querySelector('.badge');
                         if (badge) {
                             badge.className = 'badge bg-info';
                             badge.innerText = 'Syncing';
@@ -533,7 +533,7 @@
                     container.appendChild(textDiv);
                     
                     // Update badge to Syncing if not already in the active tab (or main table)
-                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    var badge = container.querySelector('.badge');
                     if (badge) {
                         badge.className = 'badge bg-info';
                         badge.innerText = 'Syncing';
@@ -574,14 +574,14 @@
                         progressBar.classList.add('bg-success');
                     }
                     
-                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    var badge = container.querySelector('.badge');
                     if (badge) {
                         badge.className = 'badge bg-success';
                         badge.innerText = 'Synced';
                     }
                 } else if (status === 'error') {
                     // Show error state
-                    var badge = container.closest('td') ? container.closest('td').querySelector('.badge') : container.querySelector('.badge');
+                    var badge = container.querySelector('.badge');
                     if (badge) {
                         badge.className = 'badge bg-danger';
                         badge.innerText = 'Error';

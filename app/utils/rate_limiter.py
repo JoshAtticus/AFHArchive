@@ -37,7 +37,9 @@ class BandwidthLimitedFile:
             if time_since_last < expected_time:
                 sleep_time = expected_time - time_since_last
                 time.sleep(sleep_time)
-        
+        else:
+            time.sleep(0) # Yield control
+            
         self.last_read_time = time.time()
         return data
     
@@ -82,7 +84,9 @@ class FixedRateLimitedFile:
                 sleep_time = expected_time - time_since_last
                 # print(f"DEBUG: Throttling {len(data)} bytes, sleeping {sleep_time:.4f}s")
                 time.sleep(sleep_time)
-        
+        else:
+            time.sleep(0) # Yield control
+            
         self.last_read_time = time.time()
         return data
     

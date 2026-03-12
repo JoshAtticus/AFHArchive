@@ -128,9 +128,11 @@ def sync_to_main(upload_id, source_mirror_id):
         os.makedirs(os.path.dirname(upload.file_path), exist_ok=True)
         
         # Write to file
+        import time
         with open(upload.file_path, 'wb') as f:
-            for chunk in resp.iter_content(chunk_size=8192):
+            for chunk in resp.iter_content(chunk_size=65536):
                 f.write(chunk)
+                time.sleep(0) # Yield to event loop
                 
         # Verify MD5 (optional but recommended)
         # For now, just assume it's good if download succeeded

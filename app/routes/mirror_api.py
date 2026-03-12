@@ -8,6 +8,7 @@ import requests
 import threading
 import time
 import hashlib
+import logging
 
 mirror_bp = Blueprint('mirror_api', __name__, url_prefix='/api/mirror')
 
@@ -132,30 +133,37 @@ def perform_sync(job_data, app_config, app_obj=None):
     """
     Background task to download file from Main.
     """
-    # Use a specific logger to avoid duplicate log lines from Flask's default propagation
-    logger = logging.getLogger("mirror_sync")
-    if not logger.handlers:
+    if app_obj:
+        with app_obj.app_context():
+            _perform_sync_logic(job_data, app_config)
+    else:
+        _perform_sync_logic(job_data, app_config)
+
+def _perform_sync_logic(job_data, app_config):
+    try:
+        # Using standard root logger propagation.
+        logger = logging.getLogger("mirror_sync")
         logger.setLevel(logging.DEBUG)
-        # Assuming there's already a root handler, but if not we can add one
-    
-    file_id = job_data['file_id']
-    download_url = job_data['download_url']
-    md5_hash = job_data['md5_hash']
-    file_size = job_data['file_size']
-    filename = job_data['filename']
-    api_key = app_config['MIRROR_API_KEY']
-    main_url = app_config['MAIN_SERVER_URL']
-    
-    logger.info(f"Starting sync job for {filename} (ID: {file_id})")
-    logger.info(f"Download URL: {download_url}")
-    logger.info(f"Target Size: {file_size} bytes")
-    
-    # Ensure upload directory exists
-    upload_dir = app_config['UPLOAD_FOLDER']
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
+        logger.propagate = True
         
-    local_path = os.path.join(upload_dir, filename)
+        file_id = job_data['file_id']
+        download_url = job_data['download_url']
+        md5_hash = job_data['md5_hash']
+        file_size = job_data['file_size']
+        filename = job_data['filename']
+        api_key = app_config['MIRROR_API_KEY']
+        main_url = app_config['MAIN_SERVER_URL']
+        
+        logger.info(f"Starting sync job for {filename} (ID: {file_id})")
+        logger.info(f"Download URL: {download_url}")
+        logger.info(f"Target Size: {file_size} bytes")
+        
+        # Ensure upload directory exists
+        upload_dir = app_config['UPLOAD_FOLDER']
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+            
+        local_path = os.path.join(upload_dir, filename)
     
     try:
         headers = {'X-Mirror-Api-Key': api_key}
@@ -260,38 +268,36 @@ def perform_sync(job_data, app_config, app_obj=None):
         }, timeout=10)
         print(f"Sync complete for {filename}")
 
-        # Update local DB if app context is provided
-        if app_obj:
-            with app_obj.app_context():
-                try:
-                    # Check if upload exists
-                    upload = Upload.query.get(file_id)
-                    if not upload:
-                        # Get system user for mirror uploads
-                        mirror_user = get_or_create_mirror_user()
-                        upload = Upload(id=file_id, user_id=mirror_user.id)
-                        db.session.add(upload)
-                    
-                    # Update fields
-                    upload.filename = filename
-                    upload.original_filename = job_data.get('original_filename', filename)
-                    upload.file_path = filename # On mirror, path is just filename in upload folder
-                    upload.file_size = file_size
-                    upload.md5_hash = md5_hash
-                    upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
-                    upload.device_model = job_data.get('device_model', 'Unknown')
-                    upload.afh_link = job_data.get('afh_link')
-                    upload.xda_thread = job_data.get('xda_thread')
-                    upload.notes = job_data.get('notes')
-                    upload.afh_md5_status = job_data.get('afh_md5_status')
-                    upload.status = 'approved'
-                    upload.uploaded_at = datetime.utcnow()
-                    
-                    db.session.commit()
-                    logger.info(f"Local DB updated for {filename}")
-                except Exception as db_e:
-                    logger.error(f"Failed to update local DB: {db_e}")
-                    db.session.rollback()
+        # Update local DB if app context is active
+        try:
+            # Check if upload exists
+            upload = Upload.query.get(file_id)
+            if not upload:
+                # Get system user for mirror uploads
+                mirror_user = get_or_create_mirror_user()
+                upload = Upload(id=file_id, user_id=mirror_user.id)
+                db.session.add(upload)
+            
+            # Update fields
+            upload.filename = filename
+            upload.original_filename = job_data.get('original_filename', filename)
+            upload.file_path = filename # On mirror, path is just filename in upload folder
+            upload.file_size = file_size
+            upload.md5_hash = md5_hash
+            upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
+            upload.device_model = job_data.get('device_model', 'Unknown')
+            upload.afh_link = job_data.get('afh_link')
+            upload.xda_thread = job_data.get('xda_thread')
+            upload.notes = job_data.get('notes')
+            upload.afh_md5_status = job_data.get('afh_md5_status')
+            upload.status = 'approved'
+            upload.uploaded_at = datetime.utcnow()
+            
+            db.session.commit()
+            logger.info(f"Local DB updated for {filename}")
+        except Exception as db_e:
+            logger.error(f"Failed to update local DB: {db_e}")
+            db.session.rollback()
         
     except Exception as e:
         logger.error(f"Sync failed for {filename}: {e}")
@@ -309,6 +315,11 @@ def perform_sync(job_data, app_config, app_obj=None):
         # Clean up partial file
         if os.path.exists(local_path):
             os.remove(local_path)
+            
+    except Exception as outer_e:
+        print(f"CRITICAL ERROR in perform_sync logic: {outer_e}")
+        import traceback
+        traceback.print_exc()
 
 @mirror_bp.route('/update', methods=['POST'])
 def receive_update_job():
@@ -433,20 +444,20 @@ def receive_sync_job():
     }
     
     if not app_config['MIRROR_API_KEY']:
-        print("Error: MIRROR_API_KEY not configured on this server")
+        current_app.logger.error("Error: MIRROR_API_KEY not configured on this server")
         return jsonify({'error': 'This server is not configured as a mirror'}), 400
         
     # Start background thread
-    print(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
+    current_app.logger.info(f"Received sync job for file {data.get('filename')} (ID: {data.get('file_id')})")
     
     provided_url = data.get('download_url', '')
     
     # If no URL provided, or if we want to force main server fallback when appropriate
     if not provided_url and app_config['MAIN_SERVER_URL']:
         data['download_url'] = f"{app_config['MAIN_SERVER_URL']}/api/mirror_sync/{data.get('file_id')}"
-        print(f"Using constructed fallback URL: {data['download_url']}")
+        current_app.logger.info(f"Using constructed fallback URL: {data['download_url']}")
     elif provided_url:
-        print(f"Using provided download URL: {provided_url}")
+        current_app.logger.info(f"Using provided download URL: {provided_url}")
     
     # Pass the API key to the thread so it can authenticate with the main server
     data['api_key'] = app_config['MIRROR_API_KEY']

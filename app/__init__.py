@@ -125,27 +125,29 @@ def create_app():
     import sys
     from logging.handlers import RotatingFileHandler
     
-    # Set up root logger to write to stdout
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
+    # Check if we already configured it to avoid duplicating on reloads
+    root_logger = logging.getLogger()
+    if not root_logger.handlers:
+        # Set up root logger to write to stdout
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        
+        # Set up file handler
+        os.makedirs('logs', exist_ok=True)
+        file_handler = RotatingFileHandler('logs/afharchive.log', maxBytes=10485760, backupCount=10)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        
+        root_logger.addHandler(handler)
+        root_logger.addHandler(file_handler)
+        root_logger.setLevel(logging.INFO)
     
-    # Set up file handler
-    os.makedirs('logs', exist_ok=True)
-    file_handler = RotatingFileHandler('logs/afharchive.log', maxBytes=10485760, backupCount=10)
-    file_handler.setLevel(logging.DEBUG)
-    file_handler.setFormatter(formatter)
-    
-    # Add handler to app logger
-    app.logger.addHandler(handler)
-    app.logger.addHandler(file_handler)
+    # App logger needs no handlers, just propagate up
+    app.logger.handlers.clear()
     app.logger.setLevel(logging.DEBUG)
-    
-    # Also configure the root logger to ensure library logs are captured
-    logging.getLogger().addHandler(handler)
-    logging.getLogger().addHandler(file_handler)
-    logging.getLogger().setLevel(logging.INFO)
+    app.logger.propagate = True
 
     # Configuration
     app.config['SECRET_KEY'] = config('SECRET_KEY')

@@ -218,9 +218,8 @@ def approve_upload(upload_id):
                 except Exception as e:
                     app_obj.logger.error(f"Failed to trigger mirror sync for upload {upload_id_val}: {e}")
         
-        # Start thread
-        sync_thread = threading.Thread(target=run_sync_async, args=(app, upload.id))
-        sync_thread.start()
+        # Start background task via socketio to play nicely with gevent
+        socketio.start_background_task(run_sync_async, app, upload.id)
         
     except Exception as e:
         current_app.logger.error(f"Failed to start mirror sync thread for upload {upload.id}: {e}")
@@ -553,9 +552,7 @@ def trigger_bulk_md5_check():
             
     # Extract IDs to avoid keeping objects tied to outer session
     ids_to_check = [u.id for u in uploads_to_check]
-    thread = threading.Thread(target=run_bulk_check, args=(app_copy, ids_to_check))
-    thread.daemon = True
-    thread.start()
+    socketio.start_background_task(run_bulk_check, app_copy, ids_to_check)
     
     flash(f'Started background re-check of {len(uploads_to_check)} uploads. Check back later!', 'success')
     return redirect(url_for('admin.md5_health'))
@@ -851,8 +848,7 @@ def restart_server():
             except:
                 pass
         
-        import threading
-        threading.Thread(target=delayed_restart, daemon=True).start()
+        socketio.start_background_task(delayed_restart)
         
     except Exception as e:
         current_app.logger.error(f"Error restarting server: {str(e)}")
@@ -1038,9 +1034,8 @@ def ai_review_batch():
                     except:
                         pass
         
-        # Start batch review in background thread
-        thread = threading.Thread(target=run_batch_review, daemon=True)
-        thread.start()
+        # Start batch review in background task via socketio
+        socketio.start_background_task(run_batch_review)
         
         # Return JSON response for AJAX call
         return jsonify({
@@ -1517,7 +1512,6 @@ def trigger_sync(upload_id):
         else:
             # Run sync to main in background as it involves file transfer
             from app.utils.mirror_utils import sync_to_main
-            import threading
             
             app = current_app._get_current_object()
             
@@ -1532,7 +1526,7 @@ def trigger_sync(upload_id):
                     except Exception as e:
                         app_obj.logger.error(f"Background Main Server sync error: {e}")
             
-            threading.Thread(target=run_sync_to_main_async, args=(app, upload.id, source_mirror_id)).start()
+            socketio.start_background_task(run_sync_to_main_async, app, upload.id, source_mirror_id)
             flash('Sync to Main Server started in background', 'info')
 
     # Handle sync to mirrors
