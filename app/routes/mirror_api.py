@@ -11,6 +11,9 @@ import hashlib
 
 mirror_bp = Blueprint('mirror_api', __name__, url_prefix='/api/mirror')
 
+# Set to track filenames that should have their sync aborted
+ABORT_SYNCS = set()
+
 # --- Main Server Endpoints ---
 
 @mirror_bp.route('/heartbeat', methods=['POST'])
@@ -68,7 +71,7 @@ def report_progress():
         'progress': progress,
         'downloaded_bytes': downloaded_bytes,
         'total_bytes': total_bytes
-    })
+    }, namespace='/')
     
     return jsonify({'status': 'ok'})
 
@@ -105,7 +108,7 @@ def sync_complete():
             'upload_id': upload_id,
             'status': status,
             'error_message': error_msg
-        })
+        }, namespace='/')
         
     return jsonify({'status': 'ok'})
 
@@ -178,6 +181,11 @@ def perform_sync(job_data, app_config, app=None):
             start_download_time = time.time()
             
             for chunk in response.iter_content(chunk_size=8192):
+                if filename in ABORT_SYNCS:
+                    logger.warning(f"Sync aborted for {filename}")
+                    ABORT_SYNCS.discard(filename)
+                    return # Exit early without completing or reporting error
+                    
                 if chunk:
                     f.write(chunk)
                     downloaded += len(chunk)
@@ -454,7 +462,12 @@ def receive_delete_job():
     upload_dir = current_app.config['UPLOAD_FOLDER']
     file_path = os.path.join(upload_dir, filename)
     
+    # Add to abort set in case it's currently syncing
+    ABORT_SYNCS.add(filename)
+    
     try:
+        # Give sync thread a moment to notice the abort and release the file handle
+        time.sleep(0.5) 
         if os.path.exists(file_path):
             os.remove(file_path)
             print(f"Deleted file {filename} from mirror storage")
