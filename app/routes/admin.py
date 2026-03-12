@@ -9,6 +9,7 @@ from app.utils.autoreviewer import get_autoreviewer_stats, run_autoreviewer_on_a
 from app.utils.ab_testing import get_test_stats, cleanup_old_assignments
 from app.utils.afh_verifier import verify_md5_against_afh
 from app.utils.mirror_utils import trigger_mirror_sync, trigger_mirror_delete
+from app import socketio
 from threading import Timer
 from sqlalchemy import or_
 from collections import defaultdict
@@ -1469,7 +1470,12 @@ def mirror_files():
         
     uploads = query.paginate(page=page, per_page=20)
     mirrors = Mirror.query.all()
-    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors, current_sort=sort_by, current_order=order)
+    
+    # Get active syncs
+    from app.models import FileReplica
+    active_syncs = FileReplica.query.filter(FileReplica.status.in_(['syncing', 'pending'])).all()
+    
+    return render_template('admin/mirror_files.html', uploads=uploads, mirrors=mirrors, current_sort=sort_by, current_order=order, active_syncs=active_syncs)
 
 @admin_bp.route('/mirrors/sync/<int:upload_id>', methods=['POST'])
 @login_required
@@ -1559,7 +1565,7 @@ def trigger_sync(upload_id):
                     except Exception as e:
                         app_obj.logger.error(f"Background mirror sync trigger error: {e}")
             
-            threading.Thread(target=run_trigger_mirror_sync_async, args=(app, upload.id, valid_mirror_ids, source_mirror_id)).start()
+            socketio.start_background_task(run_trigger_mirror_sync_async, app, upload.id, valid_mirror_ids, source_mirror_id)
             flash(f'Sync triggering for {len(valid_mirror_ids)} mirrors in background', 'info')
     
     return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
@@ -1743,4 +1749,47 @@ def trigger_bulk_delete():
 
     flash(', '.join(msg), 'success' if skipped == 0 else 'warning')
     return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
+
+@admin_bp.route('/mirrors/syncs/cancel', methods=['POST'])
+@login_required
+@admin_required
+def cancel_sync():
+    """Cancel a specific sync operation"""
+    data = request.get_json()
+    upload_id = data.get('upload_id')
+    mirror_id = data.get('mirror_id')
+    
+    if not upload_id or not mirror_id:
+        return jsonify({'success': False, 'message': 'Missing upload_id or mirror_id'})
+        
+    try:
+        from app.utils.mirror_utils import cancel_sync_job
+        if cancel_sync_job(upload_id, mirror_id):
+            return jsonify({'success': True, 'message': 'Sync cancelled'})
+        else:
+            return jsonify({'success': False, 'message': 'Sync not found or already completed'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+@admin_bp.route('/mirrors/syncs/cancel_all', methods=['POST'])
+@login_required
+@admin_required
+def cancel_all_syncs():
+    """Cancel all active sync operations"""
+    try:
+        from app.utils.mirror_utils import cancel_all_syncs_jobs
+        
+        cancel_all_syncs_jobs()
+        
+        from app.models import FileReplica, db
+        # Set all syncing/pending replicas to error/cancelled status in db to clean up
+        active_syncs = FileReplica.query.filter(FileReplica.status.in_(['syncing', 'pending'])).all()
+        for sync in active_syncs:
+            sync.status = 'error'
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'All syncs cancelled'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
 

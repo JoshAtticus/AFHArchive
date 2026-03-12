@@ -24,8 +24,25 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
+<!-- TABS -->
+<ul class="nav nav-tabs mb-4" id="mirrorTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="files-tab" data-bs-toggle="tab" data-bs-target="#files" type="button" role="tab" aria-controls="files" aria-selected="true"><i class="fas fa-file"></i> All Files</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="syncs-tab" data-bs-toggle="tab" data-bs-target="#syncs" type="button" role="tab" aria-controls="syncs" aria-selected="false">
+            <i class="fas fa-satellite-dish"></i> Active Syncs
+            {% if active_syncs|length > 0 %}
+            <span class="badge bg-primary">{{ active_syncs|length }}</span>
+            {% endif %}
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="mirrorTabsContent">
+    <div class="tab-pane fade show active" id="files" role="tabpanel" aria-labelledby="files-tab">
+        <div class="card">
+            <div class="card-body">
         <form id="bulkForm" action="{{ url_for('admin.trigger_bulk_sync', page=uploads.page, sort=current_sort, order=current_order) }}" method="POST">
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -328,6 +345,56 @@
         </nav>
     </div>
 </div>
+
+</div> <!-- end files tab pane -->
+
+<div class="tab-pane fade" id="syncs" role="tabpanel" aria-labelledby="syncs-tab">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Ongoing Sync Operations</h5>
+            {% if active_syncs|length > 0 %}
+            <button class="btn btn-sm btn-danger" onclick="cancelAllSyncs()">
+                <i class="fas fa-times-circle"></i> Cancel All
+            </button>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if active_syncs|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>File ID</th>
+                            <th>Mirror ID</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sync in active_syncs %}
+                        <tr>
+                            <td>{{ sync.upload_id }}</td>
+                            <td>{{ sync.mirror_id }}</td>
+                            <td>
+                                <span class="badge bg-warning">{{ sync.status }}</span>
+                                <div id="active-replica-{{ sync.mirror_id }}-{{ sync.upload_id }}" class="mt-1 small text-muted"></div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-danger" onclick="cancelSync({{ sync.upload_id }}, {{ sync.mirror_id }})">Cancel</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info mb-0">No active syncs at this time.</div>
+            {% endif %}
+        </div>
+    </div>
+</div> <!-- end syncs tab pane -->
+</div> <!-- end tab-content -->
+
 {% endblock %}
 
 {% block scripts %}
@@ -527,5 +594,48 @@
             }
         }
     });
+
+    function cancelSync(uploadId, mirrorId) {
+        if (!confirm('Are you sure you want to cancel this sync operation?')) return;
+        
+        fetch('{{ url_for("admin.cancel_sync") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ upload_id: uploadId, mirror_id: mirrorId })
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                alert('Sync cancelled successfully.');
+                location.reload();
+            } else {
+                alert('Error cancelling sync: ' + (data.message || 'Unknown error'));
+            }
+        }).catch(err => {
+            console.error(err);
+            alert('Failed to cancel sync.');
+        });
+    }
+
+    function cancelAllSyncs() {
+        if (!confirm('Are you sure you want to cancel ALL active sync operations?')) return;
+        
+        fetch('{{ url_for("admin.cancel_all_syncs") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(data => {
+            if (data.success) {
+                alert('All syncs cancelled successfully.');
+                location.reload();
+            } else {
+                alert('Error cancelling syncs: ' + (data.message || 'Unknown error'));
+            }
+        }).catch(err => {
+            console.error(err);
+            alert('Failed to cancel syncs.');
+        });
+    }
 </script>
 {% endblock %}

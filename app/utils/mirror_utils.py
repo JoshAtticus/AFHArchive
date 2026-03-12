@@ -210,3 +210,80 @@ def trigger_mirror_delete(upload, mirror_ids=None):
             current_app.logger.error(f"Error triggering delete to {mirror.name}: {e}")
             
     return count
+
+def cancel_sync_job(upload_id, mirror_id):
+    """
+    Cancels an ongoing sync job on the specified mirror or main server.
+    """
+    from app.models import Upload, Mirror, FileReplica, db
+    import requests
+    from flask import current_app
+    
+    upload = Upload.query.get(upload_id)
+    if not upload:
+        return False
+        
+    replica = FileReplica.query.filter_by(upload_id=upload_id, mirror_id=mirror_id).first()
+    if replica:
+        replica.status = 'error'
+        replica.error_message = 'Sync cancelled by admin'
+        db.session.commit()
+    
+    if mirror_id == 'main' or mirror_id == 0:
+        # Cancel on main server
+        from app.routes.mirror_api import ABORT_SYNCS
+        ABORT_SYNCS.add(upload.filename)
+        return True
+        
+    mirror = Mirror.query.get(mirror_id)
+    if mirror and mirror.is_active:
+        try:
+            resp = requests.post(
+                f"{mirror.url.rstrip('/')}/api/mirror/job/cancel",
+                json={'filename': upload.filename},
+                headers={
+                    'Content-Type': 'application/json',
+                    'Authorization': f"Bearer {mirror.api_key}"
+                },
+                timeout=5
+            )
+            if resp.status_code == 200:
+                return True
+        except Exception as e:
+            current_app.logger.error(f"Error sending cancel to mirror {mirror.name}: {e}")
+            
+    # Also attempt standard abort if the background download is happening on Main server to Mirror
+    from app.routes.mirror_api import ABORT_SYNCS
+    ABORT_SYNCS.add(upload.filename)
+            
+    return True
+
+def cancel_all_syncs_jobs():
+    """
+    Cancels all ongoing sync operations globally.
+    """
+    from app.models import Mirror, db
+    import requests
+    from flask import current_app
+    from app.routes.mirror_api import ABORT_SYNCS
+    
+    # Cancel everything locally
+    ABORT_SYNCS.add('ALL')
+    
+    # Notify all mirrors
+    mirrors = Mirror.query.filter_by(is_active=True).all()
+    for mirror in mirrors:
+        try:
+            requests.post(
+                f"{mirror.url.rstrip('/')}/api/mirror/job/cancel",
+                json={'filename': 'ALL'},
+                headers={
+                    'Content-Type': 'application/json',
+                    'Authorization': f"Bearer {mirror.api_key}"
+                },
+                timeout=5
+            )
+        except Exception as e:
+            current_app.logger.error(f"Error sending cancel ALL to mirror {mirror.name}: {e}")
+            
+    return True

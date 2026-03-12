@@ -217,11 +217,11 @@ def create_app():
         'ja': '日本語',
         'de': 'Deutsch',
         'it': 'Italiano',
-        # 'es': 'Español', 
-        # 'fr': 'Français',
+        'es': 'Español', 
+        'fr': 'Français',
         # 'pt': 'Português',
         # 'ko': '한국어',
-        # 'zh': '中文'
+        'zh': '中文'
     }
     
     # Domain redirect handler

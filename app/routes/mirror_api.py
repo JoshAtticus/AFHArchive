@@ -65,6 +65,19 @@ def report_progress():
     if not mirror:
         return jsonify({'error': 'Invalid API key'}), 401
         
+    # Optional: Log the progress received
+    # current_app.logger.debug(f"Received progress from {mirror.name}: {progress}%")
+    
+    # Store the progress in the database so sync-status endpoint has it
+    try:
+        replica = FileReplica.query.filter_by(mirror_id=mirror.id, upload_id=upload_id).first()
+        if replica:
+            replica.status = 'syncing'
+            # Assuming we had a field, but we don't. We just use status updates.
+            db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        
     # Emit socket event to admin UI - broadcast to ALL connected clients
     socketio.emit('mirror_sync_progress', {
         'mirror_id': mirror.id,
@@ -115,12 +128,15 @@ def sync_complete():
 
 # --- Mirror Client Logic (To be run on the Mirror Server) ---
 
-def perform_sync(job_data, app_config, app=None):
+def perform_sync(job_data, app_config, app_obj=None):
     """
     Background task to download file from Main.
     """
-    # Setup logging
-    logger = app.logger if app else logging.getLogger(__name__)
+    # Use a specific logger to avoid duplicate log lines from Flask's default propagation
+    logger = logging.getLogger("mirror_sync")
+    if not logger.handlers:
+        logger.setLevel(logging.INFO)
+        # Assuming there's already a root handler, but if not we can add one
     
     file_id = job_data['file_id']
     download_url = job_data['download_url']
@@ -180,9 +196,10 @@ def perform_sync(job_data, app_config, app=None):
             downloaded = 0
             last_progress_time = time.time()
             start_download_time = time.time()
+            last_percent_reported = 0
             
-            for chunk in response.iter_content(chunk_size=8192):
-                if filename in ABORT_SYNCS:
+            for chunk in response.iter_content(chunk_size=65536):
+                if filename in ABORT_SYNCS or 'ALL' in ABORT_SYNCS:
                     logger.warning(f"Sync aborted for {filename}")
                     ABORT_SYNCS.discard(filename)
                     return # Exit early without completing or reporting error
@@ -191,10 +208,16 @@ def perform_sync(job_data, app_config, app=None):
                     f.write(chunk)
                     downloaded += len(chunk)
                     
-                    # Report progress every 2 seconds
-                    if time.time() - last_progress_time > 2:
-                        percent = int((downloaded / file_size) * 100)
-                        speed = downloaded / (time.time() - start_download_time)
+                    # Yield to Gevent event loop to prevent blocking other requests (like progress reporting)
+                    time.sleep(0)
+                    
+                    percent = int((downloaded / file_size) * 100) if file_size else 0
+                    
+                    # Report progress every 1 second or every 1%
+                    should_report = (time.time() - last_progress_time > 1) or (percent - last_percent_reported >= 1)
+                    
+                    if should_report:
+                        speed = downloaded / max((time.time() - start_download_time), 0.001)
                         logger.debug(f"Download progress: {percent}% ({downloaded}/{file_size} bytes) - Speed: {speed/1024/1024:.2f} MB/s")
                         try:
                             requests.post(f"{main_url}/api/mirror/progress", json={
@@ -205,6 +228,7 @@ def perform_sync(job_data, app_config, app=None):
                                 'total_bytes': file_size
                             }, timeout=5)
                             last_progress_time = time.time()
+                            last_percent_reported = percent
                         except Exception as e:
                             logger.warning(f"Failed to report progress: {e}")
                             pass # Ignore progress report failures
@@ -428,9 +452,8 @@ def receive_sync_job():
     data['api_key'] = app_config['MIRROR_API_KEY']
     
     # Pass the actual app object to the thread to create a context
-    app = current_app._get_current_object()
-    thread = threading.Thread(target=perform_sync, args=(data, app_config, app))
-    thread.start()
+    app_obj = current_app._get_current_object()
+    socketio.start_background_task(perform_sync, data, app_config, app_obj)
     
     return jsonify({'status': 'job_accepted'})
 
@@ -479,6 +502,27 @@ def receive_delete_job():
     except Exception as e:
         print(f"Error deleting file {filename}: {e}")
         return jsonify({'error': str(e)}), 500
+
+@mirror_bp.route('/job/cancel', methods=['POST'])
+def receive_cancel_job():
+    """
+    Endpoint for Main to cancel a sync operation on this Mirror.
+    Expects: {
+        'filename': '...'
+    }
+    """
+    data = request.json
+    filename = data.get('filename')
+    
+    if not filename:
+        return jsonify({'error': 'Filename required'}), 400
+        
+    if filename == 'ALL':
+        ABORT_SYNCS.add('ALL')
+        return jsonify({'success': True, 'message': 'All syncs cancelled'})
+        
+    ABORT_SYNCS.add(filename)
+    return jsonify({'success': True, 'message': f'Sync for {filename} cancelled'})
 
 import fcntl
 import sys
