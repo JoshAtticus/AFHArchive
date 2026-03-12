@@ -165,156 +165,156 @@ def _perform_sync_logic(job_data, app_config):
             
         local_path = os.path.join(upload_dir, filename)
     
-    try:
-        headers = {'X-Mirror-Api-Key': api_key}
-        
-        # Retry loop for the connection start
-        retries = 0
-        max_retries = 5
-        response = None
-        
-        while retries < max_retries:
-            try:
-                logger.debug(f"Attempting connection (Try {retries+1}/{max_retries})...")
-                start_time = time.time()
-                response = requests.get(download_url, headers=headers, stream=True, timeout=30)
-                connect_time = time.time() - start_time
-                logger.debug(f"Connection established in {connect_time:.2f}s. Status: {response.status_code}")
-                
-                if response.status_code == 200:
-                    break
-                elif response.status_code in [502, 503, 504]:
-                     logger.warning(f"Server returned {response.status_code}, retrying...")
-                else:
-                    logger.error(f"Download failed with status {response.status_code}")
-                    logger.error(f"Response headers: {response.headers}")
-                    raise Exception(f"Download failed with status {response.status_code}")
-            except Exception as e:
-                logger.error(f"Connection attempt {retries+1} failed: {e}")
-            
-            retries += 1
-            if retries < max_retries:
-                time.sleep(5 * retries)
-            
-        if not response or response.status_code != 200:
-             raise Exception(f"Failed to connect after {max_retries} retries. Status: {response.status_code if response else 'None'}")
-
-        logger.info(f"Starting download stream for {filename}...")
-        with open(local_path, 'wb') as f:
-            downloaded = 0
-            last_progress_time = time.time()
-            start_download_time = time.time()
-            last_percent_reported = 0
-            
-            for chunk in response.iter_content(chunk_size=65536):
-                if filename in ABORT_SYNCS or 'ALL' in ABORT_SYNCS:
-                    logger.warning(f"Sync aborted for {filename}")
-                    ABORT_SYNCS.discard(filename)
-                    return # Exit early without completing or reporting error
-                    
-                if chunk:
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    
-                    # Yield to Gevent event loop to prevent blocking other requests (like progress reporting)
-                    time.sleep(0)
-                    
-                    percent = int((downloaded / file_size) * 100) if file_size else 0
-                    
-                    # Report progress every 1 second or every 1%
-                    should_report = (time.time() - last_progress_time > 1) or (percent - last_percent_reported >= 1)
-                    
-                    if should_report:
-                        speed = downloaded / max((time.time() - start_download_time), 0.001)
-                        logger.debug(f"Download progress: {percent}% ({downloaded}/{file_size} bytes) - Speed: {speed/1024/1024:.2f} MB/s")
-                        try:
-                            requests.post(f"{main_url.rstrip('/')}/api/mirror/progress", json={
-                                'api_key': api_key,
-                                'upload_id': file_id,
-                                'progress': percent,
-                                'downloaded_bytes': downloaded,
-                                'total_bytes': file_size
-                            }, timeout=5)
-                            last_progress_time = time.time()
-                            last_percent_reported = percent
-                        except Exception as e:
-                            logger.warning(f"Failed to report progress: {e}")
-                            pass # Ignore progress report failures
-            
-            total_time = time.time() - start_download_time
-            logger.info(f"Download finished in {total_time:.2f}s. Average speed: {file_size/total_time/1024/1024:.2f} MB/s")
-                
-        # Verify MD5
-                
-        # Verify MD5
-        local_md5 = hashlib.md5()
-        with open(local_path, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                local_md5.update(chunk)
-        
-        calculated_md5 = local_md5.hexdigest()
-        if calculated_md5 != md5_hash:
-            actual_size = os.path.getsize(local_path)
-            error_msg = f"MD5 mismatch. Expected: {md5_hash}, Got: {calculated_md5}. Expected Size: {file_size}, Got Size: {actual_size}"
-            logger.error(error_msg)
-            raise Exception(error_msg)
-            
-        # Report success
-        requests.post(f"{main_url.rstrip('/')}/api/mirror/sync_complete", json={
-            'api_key': api_key,
-            'upload_id': file_id,
-            'status': 'synced',
-            'error_message': None
-        }, timeout=10)
-        print(f"Sync complete for {filename}")
-
-        # Update local DB if app context is active
         try:
-            # Check if upload exists
-            upload = Upload.query.get(file_id)
-            if not upload:
-                # Get system user for mirror uploads
-                mirror_user = get_or_create_mirror_user()
-                upload = Upload(id=file_id, user_id=mirror_user.id)
-                db.session.add(upload)
-            
-            # Update fields
-            upload.filename = filename
-            upload.original_filename = job_data.get('original_filename', filename)
-            upload.file_path = filename # On mirror, path is just filename in upload folder
-            upload.file_size = file_size
-            upload.md5_hash = md5_hash
-            upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
-            upload.device_model = job_data.get('device_model', 'Unknown')
-            upload.afh_link = job_data.get('afh_link')
-            upload.xda_thread = job_data.get('xda_thread')
-            upload.notes = job_data.get('notes')
-            upload.afh_md5_status = job_data.get('afh_md5_status')
-            upload.status = 'approved'
-            upload.uploaded_at = datetime.utcnow()
-            
-            db.session.commit()
-            logger.info(f"Local DB updated for {filename}")
-        except Exception as db_e:
-            logger.error(f"Failed to update local DB: {db_e}")
-            db.session.rollback()
+            headers = {'X-Mirror-Api-Key': api_key}
         
-    except Exception as e:
-        logger.error(f"Sync failed for {filename}: {e}")
-        # Report error
-        try:
+            # Retry loop for the connection start
+            retries = 0
+            max_retries = 5
+            response = None
+        
+            while retries < max_retries:
+                try:
+                    logger.debug(f"Attempting connection (Try {retries+1}/{max_retries})...")
+                    start_time = time.time()
+                    response = requests.get(download_url, headers=headers, stream=True, timeout=30)
+                    connect_time = time.time() - start_time
+                    logger.debug(f"Connection established in {connect_time:.2f}s. Status: {response.status_code}")
+                
+                    if response.status_code == 200:
+                        break
+                    elif response.status_code in [502, 503, 504]:
+                         logger.warning(f"Server returned {response.status_code}, retrying...")
+                    else:
+                        logger.error(f"Download failed with status {response.status_code}")
+                        logger.error(f"Response headers: {response.headers}")
+                        raise Exception(f"Download failed with status {response.status_code}")
+                except Exception as e:
+                    logger.error(f"Connection attempt {retries+1} failed: {e}")
+            
+                retries += 1
+                if retries < max_retries:
+                    time.sleep(5 * retries)
+            
+            if not response or response.status_code != 200:
+                 raise Exception(f"Failed to connect after {max_retries} retries. Status: {response.status_code if response else 'None'}")
+
+            logger.info(f"Starting download stream for {filename}...")
+            with open(local_path, 'wb') as f:
+                downloaded = 0
+                last_progress_time = time.time()
+                start_download_time = time.time()
+                last_percent_reported = 0
+            
+                for chunk in response.iter_content(chunk_size=65536):
+                    if filename in ABORT_SYNCS or 'ALL' in ABORT_SYNCS:
+                        logger.warning(f"Sync aborted for {filename}")
+                        ABORT_SYNCS.discard(filename)
+                        return # Exit early without completing or reporting error
+                    
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                    
+                        # Yield to Gevent event loop to prevent blocking other requests (like progress reporting)
+                        time.sleep(0)
+                    
+                        percent = int((downloaded / file_size) * 100) if file_size else 0
+                    
+                        # Report progress every 1 second or every 1%
+                        should_report = (time.time() - last_progress_time > 1) or (percent - last_percent_reported >= 1)
+                    
+                        if should_report:
+                            speed = downloaded / max((time.time() - start_download_time), 0.001)
+                            logger.debug(f"Download progress: {percent}% ({downloaded}/{file_size} bytes) - Speed: {speed/1024/1024:.2f} MB/s")
+                            try:
+                                requests.post(f"{main_url.rstrip('/')}/api/mirror/progress", json={
+                                    'api_key': api_key,
+                                    'upload_id': file_id,
+                                    'progress': percent,
+                                    'downloaded_bytes': downloaded,
+                                    'total_bytes': file_size
+                                }, timeout=5)
+                                last_progress_time = time.time()
+                                last_percent_reported = percent
+                            except Exception as e:
+                                logger.warning(f"Failed to report progress: {e}")
+                                pass # Ignore progress report failures
+            
+                total_time = time.time() - start_download_time
+                logger.info(f"Download finished in {total_time:.2f}s. Average speed: {file_size/total_time/1024/1024:.2f} MB/s")
+                
+            # Verify MD5
+                
+            # Verify MD5
+            local_md5 = hashlib.md5()
+            with open(local_path, "rb") as f:
+                for chunk in iter(lambda: f.read(4096), b""):
+                    local_md5.update(chunk)
+        
+            calculated_md5 = local_md5.hexdigest()
+            if calculated_md5 != md5_hash:
+                actual_size = os.path.getsize(local_path)
+                error_msg = f"MD5 mismatch. Expected: {md5_hash}, Got: {calculated_md5}. Expected Size: {file_size}, Got Size: {actual_size}"
+                logger.error(error_msg)
+                raise Exception(error_msg)
+            
+            # Report success
             requests.post(f"{main_url.rstrip('/')}/api/mirror/sync_complete", json={
                 'api_key': api_key,
                 'upload_id': file_id,
-                'status': 'error',
-                'error_message': str(e)
+                'status': 'synced',
+                'error_message': None
             }, timeout=10)
-        except Exception as report_error:
-            logger.error(f"Failed to report error to main server: {report_error}")
+            print(f"Sync complete for {filename}")
+
+            # Update local DB if app context is active
+            try:
+                # Check if upload exists
+                upload = Upload.query.get(file_id)
+                if not upload:
+                    # Get system user for mirror uploads
+                    mirror_user = get_or_create_mirror_user()
+                    upload = Upload(id=file_id, user_id=mirror_user.id)
+                    db.session.add(upload)
+            
+                # Update fields
+                upload.filename = filename
+                upload.original_filename = job_data.get('original_filename', filename)
+                upload.file_path = filename # On mirror, path is just filename in upload folder
+                upload.file_size = file_size
+                upload.md5_hash = md5_hash
+                upload.device_manufacturer = job_data.get('device_manufacturer', 'Unknown')
+                upload.device_model = job_data.get('device_model', 'Unknown')
+                upload.afh_link = job_data.get('afh_link')
+                upload.xda_thread = job_data.get('xda_thread')
+                upload.notes = job_data.get('notes')
+                upload.afh_md5_status = job_data.get('afh_md5_status')
+                upload.status = 'approved'
+                upload.uploaded_at = datetime.utcnow()
+            
+                db.session.commit()
+                logger.info(f"Local DB updated for {filename}")
+            except Exception as db_e:
+                logger.error(f"Failed to update local DB: {db_e}")
+                db.session.rollback()
         
-        # Clean up partial file
-        if os.path.exists(local_path):
-            os.remove(local_path)
+        except Exception as e:
+            logger.error(f"Sync failed for {filename}: {e}")
+            # Report error
+            try:
+                requests.post(f"{main_url.rstrip('/')}/api/mirror/sync_complete", json={
+                    'api_key': api_key,
+                    'upload_id': file_id,
+                    'status': 'error',
+                    'error_message': str(e)
+                }, timeout=10)
+            except Exception as report_error:
+                logger.error(f"Failed to report error to main server: {report_error}")
+        
+            # Clean up partial file
+            if os.path.exists(local_path):
+                os.remove(local_path)
             
     except Exception as outer_e:
         print(f"CRITICAL ERROR in perform_sync logic: {outer_e}")
