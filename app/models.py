@@ -75,6 +75,11 @@ class Upload(db.Model):
     
     # Replication status
     is_on_main_server = Column(Boolean, default=True)
+    
+    # Internet Archive status
+    ia_item_id = Column(String(100), nullable=True)
+    ia_status = Column(String(20), default='pending') # pending, syncing, synced, error
+    ia_error_message = Column(Text)
 
     # Foreign keys
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)

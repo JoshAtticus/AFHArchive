@@ -310,6 +310,25 @@ def take_down_announcement(announcement_id):
     flash('Announcement has been taken down', 'success')
     return redirect(url_for('admin.send_announcement'))
 
+@admin_bp.route('/upload/<int:upload_id>/ia-upload', methods=['POST'])
+@login_required
+@admin_required
+def upload_to_ia(upload_id):
+    from app.utils.ia_uploader import upload_to_ia_background
+    from flask import current_app
+    from app import socketio
+
+    upload = Upload.query.get_or_404(upload_id)
+    
+    if upload.ia_status in ['syncing', 'synced']:
+        flash(f'File is already {upload.ia_status} to Internet Archive', 'info')
+        return redirect(url_for('admin.edit_upload', upload_id=upload.id))
+        
+    app = current_app._get_current_object()
+    socketio.start_background_task(upload_to_ia_background, app, upload.id)
+    flash('Started background upload to Internet Archive.', 'success')
+    return redirect(url_for('admin.edit_upload', upload_id=upload.id))
+
 @admin_bp.route('/upload/<int:upload_id>/edit', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -719,13 +738,26 @@ def server_tools():
 
         uploads_enabled = SiteConfig.get_bool('uploads_enabled', True)
         
+        ia_s3_access_key = SiteConfig.get_value('ia_s3_access_key', '')
+        ia_s3_secret_key = SiteConfig.get_value('ia_s3_secret_key', '')
+        ia_speed_limit_kbps = SiteConfig.get_value('ia_speed_limit_kbps', '')
+        
     except Exception as e:
         current_app.logger.error(f"Error getting server stats: {str(e)}")
         server_stats = {}
         flash(f'Error retrieving server statistics: {str(e)}', 'warning')
     
-    return render_template('admin/server_tools.html', stats=server_stats, uploads_enabled=uploads_enabled)
+    return render_template('admin/server_tools.html', stats=server_stats, uploads_enabled=uploads_enabled, ia_s3_access_key=ia_s3_access_key, ia_s3_secret_key=ia_s3_secret_key, ia_speed_limit_kbps=ia_speed_limit_kbps)
 
+@admin_bp.route('/server-tools/ia-settings', methods=['POST'])
+@login_required
+@admin_required
+def set_ia_settings():
+    SiteConfig.set_value('ia_s3_access_key', request.form.get('ia_s3_access_key', ''))
+    SiteConfig.set_value('ia_s3_secret_key', request.form.get('ia_s3_secret_key', ''))
+    SiteConfig.set_value('ia_speed_limit_kbps', request.form.get('ia_speed_limit_kbps', ''))
+    flash('Internet Archive settings updated successfully', 'success')
+    return redirect(url_for('admin.server_tools'))
 
 @admin_bp.route('/server-tools/uploads', methods=['POST'])
 @login_required
@@ -1495,13 +1527,16 @@ def trigger_sync(upload_id):
         flash('No targets selected', 'error')
         return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
         
-    # Separate 'main' from numeric mirror IDs
+    # Separate 'main' and 'ia' from numeric mirror IDs
     mirror_ids = []
     sync_to_main_requested = False
+    sync_to_ia_requested = False
     
     for mid in mirror_ids_raw:
         if mid == 'main':
             sync_to_main_requested = True
+        elif mid == 'ia':
+            sync_to_ia_requested = True
         else:
             mirror_ids.append(int(mid))
             
@@ -1528,6 +1563,17 @@ def trigger_sync(upload_id):
             
             socketio.start_background_task(run_sync_to_main_async, app, upload.id, source_mirror_id)
             flash('Sync to Main Server started in background', 'info')
+
+    # Handle sync to IA
+    if sync_to_ia_requested:
+        if upload.ia_status not in ['syncing', 'synced']:
+            from app.utils.ia_uploader import upload_to_ia_background
+            
+            app = current_app._get_current_object()
+            socketio.start_background_task(upload_to_ia_background, app, upload.id)
+            flash('Upload to Internet Archive started in background', 'info')
+        else:
+            flash(f'File is already {upload.ia_status} to Internet Archive', 'info')
 
     # Handle sync to mirrors
     if mirror_ids:
@@ -1590,6 +1636,9 @@ def delete_replica(upload_id, mirror_id):
     if upload.is_on_main_server:
         copies += 1
         
+    if upload.ia_status == 'synced':
+        copies += 1
+        
     other_replicas = FileReplica.query.filter(
         FileReplica.upload_id == upload.id,
         FileReplica.mirror_id != mirror_id,
@@ -1633,7 +1682,8 @@ def trigger_bulk_sync():
         flash('No mirrors selected', 'error')
         return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
         
-    mirror_ids = [int(mid) for mid in mirror_ids]
+    sync_to_ia = 'ia' in mirror_ids
+    mirror_ids = [int(mid) for mid in mirror_ids if mid != 'ia']
     upload_ids = [int(uid) for uid in upload_ids]
     
     total_triggered = 0
@@ -1643,6 +1693,12 @@ def trigger_bulk_sync():
         upload = Upload.query.get(upload_id)
         if not upload or upload.status != 'approved':
             continue
+            
+        if sync_to_ia and upload.ia_status not in ['syncing', 'synced']:
+            from app.utils.ia_uploader import upload_to_ia_background
+            app = current_app._get_current_object()
+            socketio.start_background_task(upload_to_ia_background, app, upload.id)
+            total_triggered += 1
             
         # Check storage space for each mirror
         valid_mirror_ids = []
@@ -1702,6 +1758,9 @@ def trigger_bulk_delete():
 
         copies = 0
         if upload.is_on_main_server:
+            copies += 1
+            
+        if upload.ia_status == 'synced':
             copies += 1
 
         other_replicas = FileReplica.query.filter(

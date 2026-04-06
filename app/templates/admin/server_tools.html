@@ -254,6 +254,37 @@
     </div>
 </div>
 
+<!-- Internet Archive Integration -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-archive"></i> {{ _('Internet Archive Integration') }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.set_ia_settings') }}">
+                    <div class="mb-3">
+                        <label for="ia_s3_access_key" class="form-label">{{ _('IA S3 Access Key') }}</label>
+                        <input type="text" class="form-control" id="ia_s3_access_key" name="ia_s3_access_key" value="{{ ia_s3_access_key }}">
+                        <div class="form-text">{{ _('Your Internet Archive S3 Access Key') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ia_s3_secret_key" class="form-label">{{ _('IA S3 Secret Key') }}</label>
+                        <input type="password" class="form-control" id="ia_s3_secret_key" name="ia_s3_secret_key" value="{{ ia_s3_secret_key }}">
+                        <div class="form-text">{{ _('Your Internet Archive S3 Secret Key') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ia_speed_limit_kbps" class="form-label">{{ _('Upload Speed Limit (KB/s)') }}</label>
+                        <input type="number" class="form-control" id="ia_speed_limit_kbps" name="ia_speed_limit_kbps" value="{{ ia_speed_limit_kbps }}" placeholder="0 (Unlimited)">
+                        <div class="form-text">{{ _('Limit the upload speed to Internet Archive (0 for unlimited)') }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ _('Save IA Settings') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Database Information -->
 <div class="row">
     <div class="col-md-12">

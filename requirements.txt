@@ -21,3 +21,4 @@ py7zr
 resend
 psutil
 gevent-websocket
+internetarchive

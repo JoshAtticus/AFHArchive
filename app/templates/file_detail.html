@@ -147,6 +147,17 @@
                         </a>
                         {% endif %}
 
+                        {% if upload.ia_status == 'synced' and upload.ia_item_id %}
+                        <!-- Internet Archive Source -->
+                        <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id='ia') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-archive text-info"></i> {{ _('Internet Archive') }}
+                                <small class="text-muted ms-2">(Archive.org)</small>
+                            </div>
+                            <span class="badge bg-info rounded-pill">{{ _('Archive') }}</span>
+                        </a>
+                        {% endif %}
+
                         {% if available_replicas %}
                             {% for replica in available_replicas %}
                                 <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id=replica.mirror.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">

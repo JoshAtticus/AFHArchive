@@ -370,19 +370,20 @@ def download(upload_id):
     in_direct_download_test = is_in_test_group('direct_download')
     
     # Check if a specific mirror was requested
-    mirror_id = request.args.get('mirror_id', type=int)
+    mirror_id_str = request.args.get('mirror_id', '')
     mirror_url = None
     
-    if mirror_id:
+    if mirror_id_str == 'ia':
+        if upload.ia_status == 'synced' and upload.ia_item_id:
+            mirror_url = f"https://archive.org/download/{upload.ia_item_id}/{upload.original_filename}"
+    elif mirror_id_str.isdigit():
+        mirror_id = int(mirror_id_str)
         mirror = Mirror.query.get(mirror_id)
         if mirror and mirror.is_active:
             # Check if file is synced to this mirror
             replica = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=mirror.id, status='synced').first()
             if replica:
                 # Construct mirror download URL
-                # Assuming mirror has an endpoint like /api/download/<id> or similar
-                # But wait, mirrors are just mirrors. They might not have the same routes.
-                # If the mirror runs the same code, it has /api/download/<id>
                 mirror_url = f"{mirror.url.rstrip('/')}/api/download/{upload.id}"
     
     # Show thank you page that will auto-start download

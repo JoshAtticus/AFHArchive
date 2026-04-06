@@ -77,6 +77,9 @@
                                     {% if upload.is_on_main_server %}
                                         <span class="badge bg-success">Present</span>
                                         {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
+                                        {% if upload.ia_status == 'synced' %}
+                                            {% set synced_count = synced_count + 2 %}
+                                        {% endif %}
                                         {% if synced_count >= 2 %}
                                             <button type="submit" form="del-main-{{ upload.id }}" class="btn btn-sm py-0 px-1 btn-outline-danger ms-1" title="Delete from Main Server">
                                                 <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
@@ -84,6 +87,22 @@
                                         {% endif %}
                                     {% else %}
                                         <span class="badge bg-secondary">Not Present</span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Internet Archive Status -->
+                                <div class="mb-1">
+                                    <strong>Archive:</strong>
+                                    {% if upload.ia_status == 'synced' %}
+                                        <span class="badge bg-success">Synced</span>
+                                    {% elif upload.ia_status == 'syncing' %}
+                                        <span class="badge bg-info">Syncing</span>
+                                    {% elif upload.ia_status == 'error' %}
+                                        <span class="badge bg-danger" title="{{ upload.ia_error_message }}">Error</span>
+                                    {% elif upload.ia_status == 'pending' %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not Synced</span>
                                     {% endif %}
                                 </div>
 
@@ -159,6 +178,15 @@
                             </div>
 
                             <p>Select targets to sync to:</p>
+                            <!-- Internet Archive Target -->
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="mirrors" value="ia" id="bulk_ia">
+                                <label class="form-check-label" for="bulk_ia">
+                                    <i class="fas fa-archive text-info"></i> <strong>Internet Archive</strong>
+                                    <br>
+                                    <small class="text-muted">Upload to Archive.org</small>
+                                </label>
+                            </div>
                             {% for mirror in mirrors %}
                             {% set limit_mb = mirror.storage_limit_gb * 1024 %}
                             {% set free_mb = limit_mb - mirror.storage_used_mb %}
@@ -224,6 +252,9 @@
         {% for upload in uploads.items %}
             {% if upload.is_on_main_server %}
                 {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
+                {% if upload.ia_status == 'synced' %}
+                    {% set synced_count = synced_count + 2 %}
+                {% endif %}
                 {% if synced_count >= 2 %}
                     <form id="del-main-{{ upload.id }}" action="{{ url_for('admin.delete_from_main_route', upload_id=upload.id, page=uploads.page, sort=current_sort, order=current_order) }}" method="POST" class="d-none"></form>
                 {% endif %}
@@ -262,6 +293,18 @@
                             </div>
 
                             <p>Select targets to sync to:</p>
+                            
+                            <!-- Internet Archive Target -->
+                            {% if upload.ia_status != 'synced' and upload.ia_status != 'syncing' %}
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="mirrors" value="ia" id="m_ia_{{ upload.id }}">
+                                <label class="form-check-label" for="m_ia_{{ upload.id }}">
+                                    <i class="fas fa-archive text-info"></i> <strong>Internet Archive</strong>
+                                    <br>
+                                    <small class="text-muted">Upload to Archive.org</small>
+                                </label>
+                            </div>
+                            {% endif %}
                             
                             <!-- Main Server Target -->
                             {% if not upload.is_on_main_server %}

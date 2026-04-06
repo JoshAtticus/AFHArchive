@@ -165,6 +165,38 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Internet Archive Integration -->
+                            <tr>
+                                <td>Internet Archive</td>
+                                <td>
+                                    {% if upload.ia_status == 'synced' %}
+                                        <span class="badge bg-success">Synced</span>
+                                        <br><a href="https://archive.org/details/{{ upload.ia_item_id }}" target="_blank" class="small">View Item</a>
+                                    {% elif upload.ia_status == 'syncing' %}
+                                        <span class="badge bg-info">Syncing</span>
+                                    {% elif upload.ia_status == 'error' %}
+                                        <span class="badge bg-danger">Error</span>
+                                        {% if upload.ia_error_message %}
+                                            <div class="text-danger small mt-1" style="font-size: 0.75rem; word-wrap: break-word;">
+                                                {{ upload.ia_error_message }}
+                                            </div>
+                                        {% endif %}
+                                    {% elif upload.ia_status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Not uploaded</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if upload.ia_status != 'syncing' and upload.ia_status != 'synced' %}
+                                        <form method="POST" action="{{ url_for('admin.upload_to_ia', upload_id=upload.id) }}" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-primary" title="Upload to IA">
+                                                <i class="fas fa-upload"></i> Upload
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
                             {% for mirror in mirrors %}
                                 {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
                                 <tr>

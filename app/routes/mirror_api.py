@@ -127,6 +127,32 @@ def sync_complete():
         
     return jsonify({'status': 'ok'})
 
+@mirror_bp.route('/ia_upload_complete', methods=['POST'])
+def ia_upload_complete():
+    """Mirror reports a file has been uploaded to IA"""
+    from app.models import Upload, FileReplica
+    data = request.json
+    api_key = data.get('api_key')
+    mirror = Mirror.query.filter_by(api_key=api_key).first()
+    
+    if not mirror:
+        return jsonify({'error': 'Invalid API key'}), 401
+        
+    upload_id = data.get('upload_id')
+    status = data.get('status') # 'synced' or 'error'
+    error_msg = data.get('error_message')
+    ia_item_id = data.get('ia_item_id')
+    
+    upload = Upload.query.get(upload_id)
+    if upload:
+        upload.ia_status = status
+        upload.ia_error_message = error_msg
+        if ia_item_id:
+            upload.ia_item_id = ia_item_id
+        db.session.commit()
+        
+    return jsonify({'status': 'ok'})
+
 # --- Mirror Client Logic (To be run on the Mirror Server) ---
 
 def perform_sync(job_data, app_config, app_obj=None):
@@ -467,6 +493,31 @@ def receive_sync_job():
     socketio.start_background_task(perform_sync, data, app_config, app_obj)
     
     return jsonify({'status': 'job_accepted'})
+
+@mirror_bp.route('/job/upload_ia', methods=['POST'])
+def receive_upload_ia_job():
+    """
+    Endpoint for Main to trigger IA upload from this Mirror.
+    Expects data payload to have IA keys and item details.
+    """
+    data = request.json
+    
+    app_config = {
+        'UPLOAD_FOLDER': current_app.config['UPLOAD_FOLDER'],
+        'MIRROR_API_KEY': current_app.config.get('MIRROR_API_KEY'),
+    }
+    
+    if not app_config['MIRROR_API_KEY']:
+        return jsonify({'error': 'This server is not configured as a mirror'}), 400
+        
+    data['api_key'] = app_config['MIRROR_API_KEY']
+    
+    app_obj = current_app._get_current_object()
+    
+    from app.utils.ia_uploader import upload_to_ia_background_for_mirror
+    socketio.start_background_task(upload_to_ia_background_for_mirror, app_obj, data)
+    
+    return jsonify({'status': 'ia_upload_started'})
 
 @mirror_bp.route('/job/delete', methods=['POST'])
 def receive_delete_job():

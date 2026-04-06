@@ -155,6 +155,9 @@ def delete_from_main(upload_id):
         
     # Check replicas
     synced_replicas = FileReplica.query.filter_by(upload_id=upload.id, status='synced').count()
+    if upload.ia_status == 'synced':
+        synced_replicas += 2 # IA counts as multiple valid replicas since it's canonical
+        
     if synced_replicas < 2:
         return False, f"Not enough replicas (Found {synced_replicas}, need 2)"
         
