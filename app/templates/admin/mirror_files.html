@@ -94,9 +94,14 @@
                                 <div class="mb-1">
                                     <strong>Archive:</strong>
                                     {% if upload.ia_status == 'synced' %}
-                                        <span class="badge bg-success">Synced</span>
+                                        <a href="https://archive.org/details/{{ upload.ia_item_id }}" target="_blank" class="text-decoration-none">
+                                            <span class="badge bg-success">Synced</span>
+                                        </a>
                                     {% elif upload.ia_status == 'syncing' %}
                                         <span class="badge bg-info">Syncing</span>
+                                        <a href="{{ url_for('admin.edit_upload', upload_id=upload.id) }}" class="small text-warning ms-1" title="May be stuck — click to reset or mark as synced">
+                                            <i class="fas fa-exclamation-triangle"></i> Fix
+                                        </a>
                                     {% elif upload.ia_status == 'error' %}
                                         <span class="badge bg-danger" title="{{ upload.ia_error_message }}">Error</span>
                                     {% elif upload.ia_status == 'pending' %}

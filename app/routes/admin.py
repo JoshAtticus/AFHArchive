@@ -329,6 +329,40 @@ def upload_to_ia(upload_id):
     flash('Started background upload to Internet Archive.', 'success')
     return redirect(url_for('admin.edit_upload', upload_id=upload.id))
 
+@admin_bp.route('/upload/<int:upload_id>/ia-reset', methods=['POST'])
+@login_required
+@admin_required
+def ia_reset(upload_id):
+    """Reset a stuck 'syncing' IA status back to 'pending' so it can be retried."""
+    upload = Upload.query.get_or_404(upload_id)
+    upload.ia_status = 'pending'
+    upload.ia_error_message = 'Manually reset by admin'
+    db.session.commit()
+    flash('Internet Archive status has been reset to pending. You can now retry the upload.', 'success')
+    return redirect(url_for('admin.edit_upload', upload_id=upload.id))
+
+@admin_bp.route('/upload/<int:upload_id>/ia-mark-synced', methods=['POST'])
+@login_required
+@admin_required
+def ia_mark_synced(upload_id):
+    """Manually mark a file as synced to Internet Archive with a provided item ID."""
+    upload = Upload.query.get_or_404(upload_id)
+    ia_item_id = request.form.get('ia_item_id', '').strip()
+    if not ia_item_id:
+        flash('Please provide a valid Internet Archive item ID or URL.', 'danger')
+        return redirect(url_for('admin.edit_upload', upload_id=upload.id))
+
+    # Accept full archive.org URLs and extract item ID
+    if 'archive.org/details/' in ia_item_id:
+        ia_item_id = ia_item_id.split('archive.org/details/')[-1].split('/')[0].split('?')[0]
+
+    upload.ia_item_id = ia_item_id
+    upload.ia_status = 'synced'
+    upload.ia_error_message = None
+    db.session.commit()
+    flash(f'File manually marked as synced to Internet Archive (item: {ia_item_id}).', 'success')
+    return redirect(url_for('admin.edit_upload', upload_id=upload.id))
+
 @admin_bp.route('/upload/<int:upload_id>/edit', methods=['GET', 'POST'])
 @login_required
 @admin_required
