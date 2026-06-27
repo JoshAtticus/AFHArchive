@@ -48,8 +48,10 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
         ia_secret_key = SiteConfig.get_value('ia_s3_secret_key')
         
         if not ia_access_key or not ia_secret_key:
+            error_msg = "IA Auth not configured in SiteConfig (ia_s3_access_key, ia_s3_secret_key)."
+            logger.error(error_msg)
             upload.ia_status = 'error'
-            upload.ia_error_message = "IA Auth not configured in SiteConfig (ia_s3_access_key, ia_s3_secret_key)."
+            upload.ia_error_message = error_msg
             db.session.commit()
             return
             
@@ -96,7 +98,30 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
         speed_limit_kbps = SiteConfig.get_value('ia_speed_limit_kbps', '')
 
         temp_file_path = None
-        file_to_upload = upload.file_path
+        
+        # Convert relative path to absolute path using app_root logic
+        if not os.path.isabs(upload.file_path):
+            app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            
+            if upload.file_path.startswith('uploads/') or upload.file_path.startswith('uploads\\'):
+                 file_to_upload = os.path.join(app_root, upload.file_path)
+            else:
+                 upload_dir = app.config.get('UPLOAD_FOLDER', 'uploads')
+                 file_to_upload = os.path.join(upload_dir, upload.file_path)
+                 if not os.path.isabs(file_to_upload):
+                     file_to_upload = os.path.join(app_root, file_to_upload)
+        else:
+            file_to_upload = upload.file_path
+            
+        if not os.path.exists(file_to_upload):
+            # Try fallback to uploads folder directly
+            fallback_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), os.path.basename(upload.file_path))
+            if not os.path.isabs(fallback_path):
+                app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                fallback_path = os.path.join(app_root, fallback_path)
+                
+            if os.path.exists(fallback_path):
+                file_to_upload = fallback_path
         
         # Decide which mirror should upload
         use_mirror_for_upload = False
@@ -107,14 +132,16 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
             if target_mirror:
                 use_mirror_for_upload = True
         
-        if not use_mirror_for_upload and not os.path.exists(upload.file_path):
+        if not use_mirror_for_upload and not os.path.exists(file_to_upload):
             # No specific mirror requested, but main server doesn't have it either
             target_mirror = FileReplica.query.filter_by(upload_id=upload.id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
             if target_mirror:
                 use_mirror_for_upload = True
             else:
+                error_msg = f"File {file_to_upload} not found on main server and no active mirrors have it."
+                logger.error(error_msg)
                 upload.ia_status = 'error'
-                upload.ia_error_message = f"File {upload.file_path} not found on main server and no active mirrors have it."
+                upload.ia_error_message = error_msg
                 db.session.commit()
                 return
             
