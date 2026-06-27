@@ -37,7 +37,7 @@ def get_ia_item_id(upload):
     item_id = f"afharchive_{upload.id}_{original_name}"
     return "".join([c for c in item_id if c.isalnum() or c in ("_","-")]).lower()
 
-def upload_to_ia_background(app, upload_id):
+def upload_to_ia_background(app, upload_id, source_mirror_id=None):
     with app.app_context():
         upload = Upload.query.get(upload_id)
         if not upload:
@@ -98,20 +98,32 @@ def upload_to_ia_background(app, upload_id):
         temp_file_path = None
         file_to_upload = upload.file_path
         
-        if not os.path.exists(upload.file_path):
-            # Tell the mirror to upload it directly to IA
-            synced_replica = FileReplica.query.filter_by(upload_id=upload.id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
-            if not synced_replica:
+        # Decide which mirror should upload
+        use_mirror_for_upload = False
+        target_mirror = None
+        
+        if source_mirror_id and source_mirror_id != 'main':
+            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=source_mirror_id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
+            if target_mirror:
+                use_mirror_for_upload = True
+        
+        if not use_mirror_for_upload and not os.path.exists(upload.file_path):
+            # No specific mirror requested, but main server doesn't have it either
+            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
+            if target_mirror:
+                use_mirror_for_upload = True
+            else:
                 upload.ia_status = 'error'
                 upload.ia_error_message = f"File {upload.file_path} not found on main server and no active mirrors have it."
                 db.session.commit()
                 return
             
-            logger.info(f"Downloading skipped. Asking mirror {synced_replica.mirror.name} to upload to IA directly")
-            mirror_url = f"{synced_replica.mirror.url.rstrip('/')}/api/mirror/job/upload_ia"
+        if use_mirror_for_upload and target_mirror:
+            logger.info(f"Downloading skipped. Asking mirror {target_mirror.mirror.name} to upload to IA directly")
+            mirror_url = f"{target_mirror.mirror.url.rstrip('/')}/api/mirror/job/upload_ia"
             
             try:
-                headers = {'X-Mirror-Api-Key': synced_replica.mirror.api_key}
+                headers = {'X-Mirror-Api-Key': target_mirror.mirror.api_key}
                 payload = {
                     'file_id': upload.id,
                     'ia_access_key': ia_access_key,
@@ -119,6 +131,7 @@ def upload_to_ia_background(app, upload_id):
                     'ia_speed_limit_kbps': speed_limit_kbps,
                     'metadata': md,
                     'item_id': item_id,
+                    'main_server_url': main_url,
                     'original_filename': upload.original_filename
                 }
                 
@@ -129,9 +142,9 @@ def upload_to_ia_background(app, upload_id):
                 db.session.commit()
                 return  # Mirror is handling it
             except Exception as e:
-                logger.error(f"Failed to tell mirror {synced_replica.mirror.name} to upload: {e}")
+                logger.error(f"Failed to tell mirror {target_mirror.mirror.name} to upload: {e}")
                 upload.ia_status = 'error'
-                upload.ia_error_message = f"Failed to tell mirror {synced_replica.mirror.name} to upload: {e}"
+                upload.ia_error_message = f"Failed to tell mirror {target_mirror.mirror.name} to upload: {e}"
                 db.session.commit()
                 return
 

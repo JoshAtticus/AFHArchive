@@ -71,9 +71,7 @@ def index():
     # If this is a mirror server, block access to the home page
     if current_app.config.get('MAIN_SERVER_URL'):
         return render_template('errors/generic.html', 
-                             error_code=403, 
-                             error_title="Mirror Server", 
-                             error_message="This is a mirror server. Please visit the main site to browse files."), 403
+                             error={'code': 403, 'name': "Mirror Server", 'description': "This is a mirror server. Please visit the main site to browse files."}), 403
 
     # Check if there's a file ID parameter for AFH link redirection
     fid = request.args.get('fid')

@@ -1570,7 +1570,7 @@ def trigger_sync(upload_id):
             from app.utils.ia_uploader import upload_to_ia_background
             
             app = current_app._get_current_object()
-            socketio.start_background_task(upload_to_ia_background, app, upload.id)
+            socketio.start_background_task(upload_to_ia_background, app, upload.id, source_mirror_id)
             flash('Upload to Internet Archive started in background', 'info')
         else:
             flash(f'File is already {upload.ia_status} to Internet Archive', 'info')
