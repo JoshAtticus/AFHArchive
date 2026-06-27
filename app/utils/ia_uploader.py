@@ -75,7 +75,7 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
             description += f"Original AFH Link: <a href='{upload.afh_link}' rel='nofollow'>{upload.afh_link}</a><br>"
         if upload.xda_thread:
             description += f"XDA Forums Link: <a href='{upload.xda_thread}' rel='nofollow'>{upload.xda_thread}</a><br>"
-        description += f"AFHArchive Link: <a href='{afharchive_link}'>{afharchive_link}</a>"
+        description += f"AFHArchive Link: <a href='{main_url}{afharchive_link}'>{main_url}{afharchive_link}</a>"
         
         subjects = [
             "Android",
