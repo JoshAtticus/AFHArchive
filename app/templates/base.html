@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ get_locale() }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}AFHArchive{% endblock %} | AFHArchive</title>
-    <meta name="description" content="{% block meta_description %}Preserving content from the now-defunct AndroidFileHost platform.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}android, rom, kernel, firmware, androidfilehost, afh, archive, download, preservation{% endblock %}">
+    <meta name="description"
+        content="{% block meta_description %}Preserving content from the now-defunct AndroidFileHost platform.{% endblock %}">
+    <meta name="keywords"
+        content="{% block meta_keywords %}android, rom, kernel, firmware, androidfilehost, afh, archive, download, preservation{% endblock %}">
     <meta name="author" content="JoshAtticus">
     <link rel="canonical" href="{{ request.url }}">
 
@@ -14,7 +17,8 @@
     <meta property="og:url" content="{{ request.url }}">
     <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='devimages/default_og.png', _external=True) }}{% endblock %}">
+    <meta property="og:image"
+        content="{% block og_image %}{{ url_for('static', filename='devimages/default_og.png', _external=True) }}{% endblock %}">
     <meta property="og:site_name" content="AFHArchive">
 
     <!-- Twitter -->
@@ -29,22 +33,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <script defer data-domain="afharchive.xyz" src="https://plausible.joshattic.us/js/script.file-downloads.outbound-links.js"></script>
-    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+    <script defer data-domain="afharchive.xyz" data-api="/metrics/v8-push" src="/assets/v8-core.js"></script>
+    <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2122521845436476"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
                 <i class="fas fa-archive"></i> AFHArchive
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -60,12 +65,13 @@
                         <a class="nav-link" href="{{ url_for('main.contact') }}">{{ _('Contact') }}</a>
                     </li>
                 </ul>
-                
+
                 <ul class="navbar-nav">
                     <!-- Language Selector -->
                     {% if config.LANGUAGES|length > 1 %}
                     <li class="nav-item dropdown me-2">
-                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
+                            data-bs-toggle="dropdown">
                             <i class="fas fa-globe"></i>
                             {% set current_lang = get_locale() %}
                             {% if current_lang == 'en' %}<span class="flag-emoji">🇺🇸</span>English
@@ -83,60 +89,72 @@
                         </a>
                         <ul class="dropdown-menu">
                             {% for code, name in config.LANGUAGES.items() %}
-                                <li>
-                                    <a class="dropdown-item {{ 'active' if code == get_locale() else '' }}" 
-                                       href="{{ url_for('main.set_language', language=code) }}">
-                                        {% if code == 'en' %}<span class="flag-emoji">🇺🇸</span>English
-                                        {% elif code == 'es' %}<span class="flag-emoji">🇪🇸</span>Español
-                                        {% elif code == 'fr' %}<span class="flag-emoji">🇫🇷</span>Français
-                                        {% elif code == 'de' %}<span class="flag-emoji">🇩🇪</span>Deutsch
-                                        {% elif code == 'it' %}<span class="flag-emoji">🇮🇹</span>Italiano
-                                        {% elif code == 'pt' %}<span class="flag-emoji">🇵🇹</span>Português
-                                        {% elif code == 'ru' %}<span class="flag-emoji">🇷🇺</span>Русский
-                                        {% elif code == 'ja' %}<span class="flag-emoji">🇯🇵</span>日本語
-                                        {% elif code == 'ko' %}<span class="flag-emoji">🇰🇷</span>한국어
-                                        {% elif code == 'zh' %}<span class="flag-emoji">🇨🇳</span>中文
-                                        {% else %}{{ name }}
-                                        {% endif %}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                            <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item text-primary" 
-                                   href="https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288" 
-                                   target="_blank">
+                                <a class="dropdown-item {{ 'active' if code == get_locale() else '' }}"
+                                    href="{{ url_for('main.set_language', language=code) }}">
+                                    {% if code == 'en' %}<span class="flag-emoji">🇺🇸</span>English
+                                    {% elif code == 'es' %}<span class="flag-emoji">🇪🇸</span>Español
+                                    {% elif code == 'fr' %}<span class="flag-emoji">🇫🇷</span>Français
+                                    {% elif code == 'de' %}<span class="flag-emoji">🇩🇪</span>Deutsch
+                                    {% elif code == 'it' %}<span class="flag-emoji">🇮🇹</span>Italiano
+                                    {% elif code == 'pt' %}<span class="flag-emoji">🇵🇹</span>Português
+                                    {% elif code == 'ru' %}<span class="flag-emoji">🇷🇺</span>Русский
+                                    {% elif code == 'ja' %}<span class="flag-emoji">🇯🇵</span>日本語
+                                    {% elif code == 'ko' %}<span class="flag-emoji">🇰🇷</span>한국어
+                                    {% elif code == 'zh' %}<span class="flag-emoji">🇨🇳</span>中文
+                                    {% else %}{{ name }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-primary"
+                                    href="https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288"
+                                    target="_blank">
                                     <i class="fas fa-language"></i> {{ _('Help translate AFHArchive') }}
                                 </a>
                             </li>
                         </ul>
                     </li>
                     {% endif %}
-                    
+
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                {% if current_user.avatar_url %}
-                                    <img src="{{ current_user.avatar_url }}" alt="{{ _('Avatar') }}" class="rounded-circle me-1" width="24" height="24">
-                                {% endif %}
-                                {{ current_user.name }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('main.upload') }}">{{ _('Upload File') }}</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('main.my_uploads') }}">{{ _('My Uploads') }}</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('main.settings') }}">{{ _('Settings') }}</a></li>
-                                {% if current_user.is_admin %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">{{ _('Admin Panel') }}</a></li>
-                                {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a></li>
-                            </ul>
-                        </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            {% if current_user.avatar_url %}
+                            <img src="{{ current_user.avatar_url }}" alt="{{ _('Avatar') }}" class="rounded-circle me-1"
+                                width="24" height="24">
+                            {% endif %}
+                            {{ current_user.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('main.upload') }}">{{ _('Upload File') }}</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.my_uploads') }}">{{ _('My Uploads')
+                                    }}</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.settings') }}">{{ _('Settings') }}</a>
+                            </li>
+                            {% if current_user.is_admin %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">{{ _('Admin Panel')
+                                    }}</a></li>
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a></li>
+                        </ul>
+                    </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">{{ _('Login') }}</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">{{ _('Login') }}</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -145,14 +163,15 @@
 
     <main class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
@@ -160,11 +179,16 @@
 
     <footer class="bg-light mt-5 py-4">
         <div class="container text-center">
-            <p class="mb-0">&copy; 2025 JoshAtticus | {{ _('Source on') }} <a href="https://github.com/JoshAtticus/AFHArchive">GitHub</a> | <a href="{{ url_for('main.privacy') }}">{{ _('Our Privacy Policy') }}</a> | <a href="{{ url_for('main.terms') }}">{{ _('Terms of Service') }}</a> | <a href="https://status.joshattic.us">{{ _('Status Page') }}</a></p>
+            <p class="mb-0">&copy; 2025 JoshAtticus | {{ _('Source on') }} <a
+                    href="https://github.com/JoshAtticus/AFHArchive">GitHub</a> | <a
+                    href="{{ url_for('main.privacy') }}">{{ _('Our Privacy Policy') }}</a> | <a
+                    href="{{ url_for('main.terms') }}">{{ _('Terms of Service') }}</a> | <a
+                    href="https://status.joshattic.us">{{ _('Status Page') }}</a></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
+
 </html>
