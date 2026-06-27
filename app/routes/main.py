@@ -372,8 +372,8 @@ def download(upload_id):
     mirror_url = None
     
     if mirror_id_str == 'ia':
-        if upload.ia_status == 'synced' and upload.ia_item_id:
-            mirror_url = f"https://archive.org/download/{upload.ia_item_id}/{upload.original_filename}"
+        if upload.ia_status == 'synced' and upload.ia_download_url:
+            mirror_url = upload.ia_download_url
     elif mirror_id_str.isdigit():
         mirror_id = int(mirror_id_str)
         mirror = Mirror.query.get(mirror_id)
