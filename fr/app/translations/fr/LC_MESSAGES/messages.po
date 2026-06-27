@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2026-03-09 19:56\n"
+"PO-Revision-Date: 2026-06-27 02:48\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -44,15 +44,15 @@ msgstr "AFHArchive s'engage à maintenir une communauté respectueuse et solidai
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr ""
+msgstr "Partagez des fichiers de développement Android légitimes et utiles"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "Fournissez une description et des informations accrues "
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr ""
+msgstr "Respectez les droits de propriétés intellectuelles"
 
 #: app/templates/about.html:26
 msgid "Open Source"
@@ -60,7 +60,7 @@ msgstr "Open Source"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive est un logiciel Open Source, développé de manière transparente sur GitHub. Les contributions communautaires et retours d'expériences sont toujours les bienvenus "
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
@@ -122,15 +122,15 @@ msgstr "Se connecter"
 
 #: app/templates/base.html:142
 msgid "Source on"
-msgstr ""
+msgstr "Source sur"
 
 #: app/templates/base.html:142
 msgid "Our Privacy Policy"
-msgstr "Notre Police de Confidentialité"
+msgstr "Notre politique de confidentialité"
 
 #: app/templates/base.html:142 app/templates/contact.html:78
 msgid "Terms of Service"
-msgstr ""
+msgstr "Conditions d'utilisations"
 
 #: app/templates/base.html:142
 msgid "Status Page"
@@ -146,11 +146,11 @@ msgstr "Explorer l'archive"
 
 #: app/templates/admin/uploads.html:25 app/templates/browse.html:13
 msgid "Manufacturer"
-msgstr ""
+msgstr "Fabricant"
 
 #: app/templates/admin/uploads.html:27 app/templates/browse.html:15
 msgid "All Manufacturers"
-msgstr ""
+msgstr "Tous les fabricants"
 
 #: app/templates/browse.html:24
 msgid "Model"
@@ -224,1007 +224,1007 @@ msgstr "Essayez d'ajuster vos filtres de recherche ou explorez tous les fichiers
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
-msgstr ""
+msgstr "Nous aimerions avoir vos retours ! Entrez en contact avec l'équipe AFHArchive à travers l'une des méthodes suivantes:"
 
 #: app/templates/contact.html:22
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: app/templates/contact.html:23
 msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
-msgstr ""
+msgstr "Signalez les problèmes, suggérez des fonctionnalités ou contribuez au projet sur notre dépôt GitHub."
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
-msgstr ""
+msgstr "Ouvrir un Ticket"
 
 #: app/templates/admin/announcement.html:27 app/templates/admin/users.html:20
 #: app/templates/contact.html:35
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: app/templates/contact.html:36
 msgid "For general inquiries, business matters, or urgent support requests."
-msgstr ""
+msgstr "Pour les demandes de renseignements généraux, les questions d'affaires ou les demandes de support urgent."
 
 #: app/templates/contact.html:38
 msgid "Send Email"
-msgstr ""
+msgstr "Envoyer un E-mail"
 
 #: app/templates/contact.html:50
 msgid "Translation Help"
-msgstr ""
+msgstr "Aide pour traduire"
 
 #: app/templates/contact.html:51
 msgid "Help us make AFHArchive available in more languages by joining our translation project."
-msgstr ""
+msgstr "Aidez-nous à rendre AFHArchive disponible dans plusieurs langues en rejoignant notre projet de traduction"
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
-msgstr ""
+msgstr "Rejoindre le projet de Traduction"
 
 #: app/templates/contact.html:64
 msgid "Bug Reports"
-msgstr ""
+msgstr "Rapports de Bugs"
 
 #: app/templates/contact.html:65
 msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
-msgstr ""
+msgstr "Un Bug rencontré ou une difficulté technique ? Dites-le pour que nous puissions le corriger rapidement."
 
 #: app/templates/contact.html:68
 msgid "Report Bug"
-msgstr ""
+msgstr "Rapporter un Bug"
 
 #: app/templates/contact.html:76
 msgid "Before Contacting Us"
-msgstr ""
+msgstr "Avant de nous contacter"
 
 #: app/templates/contact.html:78
 msgid "Check our"
-msgstr ""
+msgstr "Vérifier nôtre"
 
 #: app/templates/contact.html:78
 msgid "and"
-msgstr ""
+msgstr "et"
 
 #: app/templates/contact.html:78
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Politique de confidentialité"
 
 #: app/templates/contact.html:79
 msgid "Search existing"
-msgstr ""
+msgstr "Recherche existante"
 
 #: app/templates/contact.html:79
 msgid "GitHub issues"
-msgstr ""
+msgstr "Problèmes GitHub"
 
 #: app/templates/contact.html:79
 msgid "to see if your question has been answered"
-msgstr ""
+msgstr "Pour voir si votre question a été répondu "
 
 #: app/templates/contact.html:80
 msgid "For upload issues, make sure your files meet our guidelines"
-msgstr ""
+msgstr "Pour transmettre un problème, veuillez vous assurer que vos fichiers soient conformes à notre politique"
 
 #: app/templates/file_detail.html:13
 msgid "Device Information"
-msgstr ""
+msgstr "Informations sur l'appareil"
 
 #: app/templates/file_detail.html:16
 msgid "Manufacturer:"
-msgstr ""
+msgstr "Fabriquant :"
 
 #: app/templates/file_detail.html:20
 msgid "Model:"
-msgstr ""
+msgstr "Modèle :"
 
 #: app/templates/file_detail.html:26 app/templates/thank_you.html:62
 msgid "File Information"
-msgstr ""
+msgstr "Informations sur le fichier"
 
 #: app/templates/file_detail.html:33
 msgid "MD5 Hash:"
-msgstr ""
+msgstr "Hachage MD5"
 
 #: app/templates/file_detail.html:41
 msgid "Uploaded:"
-msgstr ""
+msgstr "Envoyé :"
 
 #: app/templates/file_detail.html:51
 msgid "Original Links"
-msgstr ""
+msgstr "Liens originaux"
 
 #: app/templates/file_detail.html:60
 msgid "XDA Thread"
-msgstr ""
+msgstr "Fil de discussion XDA"
 
 #: app/templates/file_detail.html:71 app/templates/thank_you.html:79
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #: app/templates/file_detail.html:83
 msgid "Back to Browse"
-msgstr ""
+msgstr "Retour à la navigation"
 
 #: app/templates/file_detail.html:86
 msgid "Download File"
-msgstr ""
+msgstr "Télécharger le fichier"
 
 #: app/templates/file_detail.html:96 app/templates/index.html:76
 #: app/templates/thank_you.html:88
 msgid "Support AFHArchive"
-msgstr ""
+msgstr "Supporter AFHArchive"
 
 #: app/templates/file_detail.html:99 app/templates/index.html:79
 #: app/templates/thank_you.html:91
 msgid "Help keep this archive running!"
-msgstr ""
+msgstr "Aidez à garder cette archive en vie"
 
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 #: app/templates/thank_you.html:92
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr ""
+msgstr "Votre soutien aide à couvrir les coûts d’hébergement et maintient ce projet de préservation en vie."
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
 #: app/templates/thank_you.html:94
 msgid "Buy me a coffee"
-msgstr ""
+msgstr "Offrez-moi une bière :)"
 
 #: app/templates/file_detail.html:109
 msgid "Download Information"
-msgstr ""
+msgstr "Informations sur ce téléchargement"
 
 #: app/templates/file_detail.html:113
 msgid "File Verification"
-msgstr ""
+msgstr "Fichier de vérification"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
-msgstr ""
+msgstr "Vous pouvez vérifier l'intégrité du fichier en utilisant son hache MD5:"
 
 #: app/templates/file_detail.html:119
 msgid "Important"
-msgstr ""
+msgstr "Important"
 
 #: app/templates/file_detail.html:121
 msgid "This file was originally hosted on AndroidFileHost"
-msgstr ""
+msgstr "Ce fichier a été initialement hébergé sur AndroidFileHost"
 
 #: app/templates/file_detail.html:122
 msgid "Files are provided as-is for preservation purposes"
-msgstr ""
+msgstr "Les fichiers sont fournis tel-quel dans le but de préservations"
 
 #: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
-msgstr ""
+msgstr "Utilisez à vos propres risques, et vérifiez en amont de la compatibilité"
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
-msgstr ""
+msgstr "Les téléchargements sont limités pour préserver la bande passante"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr ""
+msgstr "Contribué par"
 
 #: app/templates/index.html:10
 #, python-format
 msgid "Announcement posted %(date)s (active for 48 hours)"
-msgstr ""
+msgstr "Annonce publiée le %(date)s (active pendant 48 heures)"
 
 #: app/templates/index.html:15
 msgid "Welcome to AFHArchive"
-msgstr ""
+msgstr "Bienvenu sur AFHArchive"
 
 #: app/templates/index.html:16
 msgid "Preserving content from the now-defunct AndroidFileHost platform"
-msgstr ""
+msgstr "Préserver le contenu de la plate-forme AndroidFileHost disparue"
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "Aidez-nous à préserver l'histoire du développement Android en téléchargeant"
 
 #: app/templates/index.html:20
 msgid "Sign In to Contribute"
-msgstr ""
+msgstr "Enregistrez-vous pour contribuer "
 
 #: app/templates/index.html:24
 msgid "Upload a File"
-msgstr ""
+msgstr "Téléverser un fichier"
 
 #: app/templates/index.html:29
 msgid "Device Image"
-msgstr ""
+msgstr "Image de l'appareil"
 
 #: app/templates/index.html:34
 msgid "Recent Uploads"
-msgstr ""
+msgstr "Téléversements récents "
 
 #: app/templates/index.html:60
 msgid "Important Notice"
-msgstr ""
+msgstr "Note importante"
 
 #: app/templates/index.html:63
 msgid "AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost."
-msgstr ""
+msgstr "AFHArchive est dédié à la préservation des fichiers anciennement hébergé sur AndroidFileHost"
 
 #: app/templates/index.html:65
 msgid "Only upload files that were once on AFH"
-msgstr ""
+msgstr "Téléversez uniquement les fichiers qui ont été sur AndroidFileHost"
 
 #: app/templates/index.html:66
 msgid "Provide original AFH links when possible"
-msgstr ""
+msgstr "Fournissez le lien original d'AndroidFileHost si possible"
 
 #: app/templates/index.html:67
 msgid "Include device information and XDA threads"
-msgstr ""
+msgstr "Incluez les informations de l'appareil ainsi que le fil de discussion XDA"
 
 #: app/templates/index.html:68
 msgid "All uploads require admin approval"
-msgstr ""
+msgstr "Tous les téléversements nécessitent une approbation des modérateurs"
 
 #: app/templates/index.html:69
 msgid "New builds or custom ROMs will not be approved"
-msgstr ""
+msgstr "Les builds ou custom ROMS récentes ne seront pas approuvés"
 
 #: app/templates/my_uploads.html:9
 msgid "Upload New File"
-msgstr ""
+msgstr "Téléverser un nouveau fichier"
 
 #: app/templates/admin/autoreviewer.html:147
 #: app/templates/admin/uploads.html:54 app/templates/my_uploads.html:18
 msgid "Filename"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: app/templates/admin/autoreviewer.html:148
 #: app/templates/admin/uploads.html:56 app/templates/my_uploads.html:19
 #: app/templates/thank_you.html:66
 msgid "Device"
-msgstr ""
+msgstr "Appareil"
 
 #: app/templates/admin/server_tools.html:128
 #: app/templates/admin/uploads.html:57 app/templates/my_uploads.html:20
 #: app/templates/thank_you.html:69
 msgid "Size"
-msgstr ""
+msgstr "Taille"
 
 #: app/templates/admin/server_tools.html:313
 #: app/templates/admin/uploads.html:16 app/templates/admin/uploads.html:58
 #: app/templates/my_uploads.html:21
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: app/templates/my_uploads.html:23 app/templates/thank_you.html:72
 msgid "Downloads"
-msgstr ""
+msgstr "Téléchargements"
 
 #: app/templates/admin/dashboard.html:16 app/templates/admin/uploads.html:18
 #: app/templates/my_uploads.html:37
 msgid "Pending"
-msgstr ""
+msgstr "En attente"
 
 #: app/templates/admin/dashboard.html:35 app/templates/admin/uploads.html:19
 #: app/templates/my_uploads.html:39
 msgid "Approved"
-msgstr ""
+msgstr "Approuvé"
 
 #: app/templates/admin/dashboard.html:54 app/templates/admin/uploads.html:20
 #: app/templates/my_uploads.html:41
 msgid "Rejected"
-msgstr ""
+msgstr "Rejeté"
 
 #: app/templates/my_uploads.html:60
 msgid "No uploads yet"
-msgstr ""
+msgstr "Pas de téléversement effectué"
 
 #: app/templates/my_uploads.html:61
 msgid "Start contributing to the archive by uploading your first file!"
-msgstr ""
+msgstr "Contribuez à l'archivage en téléversant votre premier fichier"
 
 #: app/templates/my_uploads.html:63
 msgid "Upload First File"
-msgstr ""
+msgstr "Téléverser le premier fichier"
 
 #: app/templates/thank_you.html:3
 msgid "Thank You"
-msgstr ""
+msgstr "Merci"
 
 #: app/templates/thank_you.html:12
 msgid "Thank You for Downloading!"
-msgstr ""
+msgstr "Merci pour votre téléversement !"
 
 #: app/templates/thank_you.html:19
 msgid "Your download should start automatically in a few seconds."
-msgstr ""
+msgstr "Votre téléchargement devrait commencer dans quelques secondes."
 
 #: app/templates/thank_you.html:20
 msgid "If it doesn't start, click the button below."
-msgstr ""
+msgstr "S'il ne démarre pas, cliquez sur le bouton en dessous."
 
 #: app/templates/thank_you.html:27
 msgid "Beta Test"
-msgstr ""
+msgstr "Beta Test"
 
 #: app/templates/thank_you.html:27
 msgid "You're part of a test for direct downloads from our server. Downloads will open in a new tab."
-msgstr ""
+msgstr "Vous faites partie d'un test pour les téléchargements directs depuis notre serveur. Les téléchargements s'ouvriront dans un nouvel onglet."
 
 #: app/templates/thank_you.html:30
 msgid "Use Standard Download"
-msgstr ""
+msgstr "Utiliser le téléchargement standard"
 
 #: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
-msgstr ""
+msgstr "Démarrer le téléchargement"
 
 #: app/templates/thank_you.html:53
 msgid "Starting download in 3 seconds..."
-msgstr ""
+msgstr "Le téléchargement commencera dans 3 secondes..."
 
 #: app/templates/thank_you.html:104
 msgid "Back to File Details"
-msgstr ""
+msgstr "Retour aux détails du fichier"
 
 #: app/templates/thank_you.html:107
 msgid "Browse More Files"
-msgstr ""
+msgstr "Naviguer plus de fichiers"
 
 #: app/templates/thank_you.html:128
 msgid "Starting download in"
-msgstr ""
+msgstr "Démarrage du téléchargement dans"
 
 #: app/templates/thank_you.html:128
 msgid "seconds..."
-msgstr ""
+msgstr "secondes..."
 
 #: app/templates/thank_you.html:130
 msgid "Starting download..."
-msgstr ""
+msgstr "Début du téléchargement..."
 
 #: app/templates/thank_you.html:147 app/templates/thank_you.html:163
 msgid "Download started! Check your downloads folder."
-msgstr ""
+msgstr "Téléchargement commencé ! Vérifiez votre dossier de téléchargements."
 
 #: app/templates/thank_you.html:148 app/templates/thank_you.html:164
 msgid "Download Started"
-msgstr ""
+msgstr "Téléchargement commencé"
 
 #: app/templates/upload.html:10
 msgid "Upload File to AFHArchive"
-msgstr ""
+msgstr "Téléverser un fichier sur AFHArchive"
 
 #: app/templates/upload.html:14
 msgid "Important Guidelines"
-msgstr ""
+msgstr "Règles importantes"
 
 #: app/templates/upload.html:16
 msgid "Only upload files that were previously hosted on AndroidFileHost"
-msgstr ""
+msgstr "Téléversez uniquement des fichiers provenant d'AndroidFileHost"
 
 #: app/templates/upload.html:17
 msgid "Provide as much metadata as possible to help with approval"
-msgstr ""
+msgstr "Fournissez le plus de métadonnées possibles pour aider à l'approbation"
 
 #: app/templates/upload.html:18
 msgid "Include the original AFH link if you have it"
-msgstr ""
+msgstr "Fournissez le lien original d'AFH si vous le possédez"
 
 #: app/templates/upload.html:19
 msgid "All uploads are pending review - new builds will not be approved"
-msgstr ""
+msgstr "Tous les téléchargements sont en attente d'examen - les nouvelles versions ne seront pas approuvées"
 
 #: app/templates/upload.html:20
 msgid "Do not upload password protected archives, they will not be approved"
-msgstr ""
+msgstr "Ne pas téléverser de fichiers protégés par mot de passe, ils ne seront pas approuvés"
 
 #: app/templates/upload.html:21
 msgid "Maximum file size: 5GB"
-msgstr ""
+msgstr "Taille maximum par fichiers : 5 Go"
 
 #: app/templates/upload.html:27
 msgid "Select File"
-msgstr ""
+msgstr "Sélectionner un fichier"
 
 #: app/templates/upload.html:30
 msgid "Allowed formats: ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
-msgstr ""
+msgstr "Formats de fichiers autorisés : ZIP, APK, IMG, TAR, GZ, XZ, 7Z, RAR, MD5, TGZ"
 
 #: app/templates/upload.html:35
 msgid "Upload Progress"
-msgstr ""
+msgstr "Status du téléversement"
 
 #: app/templates/upload.html:44
 msgid "Preparing upload..."
-msgstr ""
+msgstr "Préparation du téléversement..."
 
 #: app/templates/upload.html:53
 msgid "Device Manufacturer"
-msgstr ""
+msgstr "Fabricant de l'appareil"
 
 #: app/templates/upload.html:55
 msgid "e.g., Samsung, Google, OnePlus"
-msgstr ""
+msgstr "ex: Samsung, Google, OnePlus"
 
 #: app/templates/upload.html:60
 msgid "Device Model"
-msgstr ""
+msgstr "Modèle de l'appareil"
 
 #: app/templates/upload.html:62
 msgid "e.g., Galaxy S21, Pixel 6, Generic"
-msgstr ""
+msgstr "ex: Galaxy S21, Pixel 6, Générique"
 
 #: app/templates/upload.html:68
 msgid "Original AndroidFileHost Link"
-msgstr ""
+msgstr "Lient original AndroidFileHost"
 
 #: app/templates/upload.html:70
 msgid "https://androidfilehost.com/?fid=..."
-msgstr ""
+msgstr "https://androidfilehost.com/?fid=..."
 
 #: app/templates/upload.html:71
 msgid "If you have the original AFH link, please provide it"
-msgstr ""
+msgstr "Si vous avez le lien AFH original, veuillez le fournir"
 
 #: app/templates/upload.html:75
 msgid "XDA Thread Link"
-msgstr ""
+msgstr "Lien du fil de discussion XDA"
 
 #: app/templates/upload.html:77
 msgid "https://forum.xda-developers.com/..."
-msgstr ""
+msgstr "https://forum.xda-developers.com/..."
 
 #: app/templates/upload.html:78
 msgid "Link to the XDA thread where this file was discussed"
-msgstr ""
+msgstr "Lien vers le fil de discussion XDA où ce fichier a été discuté"
 
 #: app/templates/upload.html:82
 msgid "Additional Notes"
-msgstr ""
+msgstr "Notes additionnelles"
 
 #: app/templates/upload.html:84
 msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
-msgstr ""
+msgstr "S'il vous plaît écrivez en anglais. Les notes sont visibles publiquement - veuillez inclure la version de la ROM, la date du build, ou d'autres détails pertinents. N'incluez pas les renseignements personnels, les noms de fichiers ou les hachages MD5, car ceux-ci sont déjà affichés séparément."
 
 #: app/templates/upload.html:91
 msgid "Cancel Upload"
-msgstr ""
+msgstr "Annuler le téléversement"
 
 #: app/templates/upload.html:101
 msgid "Upload Process"
-msgstr ""
+msgstr "Processus de téléversement"
 
 #: app/templates/upload.html:105
 msgid "Select your file (max 5GB)"
-msgstr ""
+msgstr "Sélectionnez votre fichier (Maximum 5 Go)"
 
 #: app/templates/upload.html:106
 msgid "Fill in required metadata"
-msgstr ""
+msgstr "Renseignez les métadonnées requises"
 
 #: app/templates/upload.html:107
 msgid "Admin reviews for AFH authenticity"
-msgstr ""
+msgstr "Examens par les administrateurs pour l'authenticité sur AFH"
 
 #: app/templates/upload.html:108
 msgid "Approved files become available"
-msgstr ""
+msgstr "Les fichiers approuvés deviennent disponibles"
 
 #: app/templates/upload.html:111
 msgid "Note:"
-msgstr ""
+msgstr "Note :"
 
 #: app/templates/upload.html:111
 msgid "Only files that were previously on AndroidFileHost will be approved for preservation."
-msgstr ""
+msgstr "Seuls les fichiers qui étaient auparavant sur AndroidFileHost seront approuvés pour la conservation."
 
 #: app/templates/upload.html:123
 msgid "File is too large. Maximum size is 5GB."
-msgstr ""
+msgstr "Le fichier est trop large. La taille maximum est de 5 Go."
 
 #: app/templates/upload.html:124
 msgid "Please select a file to upload."
-msgstr ""
+msgstr "Veuillez sélectionner un fichier à téléverser."
 
 #: app/templates/upload.html:125
 msgid "Device manufacturer is required."
-msgstr ""
+msgstr "Le fabricant de l'appareil est nécessaire."
 
 #: app/templates/upload.html:126
 msgid "Device model is required."
-msgstr ""
+msgstr "Le modèle d'appareil est nécessaire."
 
 #: app/templates/upload.html:127
 msgid "Initializing upload..."
-msgstr ""
+msgstr "Initialisation du téléversement..."
 
 #: app/templates/upload.html:128
 msgid "Failed to initialize upload"
-msgstr ""
+msgstr "L'Initialisation du téléversement a échoué"
 
 #: app/templates/upload.html:129
 msgid "Starting chunk upload..."
-msgstr ""
+msgstr "Démarrage de l'envoi du segment..."
 
 #: app/templates/upload.html:130
 msgid "Upload cancelled"
-msgstr ""
+msgstr "Téléversement annulé"
 
 #: app/templates/upload.html:131
 msgid "Chunk upload failed"
-msgstr ""
+msgstr "Envoi du segment échoué"
 
 #: app/templates/upload.html:132
 msgid "Invalid response from server"
-msgstr ""
+msgstr "Réponse invalide du serveur"
 
 #: app/templates/upload.html:133
 msgid "Network error during chunk upload"
-msgstr ""
+msgstr "Erreur réseau lors du téléversement du segment"
 
 #: app/templates/upload.html:134
 msgid "Chunk upload cancelled"
-msgstr ""
+msgstr "Envoi du segment annulé"
 
 #: app/templates/upload.html:135
 msgid "Assembling file..."
-msgstr ""
+msgstr "Assemblage du fichier..."
 
 #: app/templates/upload.html:136
 msgid "Failed to complete upload"
-msgstr ""
+msgstr "Échec du téléchargement"
 
 #: app/templates/upload.html:137
 msgid "Upload completed successfully!"
-msgstr ""
+msgstr "Téléversement terminé avec succès !"
 
 #: app/templates/upload.html:138
 msgid "Uploading chunk"
-msgstr ""
+msgstr "Téléversement du segment"
 
 #: app/templates/upload.html:139
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: app/templates/upload.html:140
 msgid "MB/s"
-msgstr ""
+msgstr "Mo/s"
 
 #: app/templates/upload.html:141
 msgid "Bytes"
-msgstr ""
+msgstr "Octets"
 
 #: app/templates/upload.html:142
 msgid "KB"
-msgstr ""
+msgstr "Ko"
 
 #: app/templates/upload.html:143
 msgid "MB"
-msgstr ""
+msgstr "Mo"
 
 #: app/templates/upload.html:144
 msgid "GB"
-msgstr ""
+msgstr "Go"
 
 #: app/templates/upload.html:145
 msgid "Upload failed"
-msgstr ""
+msgstr "Téléversement échoué"
 
 #: app/templates/admin/ab_tests.html:3 app/templates/admin/ab_tests.html:10
 msgid "A/B Testing Management"
-msgstr ""
+msgstr "Gestion des tests A/B"
 
 #: app/templates/admin/ab_tests.html:13 app/templates/admin/ab_tests.html:156
 msgid "Create Test"
-msgstr ""
+msgstr "Créer un test"
 
 #: app/templates/admin/ab_tests.html:17
 msgid "Init Direct Download Test"
-msgstr ""
+msgstr "Commencer le test de téléchargement direct"
 
 #: app/templates/admin/ab_tests.html:32
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: app/templates/admin/ab_tests.html:32
 msgid "Inactive"
-msgstr ""
+msgstr "Innactif"
 
 #: app/templates/admin/ab_tests.html:44
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: app/templates/admin/ab_tests.html:48
 msgid "Control"
-msgstr ""
+msgstr "Contrôle"
 
 #: app/templates/admin/ab_tests.html:52
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: app/templates/admin/ab_tests.html:63
 msgid "Traffic:"
-msgstr ""
+msgstr "Trafic:"
 
 #: app/templates/admin/ab_tests.html:63
 msgid "to test group"
-msgstr ""
+msgstr "vers le groupe de test"
 
 #: app/templates/admin/ab_tests.html:71
 msgid "Stop"
-msgstr ""
+msgstr "Arrêter"
 
 #: app/templates/admin/ab_tests.html:73
 msgid "Start"
-msgstr ""
+msgstr "Commencer"
 
 #: app/templates/admin/ab_tests.html:79
 msgid "Edit"
-msgstr ""
+msgstr "Éditer"
 
 #: app/templates/admin/ab_tests.html:83
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: app/templates/admin/ab_tests.html:95
 msgid "No A/B tests configured. Create your first test to get started!"
-msgstr ""
+msgstr "Pas de tests A/B configurés. Créer votre premier test pour commencer !"
 
 #: app/templates/admin/ab_tests.html:104
 msgid "Maintenance"
-msgstr ""
+msgstr "Maintenance"
 
 #: app/templates/admin/ab_tests.html:109
 msgid "Clean up assignments older than:"
-msgstr ""
+msgstr "Supprimer les affectations antérieures à :"
 
 #: app/templates/admin/ab_tests.html:114
 msgid "Cleanup Old Assignments"
-msgstr ""
+msgstr "Nettoyer les anciennes affectations"
 
 #: app/templates/admin/ab_tests.html:119
 msgid "This will remove old user assignments to prevent database bloat. Active tests are unaffected."
-msgstr ""
+msgstr "Cela supprimera les anciennes affectations d'utilisateurs pour empêcher le ballonnement de la base de données. Les tests actifs ne sont pas affectés."
 
 #: app/templates/admin/ab_tests.html:133
 msgid "Create A/B Test"
-msgstr ""
+msgstr "Créer un test A/B"
 
 #: app/templates/admin/ab_tests.html:134 app/templates/admin/ab_tests.html:171
 #: app/templates/admin/ab_tests.html:201
 #: app/templates/admin/server_tools.html:257
 #: app/templates/admin/server_tools.html:269
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #: app/templates/admin/ab_tests.html:138
 msgid "Test Name"
-msgstr ""
+msgstr "Nom de test"
 
 #: app/templates/admin/ab_tests.html:140
 msgid "Use lowercase letters, numbers, and underscores only."
-msgstr ""
+msgstr "Utilisez des lettres minuscules, des chiffres et des soulignements uniquement."
 
 #: app/templates/admin/ab_tests.html:143 app/templates/admin/ab_tests.html:175
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: app/templates/admin/ab_tests.html:147 app/templates/admin/ab_tests.html:179
 msgid "Test Traffic (%)"
-msgstr ""
+msgstr "Trafic de test (%)"
 
 #: app/templates/admin/ab_tests.html:151
 msgid "Percentage of users that will see the test variant."
-msgstr ""
+msgstr "Pourcentage d'utilisateurs qui verront la variante du test."
 
 #: app/templates/admin/ab_tests.html:155 app/templates/admin/ab_tests.html:187
 #: app/templates/admin/ab_tests.html:211
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: app/templates/admin/ab_tests.html:170
 msgid "Edit Test:"
-msgstr ""
+msgstr "Modifier le test :"
 
 #: app/templates/admin/ab_tests.html:188
 msgid "Update Test"
-msgstr ""
+msgstr "Mettre à jour le test"
 
 #: app/templates/admin/ab_tests.html:200
 msgid "Delete Test:"
-msgstr ""
+msgstr "Supprimer le test :"
 
 #: app/templates/admin/ab_tests.html:204
 msgid "Are you sure you want to delete this A/B test?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer ce test A/B ?"
 
 #: app/templates/admin/ab_tests.html:207
 msgid "This will permanently delete all test data and user assignments."
-msgstr ""
+msgstr "Cela supprimera définitivement toutes les données de test et les affectations de l'utilisateur."
 
 #: app/templates/admin/ab_tests.html:213
 msgid "Delete Test"
-msgstr ""
+msgstr "Supprimer le test"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/announcement.html:5
 #: app/templates/admin/announcement.html:45
 msgid "Send Announcement"
-msgstr ""
+msgstr "Envoyer l'annonce"
 
 #: app/templates/admin/announcement.html:2
 #: app/templates/admin/server_tools.html:3 app/templates/admin/uploads.html:3
 #: app/templates/admin/users.html:3 app/templates/admin/users.html:46
 msgid "Admin"
-msgstr ""
+msgstr "Administrateur"
 
 #: app/templates/admin/announcement.html:7
 #: app/templates/admin/autoreviewer.html:10
 #: app/templates/admin/server_tools.html:9 app/templates/admin/uploads.html:9
 #: app/templates/admin/users.html:9
 msgid "Back to Dashboard"
-msgstr ""
+msgstr "Retour au tableau de bord"
 
 #: app/templates/admin/announcement.html:12
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 #: app/templates/admin/announcement.html:13
 msgid "Announcement subject"
-msgstr ""
+msgstr "Sujet d'annonce"
 
 #: app/templates/admin/announcement.html:16
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: app/templates/admin/announcement.html:16
 msgid "HTML allowed"
-msgstr ""
+msgstr "HTML autorisé"
 
 #: app/templates/admin/announcement.html:17
 msgid "Type your announcement here..."
-msgstr ""
+msgstr "Tapez votre annonce ici..."
 
 #: app/templates/admin/announcement.html:20
 msgid "Delivery Method"
-msgstr ""
+msgstr "Méthode de livraison"
 
 #: app/templates/admin/announcement.html:23
 msgid "Homepage Banner"
-msgstr ""
+msgstr "Bannière de page d'accueil"
 
 #: app/templates/admin/announcement.html:31
 msgid "Recipients"
-msgstr ""
+msgstr "Destinataires"
 
 #: app/templates/admin/announcement.html:34
 msgid "All Users"
-msgstr ""
+msgstr "Tous les utilisateurs"
 
 #: app/templates/admin/announcement.html:38
 msgid "Only Users Who Have Uploaded"
-msgstr ""
+msgstr "Seulement les utilisateurs qui ont téléversés"
 
 #: app/templates/admin/announcement.html:43
 msgid "With great power comes great responsibility! Please think twice before making an announcement—announcements send an email to every single user! Abuse of this permission may result in removal of admin privileges."
-msgstr ""
+msgstr "Avec une grande puissance vient de grandes responsabilités ! Veuillez réfléchir à deux fois avant de faire une annonce – les annonces envoient un courriel à chaque utilisateur ! L'abus de cette autorisation peut entraîner la suppression des privilèges d'administrateur."
 
 #: app/templates/admin/autoreviewer.html:8
 msgid "Autoreviewer Management"
-msgstr ""
+msgstr "Gestion Autoreviewer"
 
 #: app/templates/admin/autoreviewer.html:21
 msgid "Autoreviewer System Info"
-msgstr ""
+msgstr "Information système d'autoreviewer"
 
 #: app/templates/admin/autoreviewer.html:26
 msgid "System User ID:"
-msgstr ""
+msgstr "ID Système de l'utilisateur :"
 
 #: app/templates/admin/autoreviewer.html:30
 msgid "Name:"
-msgstr ""
+msgstr "Nom :"
 
 #: app/templates/admin/autoreviewer.html:36
 msgid "Email:"
-msgstr ""
+msgstr "E-mail :"
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
-msgstr ""
+msgstr "Status admin"
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: app/templates/admin/autoreviewer.html:46
 msgid "Created:"
-msgstr ""
+msgstr "Créé :"
 
 #: app/templates/admin/autoreviewer.html:58
 msgid "Autoreviewer Statistics"
-msgstr ""
+msgstr "Statistiques Autoviewers"
 
 #: app/templates/admin/autoreviewer.html:65
 msgid "Total Reviewed"
-msgstr ""
+msgstr "Total Revu"
 
 #: app/templates/admin/autoreviewer.html:71
 msgid "Duplicates Rejected"
-msgstr ""
+msgstr "Duplicatas rejetés"
 
 #: app/templates/admin/autoreviewer.html:78
 msgid "Rejection Rate:"
-msgstr ""
+msgstr "Date de rejet :"
 
 #: app/templates/admin/autoreviewer.html:101
 msgid "Autoreviewer Actions"
-msgstr ""
+msgstr "Actions Autoreviewer"
 
 #: app/templates/admin/autoreviewer.html:106
 msgid "Run Batch Processing"
-msgstr ""
+msgstr "Exécuter le traitement par lot"
 
 #: app/templates/admin/autoreviewer.html:108
 msgid "Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes."
-msgstr ""
+msgstr "Exécutez l'autoreview sur tous les téléchargements en attente pour vérifier les doublons. Cela rejettera automatiquement tous les téléchargements qui ont des hachages MD5 en double."
 
 #: app/templates/admin/autoreviewer.html:113
 msgid "Run Batch Autoreviewer"
-msgstr ""
+msgstr "Executer l'autoreview par lot"
 
 #: app/templates/admin/autoreviewer.html:118
 msgid "How It Works"
-msgstr ""
+msgstr "Comment cela fonctionne"
 
 #: app/templates/admin/autoreviewer.html:120
 msgid "Automatically runs after each file upload"
-msgstr ""
+msgstr "Lancer automatiquement après chaque téléversement de fichier"
 
 #: app/templates/admin/autoreviewer.html:121
 msgid "Compares MD5 hashes to detect exact duplicates"
-msgstr ""
+msgstr "Comparer le hache MD5 pour détecter les doublons"
 
 #: app/templates/admin/autoreviewer.html:122
 msgid "Rejects uploads that match existing approved or pending files"
-msgstr ""
+msgstr "Rejette les téléversements qui correspondent aux fichiers approuvés ou en attente existants"
 
 #: app/templates/admin/autoreviewer.html:123
 msgid "Sends notification emails to uploaders"
-msgstr ""
+msgstr "Envoyer la notification par mail à l'uploader"
 
 #: app/templates/admin/autoreviewer.html:124
 msgid "Appears as \"Autoreviewer\" in the system"
-msgstr ""
+msgstr "Apparaît comme \"Revue automatique\" dans le système"
 
 #: app/templates/admin/autoreviewer.html:139
 msgid "Recent Duplicate Rejections"
-msgstr ""
+msgstr "Rejets récents en double"
 
 #: app/templates/admin/autoreviewer.html:146
 msgid "Upload ID"
-msgstr ""
+msgstr "Identifiant du téléversement"
 
 #: app/templates/admin/autoreviewer.html:149
 msgid "Uploader"
-msgstr ""
+msgstr "Uploader"
 
 #: app/templates/admin/autoreviewer.html:150
 msgid "Rejected Date"
-msgstr ""
+msgstr "Date de rejet"
 
 #: app/templates/admin/autoreviewer.html:151
 msgid "Reason"
-msgstr ""
+msgstr "Raison"
 
 #: app/templates/admin/autoreviewer.html:164
 #: app/templates/admin/server_tools.html:30
 #: app/templates/admin/server_tools.html:231
 msgid "Unknown"
-msgstr ""
+msgstr "Inconnu"
 
 #: app/templates/admin/autoreviewer.html:165
 msgid "N/A"
-msgstr ""
+msgstr "Sans objet"
 
 #: app/templates/admin/dashboard.html:3 app/templates/admin/dashboard.html:7
 msgid "Admin Dashboard"
-msgstr ""
+msgstr "Tableau de bord administrateur"
 
 #: app/templates/admin/dashboard.html:73
 #: app/templates/admin/server_tools.html:240
 msgid "Users"
-msgstr ""
+msgstr "Utilisateurs"
 
 #: app/templates/admin/dashboard.html:92
 msgid "Quick Actions"
-msgstr ""
+msgstr "Actions rapides"
 
 #: app/templates/admin/dashboard.html:99
 msgid "Review Pending Uploads"
-msgstr ""
+msgstr "Réviser les téléversements en attentes"
 
 #: app/templates/admin/dashboard.html:105
 msgid "Manage All Uploads"
-msgstr ""
+msgstr "Gérer tous les téléversements"
 
 #: app/templates/admin/dashboard.html:111 app/templates/admin/users.html:3
 #: app/templates/admin/users.html:7
 msgid "Manage Users"
-msgstr ""
+msgstr "Gérer les utilisateurs"
 
 #: app/templates/admin/dashboard.html:117
 msgid "Make Announcement"
-msgstr ""
+msgstr "Créer une annonce"
 
 #: app/templates/admin/dashboard.html:123
 #: app/templates/admin/server_tools.html:3
 #: app/templates/admin/server_tools.html:7
 msgid "Server Tools"
-msgstr ""
+msgstr "Outils serveur"
 
 #: app/templates/admin/dashboard.html:129
 msgid "Autoreviewer"
-msgstr ""
+msgstr "Revue automatique"
 
 #: app/templates/admin/dashboard.html:135
 msgid "A/B Testing"
-msgstr ""
+msgstr "Tests A/B"
 
 #: app/templates/admin/server_tools.html:18
 #: app/templates/admin/server_tools.html:303
 msgid "System Information"
-msgstr ""
+msgstr "Information système"
 
 #: app/templates/admin/server_tools.html:24
 msgid "Uptime"
-msgstr ""
+msgstr "Temps de disponibilité"
 
 #: app/templates/admin/server_tools.html:27
 msgid "days"
-msgstr ""
+msgstr "jours"
 
 #: app/templates/admin/server_tools.html:35
 #: app/templates/admin/server_tools.html:314
 msgid "CPU Usage"
-msgstr ""
+msgstr "Utilisation processeur"
 
 #: app/templates/admin/server_tools.html:40
 msgid "System information unavailable"
-msgstr ""
+msgstr "Information système non disponible"
 
 #: app/templates/admin/server_tools.html:49
 #: app/templates/admin/server_tools.html:315
 msgid "Memory Usage"
-msgstr ""
+msgstr "Utilisation de la mémoire"
 
 #: app/templates/admin/server_tools.html:66
 msgid "Memory information unavailable"
-msgstr ""
+msgstr "Utilisation de la mémoire indisponible"
 
 #: app/templates/admin/server_tools.html:78
 msgid "Disk Usage"
-msgstr ""
+msgstr "Utilisation du disque"
 
 #: app/templates/admin/server_tools.html:95
 msgid "Disk information unavailable"
-msgstr ""
+msgstr "Information du disque indisponible"
 
 #: app/templates/admin/server_tools.html:104
 msgid "Uploads Storage"
-msgstr ""
+msgstr "Stockage des téléversements"
 
 #: app/templates/admin/server_tools.html:109
 msgid "Total Size"
-msgstr ""
+msgstr "Taille totale"
 
 #: app/templates/admin/server_tools.html:113
 msgid "Upload storage information unavailable"
-msgstr ""
+msgstr "Informations sur le stockage du téléversement indisponible"
 
 #: app/templates/admin/server_tools.html:122
 msgid "Chunk Cache"
@@ -1232,230 +1232,230 @@ msgstr ""
 
 #: app/templates/admin/server_tools.html:127
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: app/templates/admin/server_tools.html:131
 msgid "Chunk cache information unavailable"
-msgstr ""
+msgstr "Informations sur le cache de segments indisponibles"
 
 #: app/templates/admin/server_tools.html:143
 msgid "Storage Management"
-msgstr ""
+msgstr "Gestion du stockage"
 
 #: app/templates/admin/server_tools.html:150
 msgid "Are you sure you want to clear all chunk cache files?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir effacer tous les fichiers de cache des segments ?"
 
 #: app/templates/admin/server_tools.html:152
 msgid "Clear Chunk Cache"
-msgstr ""
+msgstr "Vider le cache des segments"
 
 #: app/templates/admin/server_tools.html:155
 msgid "Removes all files from the chunks directory to free up space"
-msgstr ""
+msgstr "Supprime tous les fichiers du répertoire des morceaux pour libérer de l'espace"
 
 #: app/templates/admin/server_tools.html:161
 msgid "Are you sure you want to remove orphaned files?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer les fichiers orphelins ?"
 
 #: app/templates/admin/server_tools.html:163
 msgid "Clean Orphaned Files"
-msgstr ""
+msgstr "Nettoyer les fichiers orphelins"
 
 #: app/templates/admin/server_tools.html:166
 msgid "Removes upload files that no longer have database entries"
-msgstr ""
+msgstr "Supprime les fichiers de téléversement qui n'ont plus d'entrées de base de données"
 
 #: app/templates/admin/server_tools.html:172
 msgid "Refresh System Info"
-msgstr ""
+msgstr "Rafraichir les informations système"
 
 #: app/templates/admin/server_tools.html:174
 msgid "Updates system information and statistics"
-msgstr ""
+msgstr "Mettre à jour les informations et les statistiques"
 
 #: app/templates/admin/server_tools.html:187
 msgid "Server Management"
-msgstr ""
+msgstr "Gestion du serveur"
 
 #: app/templates/admin/server_tools.html:194
 msgid "Are you sure you want to restart the server? This will temporarily interrupt service."
-msgstr ""
+msgstr "Êtes-vous certain de redémarrer le serveur ? Cela interrompra temporairement le service"
 
 #: app/templates/admin/server_tools.html:196
 msgid "Restart Server"
-msgstr ""
+msgstr "Redémarrer le serveur"
 
 #: app/templates/admin/server_tools.html:199
 msgid "Gracefully restarts the server application"
-msgstr ""
+msgstr "Redémarre gracieusement l'application serveur"
 
 #: app/templates/admin/server_tools.html:205
 msgid "Detailed System Info"
-msgstr ""
+msgstr "Information système détaillé"
 
 #: app/templates/admin/server_tools.html:207
 msgid "View detailed system and process information"
-msgstr ""
+msgstr "Voir les informations détaillées du système et des processus"
 
 #: app/templates/admin/server_tools.html:220
 msgid "Database Information"
-msgstr ""
+msgstr "Information de la base de données"
 
 #: app/templates/admin/server_tools.html:226
 msgid "Database Size"
-msgstr ""
+msgstr "Taille de la base de données"
 
 #: app/templates/admin/server_tools.html:238
 msgid "Total Records"
-msgstr ""
+msgstr "Enregistrements totaux"
 
 #: app/templates/admin/server_tools.html:241 app/templates/admin/users.html:22
 msgid "Uploads"
-msgstr ""
+msgstr "Téléversements"
 
 #: app/templates/admin/server_tools.html:256
 msgid "Detailed System Information"
-msgstr ""
+msgstr "Information système détaillé"
 
 #: app/templates/admin/server_tools.html:263
 #: app/templates/admin/server_tools.html:292
 msgid "Loading..."
-msgstr ""
+msgstr "Chargement..."
 
 #: app/templates/admin/server_tools.html:270
 msgid "Refresh"
-msgstr ""
+msgstr "Rafraîchir"
 
 #: app/templates/admin/server_tools.html:304
 msgid "Platform"
-msgstr ""
+msgstr "Plateforme"
 
 #: app/templates/admin/server_tools.html:305
 msgid "Python Version"
-msgstr ""
+msgstr "Version de Python"
 
 #: app/templates/admin/server_tools.html:306
 msgid "CPU Cores"
-msgstr ""
+msgstr "Cœurs processeur"
 
 #: app/templates/admin/server_tools.html:307
 msgid "Load Average"
-msgstr ""
+msgstr "Charge moyenne"
 
 #: app/templates/admin/server_tools.html:311
 msgid "Process Information"
-msgstr ""
+msgstr "Information processus"
 
 #: app/templates/admin/server_tools.html:312
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: app/templates/admin/server_tools.html:316
 msgid "Threads"
-msgstr ""
+msgstr "Threads"
 
 #: app/templates/admin/server_tools.html:326
 msgid "Network I/O"
-msgstr ""
+msgstr "I/O Réseau"
 
 #: app/templates/admin/server_tools.html:327
 msgid "Bytes Sent"
-msgstr ""
+msgstr "Octets envoyés"
 
 #: app/templates/admin/server_tools.html:328
 msgid "Bytes Received"
-msgstr ""
+msgstr "Octets reçus"
 
 #: app/templates/admin/server_tools.html:333
 msgid "Disk I/O"
-msgstr ""
+msgstr "I/O Disque"
 
 #: app/templates/admin/server_tools.html:334
 msgid "Bytes Read"
-msgstr ""
+msgstr "Octets lus"
 
 #: app/templates/admin/server_tools.html:335
 msgid "Bytes Written"
-msgstr ""
+msgstr "Octets écrits"
 
 #: app/templates/admin/server_tools.html:345
 msgid "Error loading system information"
-msgstr ""
+msgstr "Erreur lors du chargement des informations système"
 
 #: app/templates/admin/uploads.html:3 app/templates/admin/uploads.html:7
 msgid "Manage Uploads"
-msgstr ""
+msgstr "Gérer les envois"
 
 #: app/templates/admin/uploads.html:21
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
 #: app/templates/admin/uploads.html:55 app/templates/admin/users.html:50
 msgid "User"
-msgstr ""
+msgstr "Utilisateur"
 
 #: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #: app/templates/admin/uploads.html:157
 msgid "No uploads found"
-msgstr ""
+msgstr "Pas de téléversements trouvés"
 
 #: app/templates/admin/uploads.html:158
 msgid "No uploads match your current filters."
-msgstr ""
+msgstr "Aucuns téléversements ne correspondent à vos critères"
 
 #: app/templates/admin/users.html:19
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: app/templates/admin/users.html:21
 msgid "Role"
-msgstr ""
+msgstr "Rôle"
 
 #: app/templates/admin/users.html:23
 msgid "Joined"
-msgstr ""
+msgstr "Joint"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
-msgstr ""
+msgstr "Se connecter à AFHArchive"
 
 #: app/templates/auth/login.html:13
 msgid "Sign in with your Google account to start contributing to the archive."
-msgstr ""
+msgstr "Connectez-vous avec votre compte Google pour commencer à contribuer à l'archive."
 
 #: app/templates/auth/login.html:16
 msgid "Sign in with Google"
-msgstr ""
+msgstr "Se connecter avec Google"
 
 #: app/templates/auth/login.html:21
 msgid "By signing in, you agree to help preserve AndroidFileHost content responsibly. Only files that were previously hosted on AFH will be approved."
-msgstr ""
+msgstr "En vous connectant, vous acceptez de préserver le contenu AndroidFileHost de manière responsable. Seuls les fichiers précédemment hébergés sur AFH seront approuvés."
 
 #: app/templates/errors/404.html:3 app/templates/errors/404.html:11
 msgid "Page Not Found"
-msgstr ""
+msgstr "Page non trouvé"
 
 #: app/templates/errors/404.html:13
 msgid "The page you're looking for doesn't exist or has been moved."
-msgstr ""
+msgstr "La page que vous recherchez n'existe pas ou a été déplacée."
 
 #: app/templates/errors/404.html:16
 msgid "This could be due to a broken link, mistyped URL, or the file may have been removed from our archive."
-msgstr ""
+msgstr "Cela pourrait être dû à un lien cassé, une URL mal tapée ou le fichier peut avoir été supprimé de notre archive."
 
 #: app/templates/errors/404.html:20
 msgid "Search for files..."
-msgstr ""
+msgstr "Rechercher des fichiers..."
 
 #: app/templates/errors/404.html:28
 msgid "Go Home"
-msgstr ""
+msgstr "Retourner à l'accueil"
 
 #: app/templates/errors/404.html:34
 msgid "Go Back"
-msgstr ""
+msgstr "Retourner"
 
