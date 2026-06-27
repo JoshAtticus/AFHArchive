@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2026-06-27 02:48\n"
+"PO-Revision-Date: 2026-06-27 04:04\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -44,15 +44,15 @@ msgstr "AFHArchive s'engage à maintenir une communauté respectueuse et solidai
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr "Partagez des fichiers de développement Android légitimes et utiles"
+msgstr "Partager des fichiers de développement Android légitimes et utiles"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr "Fournissez une description et des informations accrues "
+msgstr "Fournir une description et des informations accrues "
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr "Respectez les droits de propriétés intellectuelles"
+msgstr "Respecter les droits de propriétés intellectuelles"
 
 #: app/templates/about.html:26
 msgid "Open Source"
@@ -204,7 +204,7 @@ msgstr "Voir les détails"
 #: app/templates/admin/uploads.html:59 app/templates/browse.html:71
 #: app/templates/my_uploads.html:22 app/templates/thank_you.html:75
 msgid "Uploaded"
-msgstr "Téléversé"
+msgstr "Téléversé le :"
 
 #: app/templates/admin/uploads.html:118 app/templates/browse.html:87
 msgid "Previous"
@@ -257,7 +257,7 @@ msgstr "Aide pour traduire"
 
 #: app/templates/contact.html:51
 msgid "Help us make AFHArchive available in more languages by joining our translation project."
-msgstr "Aidez-nous à rendre AFHArchive disponible dans plusieurs langues en rejoignant notre projet de traduction"
+msgstr "Aidez-nous à rendre AFHArchive disponible dans plusieurs langues en rejoignant notre projet de traduction."
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
@@ -313,7 +313,7 @@ msgstr "Informations sur l'appareil"
 
 #: app/templates/file_detail.html:16
 msgid "Manufacturer:"
-msgstr "Fabriquant :"
+msgstr "Fabricant :"
 
 #: app/templates/file_detail.html:20
 msgid "Model:"
@@ -329,7 +329,7 @@ msgstr "Hachage MD5"
 
 #: app/templates/file_detail.html:41
 msgid "Uploaded:"
-msgstr "Envoyé :"
+msgstr "Téléversé le :"
 
 #: app/templates/file_detail.html:51
 msgid "Original Links"
@@ -364,7 +364,7 @@ msgstr "Aidez à garder cette archive en vie"
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 #: app/templates/thank_you.html:92
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr "Votre soutien aide à couvrir les coûts d’hébergement et maintient ce projet de préservation en vie."
+msgstr "Votre soutien aide à couvrir les coûts d’hébergement et la préservation de ce projet."
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
 #: app/templates/thank_you.html:94
@@ -381,7 +381,7 @@ msgstr "Fichier de vérification"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
-msgstr "Vous pouvez vérifier l'intégrité du fichier en utilisant son hache MD5:"
+msgstr "Vous pouvez vérifier l'intégrité du fichier en utilisant son hache MD5 :"
 
 #: app/templates/file_detail.html:119
 msgid "Important"
@@ -397,7 +397,7 @@ msgstr "Les fichiers sont fournis tel-quel dans le but de préservations"
 
 #: app/templates/file_detail.html:123
 msgid "Use at your own risk and ensure compatibility"
-msgstr "Utilisez à vos propres risques, et vérifiez en amont de la compatibilité"
+msgstr "Utilisez à vos propres risques, et vérifiez en amont la compatibilité"
 
 #: app/templates/file_detail.html:124
 msgid "Downloads are rate-limited to preserve bandwidth"
@@ -405,7 +405,7 @@ msgstr "Les téléchargements sont limités pour préserver la bande passante"
 
 #: app/templates/file_detail.html:133
 msgid "Contributed by"
-msgstr "Contribué par"
+msgstr "Contributeur"
 
 #: app/templates/index.html:10
 #, python-format
@@ -656,7 +656,7 @@ msgstr "ex: Galaxy S21, Pixel 6, Générique"
 
 #: app/templates/upload.html:68
 msgid "Original AndroidFileHost Link"
-msgstr "Lient original AndroidFileHost"
+msgstr "Lien original AndroidFileHost"
 
 #: app/templates/upload.html:70
 msgid "https://androidfilehost.com/?fid=..."
