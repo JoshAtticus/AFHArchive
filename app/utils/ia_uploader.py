@@ -60,7 +60,10 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
         
         uploader_name = upload.uploader.name + " (AFHArchive User)" if upload.uploader else "AFHArchive User"
         upload_date = upload.uploaded_at.strftime('%Y-%m-%d')
-        main_url = app.config.get('MAIN_SERVER_URL', 'https://afharchive.xyz').rstrip('/')
+        main_url = app.config.get('MAIN_SERVER_URL')
+        if not main_url:
+            main_url = 'https://afharchive.xyz'
+        main_url = main_url.rstrip('/')
         afharchive_link = f"{main_url}/file/{upload.id}"
         
         description = (
@@ -239,7 +242,9 @@ def upload_to_ia_background_for_mirror(app, data):
             md = data['metadata']
             item_id = data['item_id']
             original_filename = data['original_filename']
-            main_server_url = data['main_server_url']
+            main_server_url = data.get('main_server_url')
+            if not main_server_url:
+                main_server_url = 'https://afharchive.xyz'
             api_key = data['api_key']
             
             upload = Upload.query.get(file_id)
@@ -304,7 +309,12 @@ def upload_to_ia_background_for_mirror(app, data):
         except Exception as e:
             logger.exception("Failed to upload to IA directly from mirror")
             try:
-                requests.post(f"{data.get('main_server_url', '').rstrip('/')}/api/mirror/ia_upload_complete", json={
+                # Use the validated main_server_url with fallback
+                fallback_url = main_server_url if 'main_server_url' in locals() else data.get('main_server_url', 'https://afharchive.xyz')
+                if not fallback_url:
+                    fallback_url = 'https://afharchive.xyz'
+                
+                requests.post(f"{fallback_url.rstrip('/')}/api/mirror/ia_upload_complete", json={
                     'api_key': data.get('api_key'),
                     'upload_id': data.get('file_id'),
                     'status': 'error',
