@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-11-30 15:14\n"
+"PO-Revision-Date: 2026-06-27 02:48\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr "AFHArchiveについて"
+msgstr "について"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
@@ -220,7 +220,7 @@ msgstr "ファイルが見つかりません"
 
 #: app/templates/browse.html:127
 msgid "Try adjusting your search filters or browse all files."
-msgstr ""
+msgstr "検索フィルターを調節するか、すべてのファイルを参照してください。"
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
@@ -257,7 +257,7 @@ msgstr "翻訳ヘルプ"
 
 #: app/templates/contact.html:51
 msgid "Help us make AFHArchive available in more languages by joining our translation project."
-msgstr "私たちの翻訳プロジェクトに参加して、AFHArchiveを多くの言語で利用できるように協力してください！"
+msgstr "私たちの翻訳プロジェクトに参加して、AFHArchiveをより多くの言語で利用できるように協力してください！"
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
@@ -269,7 +269,7 @@ msgstr "バグレポート"
 
 #: app/templates/contact.html:65
 msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
-msgstr "バグが見つかったり、技術的な問題が発生しましたか？すぐに解決できるように、お知らせください。"
+msgstr "バグが見つかったり、技術的な問題が発生しましたか？すぐに解決できるように、私たちにお知らせください。"
 
 #: app/templates/contact.html:68
 msgid "Report Bug"
@@ -281,7 +281,7 @@ msgstr "バグ報告"
 
 #: app/templates/contact.html:78
 msgid "Check our"
-msgstr ""
+msgstr "確認する"
 
 #: app/templates/contact.html:78
 msgid "and"
@@ -293,7 +293,7 @@ msgstr "プライバシーポリシー"
 
 #: app/templates/contact.html:79
 msgid "Search existing"
-msgstr ""
+msgstr "重複した検索"
 
 #: app/templates/contact.html:79
 msgid "GitHub issues"
@@ -305,7 +305,7 @@ msgstr ""
 
 #: app/templates/contact.html:80
 msgid "For upload issues, make sure your files meet our guidelines"
-msgstr "アップロードの問題の場合は、ファイルがガイドラインにきちんと準拠しているかを確認してください。"
+msgstr "アップロードの問題の場合は、ファイルがガイドラインに準拠しているかを確認してください。"
 
 #: app/templates/file_detail.html:13
 msgid "Device Information"
@@ -364,7 +364,7 @@ msgstr "アーカイブの運営にご協力ください！"
 #: app/templates/file_detail.html:100 app/templates/index.html:80
 #: app/templates/thank_you.html:92
 msgid "Your support helps cover hosting costs and keeps this preservation project alive."
-msgstr "あなたがサポートすることで、サイトのホスティング費用が賄われ、このプロジェクトが存続できることに貢献できます。"
+msgstr "あなたがサポートすることで、サイトのホスティング費用が賄われ、プロジェクトが存続できることに貢献できます。"
 
 #: app/templates/file_detail.html:102 app/templates/index.html:82
 #: app/templates/thank_you.html:94
@@ -381,7 +381,7 @@ msgstr "ファイルの検証"
 
 #: app/templates/file_detail.html:114
 msgid "You can verify the file integrity using the MD5 hash:"
-msgstr ""
+msgstr "MD5ハッシュを使用してファイルの整合性を確認できます"
 
 #: app/templates/file_detail.html:119
 msgid "Important"
@@ -422,7 +422,7 @@ msgstr "廃止されたAndroidFileHostプラットフォームからのコンテ
 
 #: app/templates/index.html:17
 msgid "Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost."
-msgstr "過去にAndroidFileHostでアップロードされていたファイルをアップロードして、Androidの開発の歴史を残すことにご協力ください。"
+msgstr "過去にAndroidFileHostでアップロードされていたファイルをアップロードして、Android開発の歴史を残すことにご協力ください。"
 
 #: app/templates/index.html:20
 msgid "Sign In to Contribute"
@@ -572,11 +572,11 @@ msgstr "その他のファイルを参照する"
 
 #: app/templates/thank_you.html:128
 msgid "Starting download in"
-msgstr ""
+msgstr "ダウンロードを開始します"
 
 #: app/templates/thank_you.html:128
 msgid "seconds..."
-msgstr ""
+msgstr "..秒後..."
 
 #: app/templates/thank_you.html:130
 msgid "Starting download..."
@@ -645,7 +645,7 @@ msgstr "デバイスの製造元"
 
 #: app/templates/upload.html:55
 msgid "e.g., Samsung, Google, OnePlus"
-msgstr "例: Samsung, Google, OnePlus"
+msgstr "たとえば... Samsung, Google, OnePlus"
 
 #: app/templates/upload.html:60
 msgid "Device Model"
@@ -685,7 +685,7 @@ msgstr "追加の情報"
 
 #: app/templates/upload.html:84
 msgid "Please write in English. Notes are publicly visible - include ROM version, build date, or other relevant details. Do not include personal information, file names, or MD5 hashes as those are already displayed separately."
-msgstr ""
+msgstr "このノートは英語で記入してください。ノートはパブリックで公開されるので、ROMのバージョン、ビルドした日付、その他の関連情報を記入する必要があります。個人情報やファイル名、MD5ハッシュはすでに含まれているので、記入する必要はありません。"
 
 #: app/templates/upload.html:91
 msgid "Cancel Upload"
@@ -757,7 +757,7 @@ msgstr "チャンクのアップロードに失敗しました"
 
 #: app/templates/upload.html:132
 msgid "Invalid response from server"
-msgstr ""
+msgstr "サーバーからの応答が得られない"
 
 #: app/templates/upload.html:133
 msgid "Network error during chunk upload"
@@ -785,7 +785,7 @@ msgstr "チャンクをアップロードしています"
 
 #: app/templates/upload.html:139
 msgid "of"
-msgstr ""
+msgstr "の"
 
 #: app/templates/upload.html:140
 msgid "MB/s"
@@ -817,11 +817,11 @@ msgstr "A/Bテストの管理"
 
 #: app/templates/admin/ab_tests.html:13 app/templates/admin/ab_tests.html:156
 msgid "Create Test"
-msgstr ""
+msgstr "テスト作成"
 
 #: app/templates/admin/ab_tests.html:17
 msgid "Init Direct Download Test"
-msgstr ""
+msgstr "直接ダウンロードテスト"
 
 #: app/templates/admin/ab_tests.html:32
 msgid "Active"
@@ -900,11 +900,11 @@ msgstr "閉じる"
 
 #: app/templates/admin/ab_tests.html:138
 msgid "Test Name"
-msgstr ""
+msgstr "名前テスト"
 
 #: app/templates/admin/ab_tests.html:140
 msgid "Use lowercase letters, numbers, and underscores only."
-msgstr ""
+msgstr "小数点、数字、アンダースコアのみを使用してください。"
 
 #: app/templates/admin/ab_tests.html:143 app/templates/admin/ab_tests.html:175
 msgid "Description"
@@ -925,7 +925,7 @@ msgstr "キャンセル"
 
 #: app/templates/admin/ab_tests.html:170
 msgid "Edit Test:"
-msgstr ""
+msgstr "編集テスト:"
 
 #: app/templates/admin/ab_tests.html:188
 msgid "Update Test"
@@ -941,7 +941,7 @@ msgstr "A/Bテストを削除しても良いですか?"
 
 #: app/templates/admin/ab_tests.html:207
 msgid "This will permanently delete all test data and user assignments."
-msgstr ""
+msgstr "これにより、すべてのテストデータとユーザー割当が削除されます。"
 
 #: app/templates/admin/ab_tests.html:213
 msgid "Delete Test"
@@ -996,7 +996,7 @@ msgstr "ホームページのバナー"
 
 #: app/templates/admin/announcement.html:31
 msgid "Recipients"
-msgstr ""
+msgstr "受信者"
 
 #: app/templates/admin/announcement.html:34
 msgid "All Users"
@@ -1012,11 +1012,11 @@ msgstr "アナウンスを行う前に、よく考えてみてください。ア
 
 #: app/templates/admin/autoreviewer.html:8
 msgid "Autoreviewer Management"
-msgstr ""
+msgstr "自動評価システムの管理"
 
 #: app/templates/admin/autoreviewer.html:21
 msgid "Autoreviewer System Info"
-msgstr ""
+msgstr "自動評価システムの情報"
 
 #: app/templates/admin/autoreviewer.html:26
 msgid "System User ID:"
@@ -1032,7 +1032,7 @@ msgstr "メールアドレス："
 
 #: app/templates/admin/autoreviewer.html:40
 msgid "Admin Status:"
-msgstr "："
+msgstr "管理者ステータス:"
 
 #: app/templates/admin/autoreviewer.html:41
 msgid "Yes"
@@ -1048,11 +1048,11 @@ msgstr "作成日："
 
 #: app/templates/admin/autoreviewer.html:58
 msgid "Autoreviewer Statistics"
-msgstr ""
+msgstr "自動評価システムの統計"
 
 #: app/templates/admin/autoreviewer.html:65
 msgid "Total Reviewed"
-msgstr ""
+msgstr "レビュー済"
 
 #: app/templates/admin/autoreviewer.html:71
 msgid "Duplicates Rejected"
@@ -1068,7 +1068,7 @@ msgstr ""
 
 #: app/templates/admin/autoreviewer.html:106
 msgid "Run Batch Processing"
-msgstr ""
+msgstr "バッチ処理を実行する"
 
 #: app/templates/admin/autoreviewer.html:108
 msgid "Run the autoreviewer on all pending uploads to check for duplicates. This will automatically reject any uploads that have duplicate MD5 hashes."
@@ -1092,11 +1092,11 @@ msgstr "MD5ハッシュを比較して正確な重複を検出する"
 
 #: app/templates/admin/autoreviewer.html:122
 msgid "Rejects uploads that match existing approved or pending files"
-msgstr ""
+msgstr "既存のファイルと競合するファイルを拒否します。"
 
 #: app/templates/admin/autoreviewer.html:123
 msgid "Sends notification emails to uploaders"
-msgstr ""
+msgstr "アップローダーに通知を送信します。"
 
 #: app/templates/admin/autoreviewer.html:124
 msgid "Appears as \"Autoreviewer\" in the system"
@@ -1257,11 +1257,11 @@ msgstr "チャンクディレクトリからすべてのファイルを削除し
 
 #: app/templates/admin/server_tools.html:161
 msgid "Are you sure you want to remove orphaned files?"
-msgstr ""
+msgstr "冗長化したファイルを削除しても良いですか？"
 
 #: app/templates/admin/server_tools.html:163
 msgid "Clean Orphaned Files"
-msgstr ""
+msgstr "冗長化したファイルをクリーンアップする"
 
 #: app/templates/admin/server_tools.html:166
 msgid "Removes upload files that no longer have database entries"
@@ -1289,7 +1289,7 @@ msgstr "サーバーを再起動する"
 
 #: app/templates/admin/server_tools.html:199
 msgid "Gracefully restarts the server application"
-msgstr ""
+msgstr "サーバーアプリケーションを正常に再起動させる"
 
 #: app/templates/admin/server_tools.html:205
 msgid "Detailed System Info"
