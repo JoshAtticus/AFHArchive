@@ -238,10 +238,29 @@ def upload_to_ia_background_for_mirror(app, data):
             if not upload:
                 raise Exception("Upload not found in mirror DB")
                 
-            local_path = upload.file_path
-            upload_dir = app.config.get('UPLOAD_FOLDER', 'uploads')
-            if not os.path.isabs(local_path):
-                local_path = os.path.join(upload_dir, local_path)
+            # Convert relative path to absolute path using app_root logic
+            if not os.path.isabs(upload.file_path):
+                app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                
+                if upload.file_path.startswith('uploads/') or upload.file_path.startswith('uploads\\'):
+                     local_path = os.path.join(app_root, upload.file_path)
+                else:
+                     upload_dir = app.config.get('UPLOAD_FOLDER', 'uploads')
+                     local_path = os.path.join(upload_dir, upload.file_path)
+                     if not os.path.isabs(local_path):
+                         local_path = os.path.join(app_root, local_path)
+            else:
+                local_path = upload.file_path
+                
+            if not os.path.exists(local_path):
+                # Try fallback to uploads folder directly
+                fallback_path = os.path.join(app.config.get('UPLOAD_FOLDER', 'uploads'), os.path.basename(upload.file_path))
+                if not os.path.isabs(fallback_path):
+                    app_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                    fallback_path = os.path.join(app_root, fallback_path)
+                    
+                if os.path.exists(fallback_path):
+                    local_path = fallback_path
 
             if not os.path.exists(local_path):
                 raise Exception(f"File not found on mirror disk at {local_path}")
