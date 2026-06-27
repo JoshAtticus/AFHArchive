@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2026-03-12 14:21\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr ""
 
 #: app/templates/about.html:26
 msgid "Open Source"
-msgstr ""
+msgstr "Open Source"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
@@ -72,7 +72,7 @@ msgstr ""
 
 #: app/templates/about.html:33
 msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
-msgstr ""
+msgstr "По вопросам, предложениям или для получения поддержки, пожалуйста, посетите нашу страницу контактов или свяжитесь с нами через наш репозиторий GitHub."
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
@@ -224,15 +224,15 @@ msgstr "Измените фильтры поиска или посмотрите
 
 #: app/templates/contact.html:15
 msgid "We'd love to hear from you! Get in touch with the AFHArchive team through any of the following methods:"
-msgstr ""
+msgstr "Мы будем рады получить от вас обратную связь! Свяжитесь с командой AFHArchive любым из следующих способов:"
 
 #: app/templates/contact.html:22
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: app/templates/contact.html:23
 msgid "Report issues, suggest features, or contribute to the project on our GitHub repository."
-msgstr ""
+msgstr "Сообщайте о проблемах, предлагайте новые функции или вносите свой вклад в проект в нашем репозитории GitHub."
 
 #: app/templates/contact.html:25
 msgid "Open an Issue"
@@ -257,7 +257,7 @@ msgstr ""
 
 #: app/templates/contact.html:51
 msgid "Help us make AFHArchive available in more languages by joining our translation project."
-msgstr ""
+msgstr "Помогите нам сделать AFHArchive доступным на большем количестве языков, присоединившись к нашему проекту перевода."
 
 #: app/templates/contact.html:54
 msgid "Join Translation Project"
@@ -269,11 +269,11 @@ msgstr ""
 
 #: app/templates/contact.html:65
 msgid "Found a bug or experiencing technical issues? Let us know so we can fix it quickly."
-msgstr ""
+msgstr "Обнаружили ошибку или столкнулись с техническими проблемами? Сообщите нам, чтобы мы могли быстро их исправить."
 
 #: app/templates/contact.html:68
 msgid "Report Bug"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: app/templates/contact.html:76
 msgid "Before Contacting Us"
@@ -528,15 +528,15 @@ msgstr "Загрузить первый файл"
 
 #: app/templates/thank_you.html:3
 msgid "Thank You"
-msgstr ""
+msgstr "Спасибо"
 
 #: app/templates/thank_you.html:12
 msgid "Thank You for Downloading!"
-msgstr ""
+msgstr "Спасибо за скачивание!"
 
 #: app/templates/thank_you.html:19
 msgid "Your download should start automatically in a few seconds."
-msgstr ""
+msgstr "Ваше скачивание должно начаться автоматически через несколько секунд."
 
 #: app/templates/thank_you.html:20
 msgid "If it doesn't start, click the button below."
@@ -556,15 +556,15 @@ msgstr ""
 
 #: app/templates/thank_you.html:39 app/templates/thank_you.html:44
 msgid "Start Download"
-msgstr ""
+msgstr "Начать скачивание"
 
 #: app/templates/thank_you.html:53
 msgid "Starting download in 3 seconds..."
-msgstr ""
+msgstr "Скачивание начнется через 3 секунды..."
 
 #: app/templates/thank_you.html:104
 msgid "Back to File Details"
-msgstr ""
+msgstr "Вернутся к сведениям о файле"
 
 #: app/templates/thank_you.html:107
 msgid "Browse More Files"
@@ -744,7 +744,7 @@ msgstr "Не удалось начать загрузку"
 
 #: app/templates/upload.html:129
 msgid "Starting chunk upload..."
-msgstr "Начата загрузка чанков..."
+msgstr "Начата загрузка фрагментов файла..."
 
 #: app/templates/upload.html:130
 msgid "Upload cancelled"
@@ -764,7 +764,7 @@ msgstr "Сетевая ошибка при загрузке чанков"
 
 #: app/templates/upload.html:134
 msgid "Chunk upload cancelled"
-msgstr "Загрузка чанков отменена"
+msgstr "Загрузка фрагментов отменена"
 
 #: app/templates/upload.html:135
 msgid "Assembling file..."
@@ -780,7 +780,7 @@ msgstr "Загрузка завершена успешно!"
 
 #: app/templates/upload.html:138
 msgid "Uploading chunk"
-msgstr "Загрузка чанка"
+msgstr "Загрузка фрагмента"
 
 #: app/templates/upload.html:139
 msgid "of"
@@ -1397,27 +1397,27 @@ msgstr ""
 
 #: app/templates/admin/uploads.html:60 app/templates/admin/users.html:24
 msgid "Actions"
-msgstr ""
+msgstr "Действия"
 
 #: app/templates/admin/uploads.html:157
 msgid "No uploads found"
-msgstr ""
+msgstr "Загрузки не найдены"
 
 #: app/templates/admin/uploads.html:158
 msgid "No uploads match your current filters."
-msgstr ""
+msgstr "Не найдено файлов соответствующих вашим текущим фильтрам."
 
 #: app/templates/admin/users.html:19
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: app/templates/admin/users.html:21
 msgid "Role"
-msgstr ""
+msgstr "Роль"
 
 #: app/templates/admin/users.html:23
 msgid "Joined"
-msgstr ""
+msgstr "Присоединился"
 
 #: app/templates/auth/login.html:10
 msgid "Sign In to AFHArchive"
