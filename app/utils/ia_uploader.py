@@ -127,14 +127,22 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
         use_mirror_for_upload = False
         target_mirror = None
         
+        from app.models import Mirror
+        from datetime import datetime, timedelta
+        
+        # Online if heartbeat within last 5 minutes
+        online_threshold = datetime.utcnow() - timedelta(minutes=5)
+        
         if source_mirror_id and source_mirror_id != 'main':
-            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=source_mirror_id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
+            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=source_mirror_id, status='synced')\
+                                .join(Mirror).filter(Mirror.is_active == True, Mirror.last_heartbeat > online_threshold).first()
             if target_mirror:
                 use_mirror_for_upload = True
         
         if not use_mirror_for_upload and not os.path.exists(file_to_upload):
             # No specific mirror requested, but main server doesn't have it either
-            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, status='synced').join(FileReplica.mirror).filter_by(is_active=True, is_online=True).first()
+            target_mirror = FileReplica.query.filter_by(upload_id=upload.id, status='synced')\
+                                .join(Mirror).filter(Mirror.is_active == True, Mirror.last_heartbeat > online_threshold).first()
             if target_mirror:
                 use_mirror_for_upload = True
             else:
