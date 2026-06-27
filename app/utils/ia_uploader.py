@@ -6,8 +6,12 @@ import internetarchive
 from app import db
 from app.models import Upload, SiteConfig, FileReplica
 import logging
+import threading
 
 logger = logging.getLogger(__name__)
+
+# Global lock to serialize IA uploads and prevent rate-limiting/spam detection
+ia_upload_lock = threading.Lock()
 
 class ThrottledFile:
     def __init__(self, fileobj, rate_limit_kbps):
@@ -199,13 +203,16 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
                 
             item = session.get_item(item_id)
             # The internetarchive library's upload() method returns a list of responses
-            responses = item.upload(
-                files={upload.original_filename: file_obj},
-                metadata=md,
-                retries=3,
-                retries_sleep=30,
-                verbose=True
-            )
+            
+            with ia_upload_lock:
+                responses = item.upload(
+                    files={upload.original_filename: file_obj},
+                    metadata=md,
+                    retries=3,
+                    retries_sleep=60,
+                    verbose=True
+                )
+                time.sleep(15)  # Pace uploads to avoid IA spam detection
             
             # Close file_obj explicitely to allow temp removing
             file_obj.close()
@@ -285,13 +292,17 @@ def upload_to_ia_background_for_mirror(app, data):
                 file_obj = ThrottledFile(file_obj, int(speed_limit_kbps))
                 
             item = session.get_item(item_id)
-            responses = item.upload(
-                files={original_filename: file_obj},
-                metadata=md,
-                retries=3,
-                retries_sleep=30,
-                verbose=True
-            )
+            
+            with ia_upload_lock:
+                responses = item.upload(
+                    files={original_filename: file_obj},
+                    metadata=md,
+                    retries=3,
+                    retries_sleep=60,
+                    verbose=True
+                )
+                time.sleep(15)  # Pace uploads to avoid IA spam detection
+            
             file_obj.close()
             
             if responses and hasattr(responses[0], 'status_code') and responses[0].status_code not in [200, 201]:
