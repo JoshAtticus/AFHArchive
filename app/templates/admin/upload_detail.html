@@ -16,11 +16,11 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5><i class="fas fa-info-circle"></i> File Information</h5>
                 {% if upload.is_pending %}
-                    <span class="badge status-badge status-pending">Pending Review</span>
+                <span class="badge status-badge status-pending">Pending Review</span>
                 {% elif upload.is_approved %}
-                    <span class="badge status-badge status-approved">Approved</span>
+                <span class="badge status-badge status-approved">Approved</span>
                 {% else %}
-                    <span class="badge status-badge status-rejected">Rejected</span>
+                <span class="badge status-badge status-rejected">Rejected</span>
                 {% endif %}
             </div>
             <div class="card-body">
@@ -38,32 +38,33 @@
                         <td>
                             <code>{{ upload.md5_hash }}</code>
                             {% if upload.afh_link %}
-                                <div class="mt-2">
-                                    {% if upload.afh_md5_status == 'match' %}
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-check-circle"></i> Matches AFH
-                                        </span>
-                                    {% elif upload.afh_md5_status == 'mismatch' %}
-                                        <span class="badge bg-danger">
-                                            <i class="fas fa-times-circle"></i> Doesn't match AFH
-                                        </span>
-                                    {% elif upload.afh_md5_status == 'error' %}
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="fas fa-exclamation-triangle"></i> Couldn't verify MD5 against AFH
-                                        </span>
-                                    {% elif upload.afh_md5_status == 'no_link' %}
-                                        <span class="badge bg-secondary">
-                                            <i class="fas fa-info-circle"></i> No AFH link
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">
-                                            <i class="fas fa-question-circle"></i> Not verified
-                                        </span>
-                                    {% endif %}
-                                    <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="recheckMd5Btn" onclick="recheckAFHMD5()">
-                                        <i class="fas fa-sync-alt"></i> Recheck
-                                    </button>
-                                </div>
+                            <div class="mt-2">
+                                {% if upload.afh_md5_status == 'match' %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle"></i> Matches AFH
+                                </span>
+                                {% elif upload.afh_md5_status == 'mismatch' %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times-circle"></i> Doesn't match AFH
+                                </span>
+                                {% elif upload.afh_md5_status == 'error' %}
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-exclamation-triangle"></i> Couldn't verify MD5 against AFH
+                                </span>
+                                {% elif upload.afh_md5_status == 'no_link' %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-info-circle"></i> No AFH link
+                                </span>
+                                {% else %}
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-question-circle"></i> Not verified
+                                </span>
+                                {% endif %}
+                                <button type="button" class="btn btn-sm btn-outline-primary ms-2" id="recheckMd5Btn"
+                                    onclick="recheckAFHMD5()">
+                                    <i class="fas fa-sync-alt"></i> Recheck
+                                </button>
+                            </div>
                             {% endif %}
                         </td>
                     </tr>
@@ -79,9 +80,9 @@
                         <td>AFH Link</td>
                         <td>
                             {% if upload.afh_link %}
-                                <a href="{{ upload.afh_link }}" target="_blank">{{ upload.afh_link }}</a>
+                            <a href="{{ upload.afh_link }}" target="_blank">{{ upload.afh_link }}</a>
                             {% else %}
-                                <em>Not provided</em>
+                            <em>Not provided</em>
                             {% endif %}
                         </td>
                     </tr>
@@ -89,9 +90,9 @@
                         <td>XDA Thread</td>
                         <td>
                             {% if upload.xda_thread %}
-                                <a href="{{ upload.xda_thread }}" target="_blank">{{ upload.xda_thread }}</a>
+                            <a href="{{ upload.xda_thread }}" target="_blank">{{ upload.xda_thread }}</a>
                             {% else %}
-                                <em>Not provided</em>
+                            <em>Not provided</em>
                             {% endif %}
                         </td>
                     </tr>
@@ -112,14 +113,14 @@
                         <td>Reviewed By</td>
                         <td>
                             {% if upload.reviewer %}
-                                {{ upload.reviewer.name }}
-                                {% if upload.reviewer.email == 'autoreviewer@afharchive.system' %}
-                                    <span class="badge badge-info ml-2">
-                                        <i class="fas fa-robot"></i> Automated
-                                    </span>
-                                {% endif %}
+                            {{ upload.reviewer.name }}
+                            {% if upload.reviewer.email == 'autoreviewer@afharchive.system' %}
+                            <span class="badge badge-info ml-2">
+                                <i class="fas fa-robot"></i> Automated
+                            </span>
+                            {% endif %}
                             {% else %}
-                                Unknown
+                            Unknown
                             {% endif %}
                         </td>
                     </tr>
@@ -170,103 +171,119 @@
                                 <td>Internet Archive</td>
                                 <td>
                                     {% if upload.ia_status == 'synced' %}
-                                        <span class="badge bg-success">Synced</span>
-                                        <br><a href="https://archive.org/details/{{ upload.ia_item_id }}" target="_blank" class="small">View Item</a>
+                                    <span class="badge bg-success">Synced</span>
                                     {% elif upload.ia_status == 'syncing' %}
-                                        <span class="badge bg-info">Syncing</span>
-                                        <br><small class="text-muted">Upload may be stuck. Use Reset to retry or mark as synced manually.</small>
+                                    <span class="badge bg-info">Syncing</span>
+                                    <br><small class="text-muted">Upload may be stuck. Use Reset to retry or mark as
+                                        synced manually.</small>
                                     {% elif upload.ia_status == 'error' %}
-                                        <span class="badge bg-danger">Error</span>
-                                        {% if upload.ia_error_message %}
-                                            <div class="text-danger small mt-1" style="font-size: 0.75rem; word-wrap: break-word;">
-                                                {{ upload.ia_error_message }}
-                                            </div>
-                                        {% endif %}
+                                    <span class="badge bg-danger">Error</span>
+                                    {% if upload.ia_error_message %}
+                                    <div class="text-danger small mt-1"
+                                        style="font-size: 0.75rem; word-wrap: break-word;">
+                                        {{ upload.ia_error_message }}
+                                    </div>
+                                    {% endif %}
                                     {% elif upload.ia_status == 'pending' %}
-                                        <span class="badge bg-warning">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                     {% else %}
-                                        <span class="badge bg-secondary">Not uploaded</span>
+                                    <span class="badge bg-secondary">Not uploaded</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if upload.ia_status != 'syncing' and upload.ia_status != 'synced' %}
-                                        <form method="POST" action="{{ url_for('admin.upload_to_ia', upload_id=upload.id) }}" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-primary" title="Upload to IA">
-                                                <i class="fas fa-upload"></i> Upload
-                                            </button>
-                                        </form>
+                                    <form method="POST"
+                                        action="{{ url_for('admin.upload_to_ia', upload_id=upload.id) }}"
+                                        class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-primary" title="Upload to IA">
+                                            <i class="fas fa-upload"></i> Upload
+                                        </button>
+                                    </form>
                                     {% endif %}
                                     {% if upload.ia_status == 'syncing' %}
-                                        <form method="POST" action="{{ url_for('admin.ia_reset', upload_id=upload.id) }}" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-warning" title="Reset stuck syncing status"
-                                                onclick="return confirm('Reset the Internet Archive status to pending so it can be retried?')">
-                                                <i class="fas fa-redo"></i> Reset
-                                            </button>
-                                        </form>
-                                    {% endif %}
-                                    {% if upload.ia_status in ['syncing', 'synced', 'error', 'pending'] or upload.ia_status %}
-                                        <button type="button" class="btn btn-sm btn-secondary mt-1" data-bs-toggle="modal" data-bs-target="#iaMarkSyncedModal" title="Manually set IA item ID">
-                                            <i class="fas fa-check-circle"></i> Mark as Synced
+                                    <form method="POST" action="{{ url_for('admin.ia_reset', upload_id=upload.id) }}"
+                                        class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-warning"
+                                            title="Reset stuck syncing status"
+                                            onclick="return confirm('Reset the Internet Archive status to pending so it can be retried?')">
+                                            <i class="fas fa-redo"></i> Reset
                                         </button>
+                                    </form>
+                                    {% endif %}
+                                    {% if upload.ia_status in ['syncing', 'synced', 'error', 'pending'] or
+                                    upload.ia_status %}
+                                    <button type="button" class="btn btn-sm btn-secondary mt-1" data-bs-toggle="modal"
+                                        data-bs-target="#iaMarkSyncedModal" title="Manually set IA item ID">
+                                        <i class="fas fa-check-circle"></i> Mark as Synced
+                                    </button>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% for mirror in mirrors %}
-                                {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
-                                <tr>
-                                    <td>{{ mirror.name }}</td>
-                                    <td>
-                                        {% if replica %}
-                                            {% if replica.status == 'synced' %}
-                                                <span class="badge bg-success">Synced</span>
-                                            {% elif replica.status == 'syncing' %}
-                                                <span class="badge bg-info">Syncing</span>
-                                            {% elif replica.status == 'error' %}
-                                                <span class="badge bg-danger">Error</span>
-                                                {% if replica.error_message %}
-                                                    <div class="text-danger small mt-1" style="font-size: 0.75rem; word-wrap: break-word;">
-                                                        {% if 'MD5 mismatch' in replica.error_message %}
-                                                            <strong>MD5 Mismatch</strong><br>
-                                                            {{ replica.error_message.replace('MD5 mismatch. ', '').replace('. ', '.<br>') | safe }}
-                                                        {% else %}
-                                                            {{ replica.error_message }}
-                                                        {% endif %}
-                                                    </div>
-                                                {% endif %}
-                                            {% else %}
-                                                <span class="badge bg-warning">{{ replica.status }}</span>
-                                            {% endif %}
+                            {% set replica = upload.replicas | selectattr("mirror_id", "equalto", mirror.id) | first %}
+                            <tr>
+                                <td>{{ mirror.name }}</td>
+                                <td>
+                                    {% if replica %}
+                                    {% if replica.status == 'synced' %}
+                                    <span class="badge bg-success">Synced</span>
+                                    {% elif replica.status == 'syncing' %}
+                                    <span class="badge bg-info">Syncing</span>
+                                    {% elif replica.status == 'error' %}
+                                    <span class="badge bg-danger">Error</span>
+                                    {% if replica.error_message %}
+                                    <div class="text-danger small mt-1"
+                                        style="font-size: 0.75rem; word-wrap: break-word;">
+                                        {% if 'MD5 mismatch' in replica.error_message %}
+                                        <strong>MD5 Mismatch</strong><br>
+                                        {{ replica.error_message.replace('MD5 mismatch. ', '').replace('. ', '.<br>') |
+                                        safe }}
                                         {% else %}
-                                            <span class="badge bg-secondary">Not on mirror</span>
+                                        {{ replica.error_message }}
                                         {% endif %}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#syncModal{{ mirror.id }}">
-                                            <i class="fas fa-sync"></i>
-                                        </button>
-                                        
-                                        <!-- Sync Modal -->
-                                        <div class="modal fade" id="syncModal{{ mirror.id }}" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form action="{{ url_for('admin.trigger_sync', upload_id=upload.id, mirror_id=mirror.id) }}" method="POST">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Sync to {{ mirror.name }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure you want to sync <strong>{{ upload.original_filename }}</strong> to <strong>{{ mirror.name }}</strong>?</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-primary">Sync Now</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                    </div>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="badge bg-warning">{{ replica.status }}</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="badge bg-secondary">Not on mirror</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#syncModal{{ mirror.id }}">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+
+                                    <!-- Sync Modal -->
+                                    <div class="modal fade" id="syncModal{{ mirror.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form
+                                                    action="{{ url_for('admin.trigger_sync', upload_id=upload.id, mirror_id=mirror.id) }}"
+                                                    method="POST">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Sync to {{ mirror.name }}</h5>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to sync <strong>{{
+                                                                upload.original_filename }}</strong> to <strong>{{
+                                                                mirror.name }}</strong>?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Sync Now</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -288,11 +305,12 @@
                             <i class="fas fa-check"></i> Approve Upload
                         </button>
                     </form>
-                    
-                    <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#rejectModal">
+
+                    <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal"
+                        data-bs-target="#rejectModal">
                         <i class="fas fa-times"></i> Reject Upload
                     </button>
-                    
+
                     <button type="button" class="btn btn-info w-100" id="aiReviewBtn" onclick="triggerAIReview()">
                         <i class="fas fa-robot"></i> AI Review
                     </button>
@@ -304,28 +322,29 @@
                             <i class="fas fa-check-circle"></i> Manually Approve
                         </button>
                     </form>
-                    
+
                     <div class="alert alert-warning mt-2 mb-0">
-                        <small><i class="fas fa-info-circle"></i> This upload was rejected. Approving it will restore the file and notify the uploader.</small>
+                        <small><i class="fas fa-info-circle"></i> This upload was rejected. Approving it will restore
+                            the file and notify the uploader.</small>
                     </div>
                 </div>
                 {% endif %}
-                
+
                 <div class="d-grid gap-2 mt-3">
                     <a href="{{ url_for('admin.edit_upload', upload_id=upload.id) }}" class="btn btn-warning">
                         <i class="fas fa-edit"></i> Edit Metadata
                     </a>
-                    
+
                     <a href="{{ url_for('admin.download_file', upload_id=upload.id) }}" class="btn btn-success">
                         <i class="fas fa-download"></i> Download File
                     </a>
-                    
+
                     {% if upload.is_approved %}
                     <a href="{{ url_for('main.file_detail', upload_id=upload.id) }}" class="btn btn-primary">
                         <i class="fas fa-info-circle"></i> View File Details
                     </a>
                     {% endif %}
-                    
+
                     <form method="POST" action="{{ url_for('admin.delete_upload', upload_id=upload.id) }}">
                         <button type="submit" class="btn btn-outline-danger w-100">
                             <i class="fas fa-trash"></i> Delete Upload
@@ -368,8 +387,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="reason" class="form-label">Rejection Reason</label>
-                        <textarea class="form-control" id="reason" name="reason" rows="4" 
-                                  placeholder="Please provide a reason for rejection..."></textarea>
+                        <textarea class="form-control" id="reason" name="reason" rows="4"
+                            placeholder="Please provide a reason for rejection..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -385,121 +404,125 @@
 {% endif %}
 
 <script>
-function showNotification(message, type='info') {
-    // Create alert container if it doesn't exist
-    let container = document.getElementById('notification-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'notification-container';
-        container.style.position = 'fixed';
-        container.style.top = '80px';
-        container.style.right = '20px';
-        container.style.zIndex = '9999';
-        container.style.minWidth = '300px';
-        container.style.maxWidth = '400px';
-        document.body.appendChild(container);
-    }
-    
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow`;
-    alertDiv.role = 'alert';
-    alertDiv.innerHTML = `
+    function showNotification(message, type = 'info') {
+        // Create alert container if it doesn't exist
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            container.style.position = 'fixed';
+            container.style.top = '80px';
+            container.style.right = '20px';
+            container.style.zIndex = '9999';
+            container.style.minWidth = '300px';
+            container.style.maxWidth = '400px';
+            document.body.appendChild(container);
+        }
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow`;
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
         ${message}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
-    container.appendChild(alertDiv);
-    
-    // Auto dismiss after 5 seconds
-    setTimeout(() => {
-        alertDiv.classList.remove('show');
-        setTimeout(() => alertDiv.remove(), 150);
-    }, 5000);
-}
+        container.appendChild(alertDiv);
 
-function recheckAFHMD5() {
-    const btn = document.getElementById('recheckMd5Btn');
-    const originalHtml = btn.innerHTML;
-    
-    // Disable button and show loading
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-    
-    fetch('{{ url_for("admin.check_afh_md5", upload_id=upload.id) }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showNotification('MD5 check successful. Reloading...', 'success');
-            // Reload page to show updated status
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showNotification('Error: ' + data.message, 'error');
-            btn.disabled = false;
-            btn.innerHTML = originalHtml;
-        }
-    })
-    .catch(error => {
-        showNotification('Network error: ' + error, 'error');
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-    });
-}
+        // Auto dismiss after 5 seconds
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => alertDiv.remove(), 150);
+        }, 5000);
+    }
 
-function triggerAIReview() {
-    const btn = document.getElementById('aiReviewBtn');
-    const originalHtml = btn.innerHTML;
-    
-    // Disable button and show loading
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Reviewing...';
-    
-    fetch('{{ url_for("admin.ai_review_single_upload", upload_id=upload.id) }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showNotification('AI Review Complete: ' + data.message, 'success');
-            // Reload page to show updated status
-            setTimeout(() => location.reload(), 1500);
-        } else {
-            showNotification('AI Review Failed: ' + data.message, 'error');
-            btn.disabled = false;
-            btn.innerHTML = originalHtml;
-        }
-    })
-    .catch(error => {
-        showNotification('Network error: ' + error, 'error');
-        btn.disabled = false;
-        btn.innerHTML = originalHtml;
-    });
-}
+    function recheckAFHMD5() {
+        const btn = document.getElementById('recheckMd5Btn');
+        const originalHtml = btn.innerHTML;
+
+        // Disable button and show loading
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+        fetch('{{ url_for("admin.check_afh_md5", upload_id=upload.id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('MD5 check successful. Reloading...', 'success');
+                    // Reload page to show updated status
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification('Error: ' + data.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            })
+            .catch(error => {
+                showNotification('Network error: ' + error, 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
+    }
+
+    function triggerAIReview() {
+        const btn = document.getElementById('aiReviewBtn');
+        const originalHtml = btn.innerHTML;
+
+        // Disable button and show loading
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Reviewing...';
+
+        fetch('{{ url_for("admin.ai_review_single_upload", upload_id=upload.id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('AI Review Complete: ' + data.message, 'success');
+                    // Reload page to show updated status
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showNotification('AI Review Failed: ' + data.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            })
+            .catch(error => {
+                showNotification('Network error: ' + error, 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
+    }
 </script>
 
 <!-- Internet Archive: Mark as Synced Modal -->
-<div class="modal fade" id="iaMarkSyncedModal" tabindex="-1" aria-labelledby="iaMarkSyncedModalLabel" aria-hidden="true">
+<div class="modal fade" id="iaMarkSyncedModal" tabindex="-1" aria-labelledby="iaMarkSyncedModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="iaMarkSyncedModalLabel"><i class="fas fa-check-circle text-success"></i> Mark as Synced on Internet Archive</h5>
+                <h5 class="modal-title" id="iaMarkSyncedModalLabel"><i class="fas fa-check-circle text-success"></i>
+                    Mark as Synced on Internet Archive</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="{{ url_for('admin.ia_mark_synced', upload_id=upload.id) }}">
                 <div class="modal-body">
-                    <p class="text-muted small">Use this if the file was successfully uploaded to the Internet Archive but the status is stuck on <strong>Syncing</strong>, or to correct an existing entry.</p>
+                    <p class="text-muted small">Use this if the file was successfully uploaded to the Internet Archive
+                        but the status is stuck on <strong>Syncing</strong>, or to correct an existing entry.</p>
                     <div class="mb-3">
                         <label for="ia_item_id_input" class="form-label">Internet Archive Item ID or URL</label>
                         <input type="text" class="form-control" id="ia_item_id_input" name="ia_item_id"
                             placeholder="e.g. afharchive_42_filename or https://archive.org/details/..."
-                            value="{{ upload.ia_item_id or '' }}" required>
-                        <div class="form-text">Enter the item ID (e.g. <code>afharchive_42_myfile</code>) or paste the full <code>archive.org/details/...</code> URL.</div>
+                            value="{{ upload.ia_clean_item_id or '' }}" required>
+                        <div class="form-text">Enter the item ID (e.g. <code>afharchive_42_myfile</code>) or paste the
+                            full <code>archive.org/details/...</code> URL.</div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -107,6 +107,53 @@ class Upload(db.Model):
     def is_rejected(self):
         return self.status == 'rejected'
 
+    @property
+    def ia_clean_item_id(self):
+        """Return the bare IA item ID regardless of what format is stored in ia_item_id.
+
+        Handles three storage formats that may exist in the DB:
+          - Bare item ID:        afharchive_13_slidemeapk
+          - S3 URL:              https://s3.us.archive.org/afharchive_13_slidemeapk/SlideME.apk
+          - Archive.org URL:     https://archive.org/details/afharchive_13_slidemeapk
+        """
+        raw = self.ia_item_id
+        if not raw:
+            return None
+        if 's3.us.archive.org/' in raw or 's3.archive.org/' in raw:
+            # Extract first path segment after the host
+            try:
+                path = raw.split('archive.org/')[-1]
+                return path.split('/')[0]
+            except Exception:
+                return raw
+        if 'archive.org/details/' in raw:
+            try:
+                return raw.split('archive.org/details/')[-1].split('/')[0].split('?')[0]
+            except Exception:
+                return raw
+        if 'archive.org/download/' in raw:
+            try:
+                return raw.split('archive.org/download/')[-1].split('/')[0].split('?')[0]
+            except Exception:
+                return raw
+        return raw
+
+    @property
+    def ia_archive_url(self):
+        """Return the canonical archive.org details page URL for this upload."""
+        item_id = self.ia_clean_item_id
+        if not item_id:
+            return None
+        return f"https://archive.org/details/{item_id}"
+
+    @property
+    def ia_download_url(self):
+        """Return the direct archive.org download URL for this upload."""
+        item_id = self.ia_clean_item_id
+        if not item_id:
+            return None
+        return f"https://archive.org/download/{item_id}/{self.original_filename}"
+
 
 # Announcement model
 class Announcement(db.Model):
