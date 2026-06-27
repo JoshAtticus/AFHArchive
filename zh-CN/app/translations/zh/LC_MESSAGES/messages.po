@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: afharchive\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-08-10 21:56+0800\n"
-"PO-Revision-Date: 2025-08-10 14:54\n"
+"PO-Revision-Date: 2026-06-27 02:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -20,105 +20,105 @@ msgstr ""
 
 #: app/templates/about.html:3 app/templates/base.html:37
 msgid "About"
-msgstr ""
+msgstr "对于"
 
 #: app/templates/about.html:11
 msgid "About AFHArchive"
-msgstr ""
+msgstr "对于 AFHArchive"
 
 #: app/templates/about.html:15
 msgid "What is AFHArchive?"
-msgstr ""
+msgstr "什么是 AFHArchive?"
 
 #: app/templates/about.html:16
 msgid "AFHArchive is a community-driven platform dedicated to preserving and sharing Android firmware, custom ROMs, and development files."
-msgstr ""
+msgstr "AFHArchive 是一个社区驱动的平台及服务治理于保存和分享安卓（Android）固件，定制ROMs，和 代码文件。"
 
 #: app/templates/about.html:18
 msgid "Community Guidelines"
-msgstr ""
+msgstr "社区准则"
 
 #: app/templates/about.html:19
 msgid "AFHArchive is committed to maintaining a respectful and helpful community. We encourage users to:"
-msgstr ""
+msgstr "AFHArchive 致力于一个互相尊重，互助友爱的额社区。我们鼓励用户："
 
 #: app/templates/about.html:21
 msgid "Share legitimate, useful Android development files"
-msgstr ""
+msgstr "分享真的，有用的安卓（Android）的文件。"
 
 #: app/templates/about.html:22
 msgid "Provide accurate descriptions and information"
-msgstr ""
+msgstr "提供准确的描述和信息"
 
 #: app/templates/about.html:23
 msgid "Respect intellectual property rights"
-msgstr ""
+msgstr "尊重知识产权"
 
 #: app/templates/about.html:26
 msgid "Open Source"
-msgstr ""
+msgstr "开源"
 
 #: app/templates/about.html:27
 msgid "AFHArchive is open source software, developed transparently on GitHub. Community contributions and feedback are always welcome."
-msgstr ""
+msgstr "AFHArchive 是开源软件，在GitHub上以透明方式开发。我们欢迎社区贡献与反馈。"
 
 #: app/templates/about.html:29
 msgid "View on GitHub"
-msgstr ""
+msgstr "在 GitHub 是查看"
 
 #: app/templates/about.html:32
 msgid "Contact Information"
-msgstr ""
+msgstr "联系方式"
 
 #: app/templates/about.html:33
 msgid "For questions, suggestions, or support, please visit our contact page or reach out through our GitHub repository."
-msgstr ""
+msgstr "如果您有任何问题、建议或需要支持，请访问我们的联系页面，或通过我们的 GitHub 仓库与我们联系。"
 
 #: app/templates/about.html:35 app/templates/contact.html:11
 msgid "Contact Us"
-msgstr ""
+msgstr "联系我们"
 
 #: app/templates/base.html:31
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: app/templates/base.html:34
 msgid "Browse"
-msgstr ""
+msgstr "浏览"
 
 #: app/templates/base.html:40 app/templates/contact.html:3
 msgid "Contact"
-msgstr ""
+msgstr "联系"
 
 #: app/templates/base.html:89
 msgid "Help translate AFHArchive"
-msgstr ""
+msgstr "帮助翻译 AFHArchive"
 
 #: app/templates/admin/users.html:18 app/templates/base.html:100
 msgid "Avatar"
-msgstr ""
+msgstr "头像"
 
 #: app/templates/base.html:105 app/templates/upload.html:3
 #: app/templates/upload.html:88
 msgid "Upload File"
-msgstr ""
+msgstr "上传文件"
 
 #: app/templates/base.html:106 app/templates/my_uploads.html:3
 #: app/templates/my_uploads.html:7
 msgid "My Uploads"
-msgstr ""
+msgstr "我的上传"
 
 #: app/templates/base.html:109
 msgid "Admin Panel"
-msgstr ""
+msgstr "管理面板"
 
 #: app/templates/base.html:112
 msgid "Logout"
-msgstr ""
+msgstr "退出"
 
 #: app/templates/auth/login.html:3 app/templates/base.html:117
 msgid "Login"
-msgstr ""
+msgstr "登录"
 
 #: app/templates/base.html:142
 msgid "Source on"
