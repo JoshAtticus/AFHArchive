@@ -25,7 +25,10 @@ def get_or_fetch_upload(upload_id):
         return upload
         
     # If not found locally, check if we are a mirror
-    main_url = current_app.config.get('MAIN_SERVER_URL')
+    if current_app.config.get('IS_MIRROR'):
+        main_url = current_app.config.get('MAIN_SERVER_URL')
+    else:
+        main_url = None
     if main_url:
         try:
             # Fetch metadata from main server
@@ -69,7 +72,7 @@ def uploaded_file(filename):
 @main_bp.route('/')
 def index():
     # If this is a mirror server, block access to the home page
-    if current_app.config.get('MAIN_SERVER_URL'):
+    if current_app.config.get('IS_MIRROR'):
         return render_template('errors/generic.html', 
                              error={'code': 403, 'name': "Mirror Server", 'description': "This is a mirror server. Please visit the main site to browse files."}), 403
 

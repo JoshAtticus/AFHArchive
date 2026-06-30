@@ -1,6 +1,6 @@
 from app import db
 from app.models import Mirror, FileReplica, Upload, User
-from flask import url_for, current_app
+from flask import url_for, current_app, has_request_context
 import requests
 import os
 
@@ -18,7 +18,7 @@ def get_or_create_mirror_user():
         db.session.commit()
     return user
 
-def trigger_mirror_sync(upload_id, mirror_ids=None, source_mirror_id=None):
+def trigger_mirror_sync(upload_id, mirror_ids=None, source_mirror_id=None, base_url=None):
     """
     Triggers sync for a file to specified mirrors.
     If mirror_ids is None, selects 2 active mirrors automatically.
@@ -48,7 +48,16 @@ def trigger_mirror_sync(upload_id, mirror_ids=None, source_mirror_id=None):
     
     if not download_url:
         # Default to main server
-        download_url = url_for('api.mirror_sync_download', upload_id=upload.id, _external=True)
+        if base_url:
+            download_url = f"{base_url.rstrip('/')}/api/mirror_sync/{upload.id}"
+        else:
+            main_url = current_app.config.get('MAIN_SERVER_URL')
+            if main_url:
+                download_url = f"{main_url.rstrip('/')}/api/mirror_sync/{upload.id}"
+            elif has_request_context():
+                download_url = url_for('api.mirror_sync_download', upload_id=upload.id, _external=True)
+            else:
+                raise ValueError("Unable to determine download URL: no base_url, MAIN_SERVER_URL, or request context available.")
         
     count = 0
     for mirror in mirrors:

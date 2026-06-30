@@ -610,8 +610,8 @@ def mirror_heartbeat_loop(app):
         main_url = app.config.get('MAIN_SERVER_URL')
         upload_folder = app.config.get('UPLOAD_FOLDER')
         
-        if not api_key or not main_url:
-            print("Mirror configuration missing. Heartbeat disabled.")
+        if not app.config.get('IS_MIRROR') or not api_key or not main_url:
+            print("Mirror configuration missing or server is not a mirror. Heartbeat disabled.")
             return
 
         print(f"Starting mirror heartbeat to {main_url}...")

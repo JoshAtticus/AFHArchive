@@ -168,6 +168,7 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
                 headers = {'X-Mirror-Api-Key': target_mirror.mirror.api_key}
                 payload = {
                     'file_id': upload.id,
+                    'filename': upload.filename,
                     'ia_access_key': ia_access_key,
                     'ia_secret_key': ia_secret_key,
                     'ia_speed_limit_kbps': speed_limit_kbps,
@@ -243,6 +244,7 @@ def upload_to_ia_background_for_mirror(app, data):
     with app.app_context():
         try:
             file_id = data['file_id']
+            filename = data.get('filename')
             ia_access_key = data['ia_access_key']
             ia_secret_key = data['ia_secret_key']
             speed_limit_kbps = data['ia_speed_limit_kbps']
@@ -256,7 +258,31 @@ def upload_to_ia_background_for_mirror(app, data):
             
             upload = Upload.query.get(file_id)
             if not upload:
-                raise Exception("Upload not found in mirror DB")
+                try:
+                    from app.utils.mirror_utils import get_or_create_mirror_user
+                    from datetime import datetime
+                    mirror_user = get_or_create_mirror_user()
+                    upload = Upload(
+                        id=file_id,
+                        user_id=mirror_user.id,
+                        filename=filename or original_filename,
+                        original_filename=original_filename,
+                        file_path=filename or original_filename,
+                        status='approved',
+                        uploaded_at=datetime.utcnow()
+                    )
+                    db.session.add(upload)
+                    db.session.commit()
+                    logger.info(f"Created missing Upload {file_id} in mirror DB")
+                except Exception as db_err:
+                    db.session.rollback()
+                    logger.warning(f"Could not create missing Upload in mirror DB: {db_err}")
+                    upload = Upload(
+                        id=file_id,
+                        filename=filename or original_filename,
+                        original_filename=original_filename,
+                        file_path=filename or original_filename
+                    )
                 
             # Convert relative path to absolute path using app_root logic
             if not os.path.isabs(upload.file_path):

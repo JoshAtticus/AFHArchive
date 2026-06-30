@@ -171,7 +171,8 @@ def create_app():
     
     # Mirror Configuration
     app.config['MIRROR_API_KEY'] = config('MIRROR_API_KEY', default='')
-    app.config['MAIN_SERVER_URL'] = config('MAIN_SERVER_URL', default='')
+    app.config['MAIN_SERVER_URL'] = config('MAIN_SERVER_URL', default='https://afharchive.xyz')
+    app.config['IS_MIRROR'] = config('IS_MIRROR', default=False, cast=bool)
     
     # Ensure upload directory exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)

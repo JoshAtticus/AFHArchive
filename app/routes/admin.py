@@ -207,19 +207,20 @@ def approve_upload(upload_id):
         # Import threading here to ensure we have it
         import threading
         
-        # Capture app context for the thread
+        # Capture app context and host_url for the thread
         app = current_app._get_current_object()
+        base_url = request.host_url
         
-        def run_sync_async(app_obj, upload_id_val):
+        def run_sync_async(app_obj, upload_id_val, base_url_val):
             with app_obj.app_context():
                 try:
-                    trigger_mirror_sync(upload_id_val)
+                    trigger_mirror_sync(upload_id_val, base_url=base_url_val)
                     app_obj.logger.info(f"Triggered mirror sync for approved upload {upload_id_val}")
                 except Exception as e:
                     app_obj.logger.error(f"Failed to trigger mirror sync for upload {upload_id_val}: {e}")
         
         # Start background task via socketio to play nicely with gevent
-        socketio.start_background_task(run_sync_async, app, upload.id)
+        socketio.start_background_task(run_sync_async, app, upload.id, base_url)
         
     except Exception as e:
         current_app.logger.error(f"Failed to start mirror sync thread for upload {upload.id}: {e}")
@@ -1630,16 +1631,17 @@ def trigger_sync(upload_id):
             import threading
             
             app = current_app._get_current_object()
+            base_url = request.host_url
             
-            def run_trigger_mirror_sync_async(app_obj, upload_id_val, target_ids, source_id_val):
+            def run_trigger_mirror_sync_async(app_obj, upload_id_val, target_ids, source_id_val, base_url_val):
                 with app_obj.app_context():
                     try:
-                        count = trigger_mirror_sync(upload_id_val, target_ids, source_mirror_id=source_id_val)
+                        count = trigger_mirror_sync(upload_id_val, target_ids, source_mirror_id=source_id_val, base_url=base_url_val)
                         app_obj.logger.info(f"Background mirror sync triggered for {count} mirrors")
                     except Exception as e:
                         app_obj.logger.error(f"Background mirror sync trigger error: {e}")
             
-            socketio.start_background_task(run_trigger_mirror_sync_async, app, upload.id, valid_mirror_ids, source_mirror_id)
+            socketio.start_background_task(run_trigger_mirror_sync_async, app, upload.id, valid_mirror_ids, source_mirror_id, base_url)
             flash(f'Sync triggering for {len(valid_mirror_ids)} mirrors in background', 'info')
     
     return redirect(url_for('admin.mirror_files', page=page, sort=request.args.get('sort', 'downloads'), order=request.args.get('order', 'desc')))
@@ -1748,7 +1750,7 @@ def trigger_bulk_sync():
                     skipped_space += 1
         
         if valid_mirror_ids:
-            count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id)
+            count = trigger_mirror_sync(upload.id, valid_mirror_ids, source_mirror_id=source_mirror_id, base_url=request.host_url)
             total_triggered += count
             
     msg = f'Bulk sync triggered: {total_triggered} jobs created.'
