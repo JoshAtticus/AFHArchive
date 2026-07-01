@@ -75,8 +75,9 @@
                                 <div class="mb-1">
                                     <strong>Main Server:</strong>
                                     {% if upload.is_on_main_server %}
-                                        <span class="badge bg-success">Present</span>
-                                        {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
+                                                                <span class="badge bg-success">Present</span>
+                                        {% set active_mirror_ids = mirrors | map(attribute='id') | list %}
+                                        {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | selectattr("mirror_id", "in", active_mirror_ids) | list | length %}
                                         {% if upload.ia_status == 'synced' %}
                                             {% set synced_count = synced_count + 2 %}
                                         {% endif %}
@@ -285,7 +286,8 @@
         <!-- Generated Forms for Delete actions to prevent nested forms inside bulkForm -->
         {% for upload in uploads.items %}
             {% if upload.is_on_main_server %}
-                {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | list | length %}
+                {% set active_mirror_ids = mirrors | map(attribute='id') | list %}
+                {% set synced_count = upload.replicas | selectattr("status", "equalto", "synced") | selectattr("mirror_id", "in", active_mirror_ids) | list | length %}
                 {% if upload.ia_status == 'synced' %}
                     {% set synced_count = synced_count + 2 %}
                 {% endif %}

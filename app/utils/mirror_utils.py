@@ -166,13 +166,18 @@ def delete_from_main(upload_id, force=False):
         return False, "Upload not found"
 
     if not force:
-        # Check replicas
-        synced_replicas = FileReplica.query.filter_by(upload_id=upload.id, status='synced').count()
+        # Check replicas — only count copies on active mirrors
+        synced_replicas = FileReplica.query.join(Mirror).filter(
+            FileReplica.upload_id == upload.id,
+            FileReplica.status == 'synced',
+            Mirror.is_active == True
+        ).count()
         if upload.ia_status == 'synced':
             synced_replicas += 2  # IA counts as multiple valid replicas since it's canonical
 
         if synced_replicas < 2:
             return False, f"Not enough replicas (Found {synced_replicas}, need 2)"
+
 
     try:
         if not upload.is_on_main_server:

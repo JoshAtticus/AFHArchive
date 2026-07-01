@@ -1548,7 +1548,7 @@ def mirror_files():
         query = query.order_by(sort_column.desc())
         
     uploads = query.paginate(page=page, per_page=20)
-    mirrors = Mirror.query.all()
+    mirrors = Mirror.query.filter_by(is_active=True).all()
     
     # Get active syncs
     from app.models import FileReplica
@@ -1692,10 +1692,11 @@ def delete_replica(upload_id, mirror_id):
     if upload.ia_status == 'synced':
         copies += 1
         
-    other_replicas = FileReplica.query.filter(
+    other_replicas = FileReplica.query.join(Mirror).filter(
         FileReplica.upload_id == upload.id,
         FileReplica.mirror_id != mirror_id,
-        FileReplica.status == 'synced'
+        FileReplica.status == 'synced',
+        Mirror.is_active == True
     ).count()
     copies += other_replicas
     
@@ -1816,9 +1817,10 @@ def trigger_bulk_delete():
         if upload.ia_status == 'synced':
             copies += 1
 
-        other_replicas = FileReplica.query.filter(
+        other_replicas = FileReplica.query.join(Mirror).filter(
             FileReplica.upload_id == upload.id,
-            FileReplica.status == 'synced'
+            FileReplica.status == 'synced',
+            Mirror.is_active == True
         ).all()
         copies += len(other_replicas)
 
