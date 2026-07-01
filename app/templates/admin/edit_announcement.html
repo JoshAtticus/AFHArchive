@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Edit Announcement') }} - {{ _('Admin') }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-edit"></i> {{ _('Edit Announcement') }}</h2>
+    <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> {{ _('Back to Announcements') }}
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-bullhorn"></i> {{ _('Edit Announcement Details') }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">{{ _('Subject') }}</label>
+                        <input type="text" class="form-control" id="subject" name="subject" value="{{ announcement.subject }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">{{ _('Message') }} ({{ _('HTML allowed') }})</label>
+                        <textarea class="form-control" id="message" name="message" rows="8" required>{{ announcement.message }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_indefinite" name="is_indefinite" value="1" {% if announcement.is_indefinite %}checked{% endif %}>
+                            <label class="form-check-label" for="is_indefinite">
+                                {{ _('Indefinite Announcement') }} - <span class="text-muted">{{ _('Keep announcement on home page indefinitely until manually taken down or replaced') }}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ _('Save Changes') }}
+                        </button>
+                        <a href="{{ url_for('admin.send_announcement') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> {{ _('Cancel') }}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> {{ _('Announcement Stats') }}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <td>{{ _('Posted Date') }}</td>
+                        <td>{{ announcement.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ _('Status') }}</td>
+                        <td>
+                            {% if announcement.is_active %}
+                            <span class="badge bg-success">{{ _('Active') }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ _('Expired') }}</span>
+                            {% endif %}
+                            {% if announcement.is_indefinite %}
+                            <span class="badge bg-info text-dark">{{ _('Indefinite') }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

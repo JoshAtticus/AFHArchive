@@ -162,9 +162,12 @@ class Announcement(db.Model):
     subject = Column(String(255), nullable=False)
     message = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_indefinite = Column(Boolean, default=False, nullable=False)
 
     @property
     def is_active(self):
+        if self.is_indefinite:
+            return True
         # Active for 48 hours
         return (datetime.utcnow() - self.created_at) < timedelta(hours=48)
 

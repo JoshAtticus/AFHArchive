@@ -452,6 +452,12 @@ def privacy():
 def terms():
     return render_template('terms.html')
 
+# Announcements Page
+@main_bp.route('/announcements')
+def announcements():
+    all_announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
+    return render_template('announcements.html', announcements=all_announcements)
+
 # About Page
 @main_bp.route('/about')
 def about():

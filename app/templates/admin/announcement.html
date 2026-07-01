@@ -47,6 +47,14 @@
             <label class="form-check-label" for="send_email">{{ _('Email') }}</label>
         </div>
     </div>
+    <div class="mb-3" id="indefinite_container">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="is_indefinite" name="is_indefinite" value="1">
+            <label class="form-check-label" for="is_indefinite">
+                {{ _('Indefinite Announcement') }} - <span class="text-muted">{{ _('Keep announcement on home page indefinitely until manually taken down or replaced') }}</span>
+            </label>
+        </div>
+    </div>
     <div class="mb-3">
         <label class="form-label">{{ _('Recipients') }}</label><br>
         <div class="form-check form-check-inline">
@@ -64,4 +72,79 @@
     </div>
     <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> {{ _('Send Announcement') }}</button>
 </form>
+
+<h3 class="mt-5 mb-3"><i class="fas fa-history"></i> {{ _('Previous Announcements') }}</h3>
+<div class="card mb-4">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>{{ _('Subject') }}</th>
+                        <th>{{ _('Posted Date') }}</th>
+                        <th>{{ _('Status') }}</th>
+                        <th class="text-end">{{ _('Actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ann in all_announcements %}
+                    <tr>
+                        <td><strong>{{ ann.subject }}</strong></td>
+                        <td>{{ ann.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+                        <td>
+                            {% if ann.is_active %}
+                            <span class="badge bg-success">{{ _('Active') }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ _('Expired') }}</span>
+                            {% endif %}
+                            {% if ann.is_indefinite %}
+                            <span class="badge bg-info text-dark">{{ _('Indefinite') }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ url_for('admin.edit_announcement', announcement_id=ann.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> {{ _('Edit') }}
+                                </a>
+                                <form method="POST" action="{{ url_for('admin.take_down_announcement', announcement_id=ann.id) }}" class="d-inline" onsubmit="return confirm('{{ _('Are you sure you want to delete this announcement?') }}')">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> {{ _('Delete') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            {{ _('No announcements found.') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendHomepage = document.getElementById('send_homepage');
+        const indefiniteContainer = document.getElementById('indefinite_container');
+        
+        function toggleIndefinite() {
+            if (sendHomepage.checked) {
+                indefiniteContainer.style.display = 'block';
+            } else {
+                indefiniteContainer.style.display = 'none';
+                document.getElementById('is_indefinite').checked = false;
+            }
+        }
+        
+        sendHomepage.addEventListener('change', toggleIndefinite);
+        toggleIndefinite();
+    });
+</script>
 {% endblock %}

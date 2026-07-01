@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Announcements') }} - AFHArchive{% endblock %}
+{% block meta_description %}{{ _('View announcements and updates from AFHArchive.') }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h2 class="mb-4"><i class="fas fa-bullhorn text-primary"></i> {{ _('Announcements') }}</h2>
+        
+        {% if announcements %}
+            {% for announcement in announcements %}
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">{{ announcement.subject }}</h4>
+                        <h6 class="card-subtitle mb-3 text-muted">
+                            <i class="fas fa-calendar-alt"></i> {{ announcement.created_at.strftime('%Y-%m-%d %H:%M UTC') }}
+                        </h6>
+                        <div class="card-text mt-3">
+                            {{ announcement.message | safe }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle"></i> {{ _('No announcements have been posted yet.') }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

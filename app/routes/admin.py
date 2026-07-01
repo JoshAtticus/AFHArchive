@@ -280,7 +280,8 @@ def send_announcement():
 
         # Post to homepage if requested
         if send_homepage:
-            announcement = Announcement(subject=subject, message=message)
+            is_indefinite = request.form.get('is_indefinite') == '1'
+            announcement = Announcement(subject=subject, message=message, is_indefinite=is_indefinite)
             db.session.add(announcement)
             db.session.commit()
 
@@ -299,7 +300,23 @@ def send_announcement():
     if current_announcement and not current_announcement.is_active:
         current_announcement = None
     
-    return render_template('admin/announcement.html', current_announcement=current_announcement)
+    all_announcements = Announcement.query.order_by(Announcement.created_at.desc()).all()
+    
+    return render_template('admin/announcement.html', current_announcement=current_announcement, all_announcements=all_announcements)
+
+@admin_bp.route('/announcement/<int:announcement_id>/edit', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_announcement(announcement_id):
+    announcement = Announcement.query.get_or_404(announcement_id)
+    if request.method == 'POST':
+        announcement.subject = request.form.get('subject', '')
+        announcement.message = request.form.get('message', '')
+        announcement.is_indefinite = request.form.get('is_indefinite') == '1'
+        db.session.commit()
+        flash('Announcement updated successfully', 'success')
+        return redirect(url_for('admin.send_announcement'))
+    return render_template('admin/edit_announcement.html', announcement=announcement)
 
 @admin_bp.route('/announcement/<int:announcement_id>/take-down', methods=['POST'])
 @login_required

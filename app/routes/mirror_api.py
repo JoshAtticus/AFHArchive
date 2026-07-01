@@ -586,24 +586,50 @@ def receive_cancel_job():
     ABORT_SYNCS.add(filename)
     return jsonify({'success': True, 'message': f'Sync for {filename} cancelled'})
 
-import fcntl
+try:
+    import fcntl
+except ImportError:
+    fcntl = None
+
+try:
+    import msvcrt
+except ImportError:
+    msvcrt = None
+
 import sys
+import tempfile
 
 def mirror_heartbeat_loop(app):
     """
     Background loop to send heartbeats to the main server.
     Uses a file lock to ensure only one worker runs this loop.
     """
-    lock_file = '/tmp/afh_mirror_heartbeat.lock'
-    fp = open(lock_file, 'w')
-    
+    lock_file = os.path.join(tempfile.gettempdir(), 'afh_mirror_heartbeat.lock')
     try:
-        # Try to acquire an exclusive lock (non-blocking)
-        fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except IOError:
-        # Another instance is already running
-        print("Mirror heartbeat already running in another worker.")
+        fp = open(lock_file, 'w')
+    except Exception as e:
+        print(f"Failed to open lock file {lock_file}: {e}")
         return
+    
+    if fcntl:
+        try:
+            # Try to acquire an exclusive lock (non-blocking)
+            fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except (IOError, OSError):
+            # Another instance is already running
+            print("Mirror heartbeat already running in another worker.")
+            return
+    elif msvcrt:
+        try:
+            # Try to acquire a non-blocking lock on Windows
+            fp.seek(0)
+            msvcrt.locking(fp.fileno(), msvcrt.LK_NBLCK, 1)
+        except (IOError, OSError):
+            # Another instance is already running
+            print("Mirror heartbeat already running in another worker (Windows).")
+            return
+    else:
+        print("Warning: Heartbeat locking bypassed. Running without lock.")
 
     with app.app_context():
         api_key = app.config.get('MIRROR_API_KEY')
