@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block title %}{{ _('Home') }}{% endblock %}
-{% block meta_description %}{{ _('The ultimate archive for Android development files. Download decades of ROMs, kernels, and tools preserved from AndroidFileHost. Search thousands of files for your device.') }}{% endblock %}
+{% block meta_description %}{{ _('The ultimate archive for Android development files. Download decades of ROMs, kernels,
+and tools preserved from AndroidFileHost. Search thousands of files for your device.') }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -10,26 +11,29 @@
         <div class="alert alert-info shadow-sm mb-4" style="border-left: 6px solid #007bff;">
             <h4 class="mb-2"><i class="fas fa-bullhorn"></i> {{ announcement.subject }}</h4>
             <div>{{ announcement.message|safe }}</div>
-            <small class="text-muted">{{ _('Announcement posted %(date)s (active for 48 hours)', date=announcement.created_at.strftime('%Y-%m-%d %H:%M')) }}</small>
+            <small class="text-muted">{{ _('Announcement posted %(date)s ',
+                date=announcement.created_at.strftime('%Y-%m-%d %H:%M')) }}</small>
         </div>
         {% endif %}
         <div class="hero-section bg-primary text-white rounded p-5 mb-5 position-relative overflow-hidden">
             <div class="hero-content" style="position: relative; z-index: 2;">
                 <h1 class="display-4">{{ _('Welcome to AFHArchive') }}</h1>
                 <p class="lead">{{ _('Preserving content from the now-defunct AndroidFileHost platform') }}</p>
-                <p>{{ _('Help us preserve Android development history by uploading files that were previously hosted on AndroidFileHost.') }}</p>
+                <p>{{ _('Help us preserve Android development history by uploading files that were previously hosted on
+                    AndroidFileHost.') }}</p>
                 {% if not current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
-                        <i class="fab fa-google"></i> {{ _('Sign In to Contribute') }}
-                    </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg">
+                    <i class="fab fa-google"></i> {{ _('Sign In to Contribute') }}
+                </a>
                 {% else %}
-                    <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-upload"></i> {{ _('Upload a File') }}
-                    </a>
+                <a href="{{ url_for('main.upload') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-upload"></i> {{ _('Upload a File') }}
+                </a>
                 {% endif %}
             </div>
             {% if random_image %}
-                <img src="{{ url_for('static', filename='devimages/' + random_image) }}" class="hero-bg-img" alt="{{ _('Device Image') }}" />
+            <img src="{{ url_for('static', filename='devimages/' + random_image) }}" class="hero-bg-img"
+                alt="{{ _('Device Image') }}" />
             {% endif %}
         </div>
 
@@ -42,7 +46,8 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ upload.original_filename }}</h5>
                         <p class="card-text">
-                            <strong>{{ _('Device:') }}</strong> {{ upload.device_manufacturer }} {{ upload.device_model }}<br>
+                            <strong>{{ _('Device:') }}</strong> {{ upload.device_manufacturer }} {{ upload.device_model
+                            }}<br>
                             <strong>{{ _('Size:') }}</strong> {{ upload.file_size_mb }} MB<br>
                             <strong>{{ _('Downloads:') }}</strong> {{ upload.download_count }}
                         </p>
@@ -63,7 +68,8 @@
                 <h5><i class="fas fa-info-circle"></i> {{ _('Important Notice') }}</h5>
             </div>
             <div class="card-body">
-                <p><strong>{{ _('AFHArchive is dedicated to preserving files that were previously hosted on AndroidFileHost.') }}</strong></p>
+                <p><strong>{{ _('AFHArchive is dedicated to preserving files that were previously hosted on
+                        AndroidFileHost.') }}</strong></p>
                 <ul>
                     <li>{{ _('Only upload files that were once on AFH') }}</li>
                     <li>{{ _('Provide original AFH links when possible') }}</li>
@@ -74,13 +80,14 @@
             </div>
         </div>
 
-                <div class="card mb-4 border-warning">
+        <div class="card mb-4 border-warning">
             <div class="card-header bg-warning text-dark">
                 <h5><i class="fas fa-coffee"></i> {{ _('Support AFHArchive') }}</h5>
             </div>
             <div class="card-body text-center">
                 <p><strong>{{ _('Help keep this archive running!') }}</strong></p>
-                <p class="text-muted">{{ _('Your support helps cover hosting costs and keeps this preservation project alive.') }}</p>
+                <p class="text-muted">{{ _('Your support helps cover hosting costs and keeps this preservation project
+                    alive.') }}</p>
                 <a href="https://buymeacoffee.com/joshatticus" target="_blank" class="btn btn-warning btn-lg shadow">
                     <i class="fas fa-coffee"></i> {{ _('Buy me a coffee') }}
                 </a>
