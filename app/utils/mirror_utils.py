@@ -154,33 +154,42 @@ def sync_to_main(upload_id, source_mirror_id):
         current_app.logger.error(f"Error syncing to main: {e}")
         return False, str(e)
 
-def delete_from_main(upload_id):
+def delete_from_main(upload_id, force=False):
     """
-    Deletes a file from the main server if it exists on at least 2 mirrors.
+    Deletes a file from the main server.
+    By default requires at least 2 synced replicas elsewhere before deleting.
+    Pass force=True to skip the replica-count guard (caller is responsible for
+    ensuring the file is safe to remove).
     """
     upload = Upload.query.get(upload_id)
     if not upload:
         return False, "Upload not found"
-        
-    # Check replicas
-    synced_replicas = FileReplica.query.filter_by(upload_id=upload.id, status='synced').count()
-    if upload.ia_status == 'synced':
-        synced_replicas += 2 # IA counts as multiple valid replicas since it's canonical
-        
-    if synced_replicas < 2:
-        return False, f"Not enough replicas (Found {synced_replicas}, need 2)"
-        
+
+    if not force:
+        # Check replicas
+        synced_replicas = FileReplica.query.filter_by(upload_id=upload.id, status='synced').count()
+        if upload.ia_status == 'synced':
+            synced_replicas += 2  # IA counts as multiple valid replicas since it's canonical
+
+        if synced_replicas < 2:
+            return False, f"Not enough replicas (Found {synced_replicas}, need 2)"
+
     try:
+        if not upload.is_on_main_server:
+            # File is already marked as not on main; nothing to do
+            current_app.logger.info(f"File {upload.id} is already marked as not on main server — skipping.")
+            return True, "File was not on main server (skipped)"
+
         if os.path.exists(upload.file_path):
             os.remove(upload.file_path)
             current_app.logger.info(f"Deleted file from main server: {upload.file_path}")
         else:
-            current_app.logger.warning(f"File not found on main server: {upload.file_path}")
-            
+            current_app.logger.warning(f"File not found on disk at {upload.file_path} — marking as removed anyway.")
+
         upload.is_on_main_server = False
         db.session.commit()
         return True, "Deleted from main server"
-        
+
     except Exception as e:
         current_app.logger.error(f"Error deleting from main: {e}")
         return False, str(e)
@@ -189,40 +198,46 @@ def delete_from_main(upload_id):
 def trigger_mirror_delete(upload, mirror_ids=None):
     """
     Triggers deletion of a file from specified mirrors.
+    Silently skips mirrors where the file has no replica record.
     """
     if not mirror_ids:
         return 0
-        
+
     mirrors = Mirror.query.filter(Mirror.id.in_(mirror_ids)).all()
     count = 0
-    
+
     for mirror in mirrors:
+        # Skip mirrors where this file is not tracked — nothing to delete
+        replica = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=mirror.id).first()
+        if not replica:
+            current_app.logger.info(
+                f"No replica record for {upload.filename} on {mirror.name} — skipping delete."
+            )
+            count += 1  # Not an error; file simply wasn't there
+            continue
+
         try:
             current_app.logger.info(f"Triggering delete for {upload.filename} on {mirror.url}")
-            
+
             resp = requests.post(
                 f"{mirror.url}/api/mirror/job/delete",
-                json={
-                    'filename': upload.filename
-                },
+                json={'filename': upload.filename},
                 timeout=5
             )
-            
+
             if resp.status_code in [200, 404]:
                 count += 1
                 current_app.logger.info(f"Delete triggered successfully for {mirror.name}")
-                
-                # Remove replica record
-                replica = FileReplica.query.filter_by(upload_id=upload.id, mirror_id=mirror.id).first()
-                if replica:
-                    db.session.delete(replica)
-                    db.session.commit()
+                db.session.delete(replica)
+                db.session.commit()
             else:
-                current_app.logger.error(f"Mirror {mirror.name} rejected delete job: {resp.status_code} - {resp.text}")
-                
+                current_app.logger.error(
+                    f"Mirror {mirror.name} rejected delete job: {resp.status_code} - {resp.text}"
+                )
+
         except Exception as e:
             current_app.logger.error(f"Error triggering delete to {mirror.name}: {e}")
-            
+
     return count
 
 def cancel_sync_job(upload_id, mirror_id):

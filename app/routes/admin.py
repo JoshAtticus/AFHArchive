@@ -1834,8 +1834,8 @@ def trigger_bulk_delete():
             skipped += 1
             continue
 
-        if delete_from_main_flag and upload.is_on_main_server:
-            success, _ = delete_from_main(upload.id)
+        if delete_from_main_flag:
+            success, _ = delete_from_main(upload.id, force=True)
             if success:
                 total_deleted_main += 1
 

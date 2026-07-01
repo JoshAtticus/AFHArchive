@@ -221,36 +221,65 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete Selected Files</h5>
+                            <h5 class="modal-title">
+                                <i class="fas fa-trash text-danger"></i>
+                                Delete from Selected Locations
+                                <span class="badge bg-danger ms-2" id="bulkDelFileCount" style="display:none;"></span>
+                            </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Select targets to delete from:</p>
+                            <p class="fw-semibold">Select which locations to remove the selected files from:</p>
+
+                            <!-- Select All Targets convenience toggle -->
+                            <div class="form-check mb-3 border-bottom pb-2">
+                                <input class="form-check-input" type="checkbox" id="bulk_del_all_targets">
+                                <label class="form-check-label fw-bold" for="bulk_del_all_targets">
+                                    Select All Locations
+                                </label>
+                            </div>
+
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="delete_targets" value="main" id="bulk_del_main">
+                                <input class="form-check-input del-target-checkbox" type="checkbox" name="delete_targets" value="main" id="bulk_del_main">
                                 <label class="form-check-label text-danger" for="bulk_del_main">
-                                    Main Server
+                                    <i class="fas fa-server"></i> <strong>Main Server</strong>
                                 </label>
                             </div>
                             {% for mirror in mirrors %}
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" name="delete_targets" value="{{ mirror.id }}" id="bulk_del_{{ mirror.id }}">
+                                <input class="form-check-input del-target-checkbox" type="checkbox" name="delete_targets" value="{{ mirror.id }}" id="bulk_del_{{ mirror.id }}">
                                 <label class="form-check-label text-danger" for="bulk_del_{{ mirror.id }}">
-                                    {{ mirror.name }} ({{ mirror.location }})
+                                    <i class="fas fa-hdd"></i> {{ mirror.name }} ({{ mirror.location }})
                                 </label>
                             </div>
                             {% endfor %}
-                            <div class="alert alert-warning mt-3">
-                                <strong>Warning:</strong> A file cannot be deleted from its last remaining location.
+
+                            <div class="alert alert-warning mt-3 mb-2">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Safe to delete?</strong> A file will <strong>not</strong> be deleted if it would become the last remaining copy.
+                                Files already on the Internet Archive are safe to clean up from all other locations.
+                            </div>
+
+                            <!-- Confirmation checkbox -->
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="bulk_del_confirm">
+                                <label class="form-check-label text-danger fw-semibold" for="bulk_del_confirm">
+                                    I understand this will permanently delete files from the selected locations
+                                </label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" formaction="{{ url_for('admin.trigger_bulk_delete', page=uploads.page, sort=current_sort, order=current_order) }}" class="btn btn-danger">Delete from Selected</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" id="bulkDelSubmitBtn"
+                                formaction="{{ url_for('admin.trigger_bulk_delete', page=uploads.page, sort=current_sort, order=current_order) }}"
+                                class="btn btn-danger" disabled>
+                                <i class="fas fa-trash"></i> Delete from Selected
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </form>
         
         <!-- Generated Forms for Delete actions to prevent nested forms inside bulkForm -->
@@ -546,7 +575,52 @@
             document.getElementById('bulkDeleteBtn').disabled = checkedCount === 0;
         });
     }
-    
+
+    // ── Bulk Delete Modal wiring ─────────────────────────────────────────────
+
+    // Show live file count badge when modal opens
+    document.getElementById('bulkDeleteModal').addEventListener('show.bs.modal', function() {
+        var count = document.querySelectorAll('.upload-checkbox:checked').length;
+        var badge = document.getElementById('bulkDelFileCount');
+        badge.textContent = count + ' file' + (count !== 1 ? 's' : '') + ' selected';
+        badge.style.display = '';
+
+        // Reset state every time the modal opens
+        document.getElementById('bulk_del_confirm').checked = false;
+        document.getElementById('bulk_del_all_targets').checked = false;
+        document.getElementById('bulkDelSubmitBtn').disabled = true;
+    });
+
+    // "Select All Locations" toggle
+    document.getElementById('bulk_del_all_targets').addEventListener('change', function() {
+        var targets = document.querySelectorAll('.del-target-checkbox');
+        targets.forEach(function(cb) { cb.checked = this.checked; }, this);
+        updateBulkDelSubmit();
+    });
+
+    // Keep "Select All" in sync when individual targets are toggled
+    document.querySelectorAll('.del-target-checkbox').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            var all = document.querySelectorAll('.del-target-checkbox');
+            var allChecked = Array.from(all).every(function(c) { return c.checked; });
+            document.getElementById('bulk_del_all_targets').checked = allChecked;
+            document.getElementById('bulk_del_all_targets').indeterminate =
+                !allChecked && Array.from(all).some(function(c) { return c.checked; });
+            updateBulkDelSubmit();
+        });
+    });
+
+    // Confirmation checkbox gates the submit button
+    document.getElementById('bulk_del_confirm').addEventListener('change', updateBulkDelSubmit);
+
+    function updateBulkDelSubmit() {
+        var confirmed = document.getElementById('bulk_del_confirm').checked;
+        var anyTarget = document.querySelectorAll('.del-target-checkbox:checked').length > 0;
+        document.getElementById('bulkDelSubmitBtn').disabled = !(confirmed && anyTarget);
+    }
+
+    // ── End Bulk Delete Modal wiring ─────────────────────────────────────────
+
     socket.on('mirror_sync_progress', function(data) {
         var mirrorId = data.mirror_id;
         var uploadId = data.upload_id;
