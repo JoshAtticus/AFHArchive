@@ -10,8 +10,8 @@ import threading
 
 logger = logging.getLogger(__name__)
 
-# Global lock to serialize IA uploads and prevent rate-limiting/spam detection
-ia_upload_lock = threading.Lock()
+# Global semaphore to limit concurrent IA uploads to 2 at a time
+ia_upload_lock = threading.Semaphore(2)
 
 class ThrottledFile:
     def __init__(self, fileobj, rate_limit_kbps):
@@ -213,8 +213,6 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
                     retries_sleep=60,
                     verbose=True
                 )
-                time.sleep(15)  # Pace uploads to avoid IA spam detection
-            
             # Close file_obj explicitely to allow temp removing
             file_obj.close()
             
