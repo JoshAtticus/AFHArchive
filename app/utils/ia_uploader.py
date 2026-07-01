@@ -153,7 +153,7 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
             if target_mirror:
                 use_mirror_for_upload = True
             else:
-                error_msg = f"File {file_to_upload} not found on main server and no active mirrors have it."
+                error_msg = f"Uh oh! I don't have file {file_to_upload}, and neither do any active mirrors!"
                 logger.error(error_msg)
                 upload.ia_status = 'error'
                 upload.ia_error_message = error_msg
@@ -161,7 +161,7 @@ def upload_to_ia_background(app, upload_id, source_mirror_id=None):
                 return
             
         if use_mirror_for_upload and target_mirror:
-            logger.info(f"Downloading skipped. Asking mirror {target_mirror.mirror.name} to upload to IA directly")
+            logger.info(f"Uh oh! I don't have that file! Asking mirror {target_mirror.mirror.name} who does to upload to the Internet Archive instead.")
             mirror_url = f"{target_mirror.mirror.url.rstrip('/')}/api/mirror/job/upload_ia"
             
             try:
@@ -324,9 +324,7 @@ def upload_to_ia_background_for_mirror(app, data):
                     retries=3,
                     retries_sleep=60,
                     verbose=True
-                )
-                time.sleep(15)  # Pace uploads to avoid IA spam detection
-            
+                )            
             file_obj.close()
             
             if responses and hasattr(responses[0], 'status_code') and responses[0].status_code not in [200, 201]:
