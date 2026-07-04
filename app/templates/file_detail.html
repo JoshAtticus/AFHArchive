@@ -1,29 +1,37 @@
 {% extends "base.html" %}
 
 {% macro render_speed_tag(speed_mbps) %}
-    {% set title_text = (speed_mbps|string + ' Mbps') if speed_mbps < 1000 else ((speed_mbps / 1000)|round(1)|string + ' Gbps') %}
-    {% if speed_mbps < 50 %}
-        <span class="badge bg-secondary ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Slow</span>
-    {% elif speed_mbps < 150 %}
-        <span class="badge bg-primary ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Standard</span>
-    {% elif speed_mbps < 1000 %}
-        <span class="badge bg-success ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">Fast</span>
-    {% elif speed_mbps < 2000 %}
-        <span class="badge bg-success ms-2" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);" title="{{ title_text }}" data-bs-toggle="tooltip">Turbo</span>
-    {% else %}
-        {% set turbo_mult = (speed_mbps // 1000) %}
-        <span class="badge bg-success ms-2" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);" title="{{ title_text }}" data-bs-toggle="tooltip">{{ turbo_mult }}X Turbo</span>
-    {% endif %}
-{% endmacro %}
+{% set title_text = (speed_mbps|string + ' Mbps') if speed_mbps < 1000 else ((speed_mbps / 1000)|round(1)|string
+    + ' Gbps' ) %} {% if speed_mbps < 50 %} <span class="badge bg-secondary ms-2" title="{{ title_text }}"
+    data-bs-toggle="tooltip">Slow</span>
+    {% elif speed_mbps < 150 %} <span class="badge bg-primary ms-2" title="{{ title_text }}" data-bs-toggle="tooltip">
+        Standard</span>
+        {% elif speed_mbps < 1000 %} <span class="badge bg-success ms-2" title="{{ title_text }}"
+            data-bs-toggle="tooltip">Fast</span>
+            {% elif speed_mbps < 2000 %} <span class="badge bg-success ms-2"
+                style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);"
+                title="{{ title_text }}" data-bs-toggle="tooltip">Turbo</span>
+                {% else %}
+                {% set turbo_mult = (speed_mbps // 1000) %}
+                <span class="badge bg-success ms-2"
+                    style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.2) 10px, rgba(255,255,255,.2) 20px);"
+                    title="{{ title_text }}" data-bs-toggle="tooltip">{{ turbo_mult }}X Turbo</span>
+                {% endif %}
+                {% endmacro %}
 
-{% block title %}{{ upload.original_filename }} - {{ upload.device_manufacturer }} {{ upload.device_model }}{% endblock %}
+                {% block title %}{{ upload.original_filename }} - {{ upload.device_manufacturer }} {{
+                upload.device_model }}{% endblock %}
 
-{% block meta_description %}{{ _('Download %(filename)s for %(manufacturer)s %(model)s. File size: %(size)s MB. Preserved and archived from AndroidFileHost.', filename=upload.original_filename, manufacturer=upload.device_manufacturer, model=upload.device_model, size=upload.file_size_mb) }}{% endblock %}
+                {% block meta_description %}{{ _('Download %(filename)s for %(manufacturer)s %(model)s. File size:
+                %(size)s MB. Preserved and archived from AndroidFileHost.', filename=upload.original_filename,
+                manufacturer=upload.device_manufacturer, model=upload.device_model, size=upload.file_size_mb) }}{%
+                endblock %}
 
-{% block meta_keywords %}{{ upload.device_manufacturer }}, {{ upload.device_model }}, {{ upload.original_filename }}, android, rom, firmware, download, afharchive{% endblock %}
+                {% block meta_keywords %}{{ upload.device_manufacturer }}, {{ upload.device_model }}, {{
+                upload.original_filename }}, android, rom, firmware, download, afharchive{% endblock %}
 
-{% block content %}
-<script type="application/ld+json">
+                {% block content %}
+                <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -42,227 +50,241 @@
 }
 </script>
 
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-file-archive"></i> {{ upload.original_filename }}</h2>
-            </div>
-            <div class="card-body">
-                <!-- Status: {{ upload.afh_md5_status }} -->
-                {% if upload.afh_md5_status == 'mismatch' %}
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    <strong>Warning:</strong> This file's MD5 hash does NOT match the original file on AndroidFileHost.
-                </div>
-                {% elif upload.afh_md5_status == 'error' %}
-                <div class="alert alert-warning" role="alert">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <strong>Warning:</strong> Could not verify this file's MD5 hash against AndroidFileHost.
-                </div>
-                {% endif %}
-
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h5>{{ _('Device Information') }}</h5>
-                        <table class="table table-sm table-bordered">
-                            <tr>
-                                <th class="bg-light" style="width: 40%">{{ _('Manufacturer:') }}</th>
-                                <td>{{ upload.device_manufacturer }}</td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light">{{ _('Model:') }}</th>
-                                <td>{{ upload.device_model }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <h5>{{ _('File Information') }}</h5>
-                        <table class="table table-sm table-bordered">
-                            <tr>
-                                <th class="bg-light" style="width: 40%">{{ _('Size:') }}</th>
-                                <td>{{ upload.file_size_mb }} MB</td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light">{{ _('MD5 Hash:') }}</th>
-                                <td class="text-break"><code>{{ upload.md5_hash }}</code></td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light">{{ _('Downloads:') }}</th>
-                                <td>{{ upload.download_count }}</td>
-                            </tr>
-                            <tr>
-                                <th class="bg-light">{{ _('Uploaded:') }}</th>
-                                <td>{{ upload.uploaded_at.strftime('%B %d, %Y') }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                {% if upload.afh_link or upload.xda_thread %}
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <h5>{{ _('Original Links') }}</h5>
-                        <div class="d-flex gap-2">
-                            {% if upload.afh_link %}
-                            <a href="{{ upload.afh_link }}" target="_blank" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-external-link-alt"></i> {{ _('Original AFH Link') }}
-                            </a>
-                            {% endif %}
-                            {% if upload.xda_thread %}
-                            <a href="{{ upload.xda_thread }}" target="_blank" class="btn btn-outline-info btn-sm">
-                                <i class="fab fa-android"></i> {{ _('XDA Thread') }}
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                {% if upload.notes %}
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <h5>{{ _('Notes') }}</h5>
-                        <div class="card bg-light">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-file-archive"></i> {{ upload.original_filename }}</h2>
+                            </div>
                             <div class="card-body">
-                                <p class="mb-0">{{ upload.notes }}</p>
+                                <!-- Status: {{ upload.afh_md5_status }} -->
+                                {% if upload.afh_md5_status == 'mismatch' %}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong>Warning:</strong> This file's MD5 hash does NOT match the original file on
+                                    AndroidFileHost.
+                                </div>
+                                {% elif upload.afh_md5_status == 'error' %}
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <strong>Warning:</strong> Could not verify this file's MD5 hash against
+                                    AndroidFileHost.
+                                </div>
+                                {% endif %}
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h5>{{ _('Device Information') }}</h5>
+                                        <table class="table table-sm table-bordered">
+                                            <tr>
+                                                <th class="bg-light" style="width: 40%">{{ _('Manufacturer:') }}</th>
+                                                <td>{{ upload.device_manufacturer }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">{{ _('Model:') }}</th>
+                                                <td>{{ upload.device_model }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>{{ _('File Information') }}</h5>
+                                        <table class="table table-sm table-bordered">
+                                            <tr>
+                                                <th class="bg-light" style="width: 40%">{{ _('Size:') }}</th>
+                                                <td>{{ upload.file_size_mb }} MB</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">{{ _('MD5 Hash:') }}</th>
+                                                <td class="text-break"><code>{{ upload.md5_hash }}</code></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">{{ _('Downloads:') }}</th>
+                                                <td>{{ upload.download_count }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">{{ _('Uploaded:') }}</th>
+                                                <td>{{ upload.uploaded_at.strftime('%B %d, %Y') }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {% if upload.afh_link or upload.xda_thread %}
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h5>{{ _('Original Links') }}</h5>
+                                        <div class="d-flex gap-2">
+                                            {% if upload.afh_link %}
+                                            <a href="{{ upload.afh_link }}" target="_blank"
+                                                class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-external-link-alt"></i> {{ _('Original AFH Link') }}
+                                            </a>
+                                            {% endif %}
+                                            {% if upload.xda_thread %}
+                                            <a href="{{ upload.xda_thread }}" target="_blank"
+                                                class="btn btn-outline-info btn-sm">
+                                                <i class="fab fa-android"></i> {{ _('XDA Thread') }}
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if upload.notes %}
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <h5>{{ _('Notes') }}</h5>
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <p class="mb-0">{{ upload.notes }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="mb-4">
+                                    <h5>{{ _('Available Mirrors') }}</h5>
+                                    <div class="list-group">
+                                        <!-- Main Server -->
+                                        {% if upload.is_on_main_server %}
+                                        <a href="{{ url_for('main.download', upload_id=upload.id) }}"
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-server text-primary"></i> {{ _('Main Server') }}
+                                                <small class="text-muted ms-2">({{ main_server_location }})</small>
+                                                {{ render_speed_tag(main_server_port_speed_mbps|default(1000, true)) }}
+                                            </div>
+                                            <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
+                                        </a>
+                                        {% endif %}
+
+                                        {% if upload.ia_status == 'synced' and upload.ia_item_id %}
+                                        <!-- Internet Archive Source -->
+                                        <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id='ia') }}"
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-archive text-info"></i> {{ _('Internet Archive') }}
+                                                <small class="text-muted ms-2">(Archive.org)</small>
+                                            </div>
+                                            <span class="badge bg-success rounded-pill">{{ _('Recommended') }}</span>
+                                        </a>
+                                        {% endif %}
+
+                                        {% if available_replicas %}
+                                        {% for replica in available_replicas %}
+                                        <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id=replica.mirror.id) }}"
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
+                                                <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                                {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true))
+                                                }}
+                                            </div>
+                                            <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
+                                        </a>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                {% if unavailable_replicas %}
+                                <div class="mb-4">
+                                    <h5>{{ _('Unavailable Mirrors') }}</h5>
+                                    <div class="list-group">
+                                        {% for replica in unavailable_replicas %}
+                                        <div
+                                            class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-server text-muted"></i> {{ replica.mirror.name }}
+                                                <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
+                                                {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true))
+                                                }}
+                                            </div>
+                                            <span class="badge bg-danger rounded-pill">{{ _('Offline') }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% endif %}
 
-                <div class="mb-4">
-                    <h5>{{ _('Available Mirrors') }}</h5>
-                    <div class="list-group">
-                        <!-- Main Server -->
-                        {% if upload.is_on_main_server %}
-                        <a href="{{ url_for('main.download', upload_id=upload.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <div>
-                                <i class="fas fa-server text-primary"></i> {{ _('Main Server') }}
-                                <small class="text-muted ms-2">({{ main_server_location }})</small>
-                                {{ render_speed_tag(main_server_port_speed_mbps|default(1000, true)) }}
+                    <div class="col-lg-4">
+                        <div class="card mb-3 border-warning">
+                            <div class="card-header bg-warning text-dark">
+                                <h5><i class="fas fa-coffee"></i> {{ _('Support AFHArchive') }}</h5>
                             </div>
-                            <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
-                        </a>
-                        {% endif %}
-
-                        {% if upload.ia_status == 'synced' and upload.ia_item_id %}
-                        <!-- Internet Archive Source -->
-                        <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id='ia') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <div>
-                                <i class="fas fa-archive text-info"></i> {{ _('Internet Archive') }}
-                                <small class="text-muted ms-2">(Archive.org)</small>
-                            </div>
-                            <span class="badge bg-info rounded-pill">{{ _('Archive') }}</span>
-                        </a>
-                        {% endif %}
-
-                        {% if available_replicas %}
-                            {% for replica in available_replicas %}
-                                <a href="{{ url_for('main.download', upload_id=upload.id, mirror_id=replica.mirror.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <i class="fas fa-server text-primary"></i> {{ replica.mirror.name }}
-                                        <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
-                                        {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true)) }}
-                                    </div>
-                                    <span class="badge bg-success rounded-pill">{{ _('Online') }}</span>
+                            <div class="card-body text-center">
+                                <p><strong>{{ _('Help keep this archive running!') }}</strong></p>
+                                <p class="text-muted small">{{ _('Your support helps cover hosting costs and keeps this
+                                    preservation project alive.') }}</p>
+                                <a href="https://buymeacoffee.com/joshatticus" target="_blank"
+                                    class="btn btn-warning shadow">
+                                    <i class="fas fa-coffee"></i> {{ _('Buy me a coffee') }}
                                 </a>
-                            {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-info-circle"></i> {{ _('Download Information') }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-shield-alt"></i> {{ _('File Verification') }}</h6>
+                                    <p class="mb-2">{{ _('You can verify the file integrity using the MD5 hash:') }}</p>
+                                    <code class="small">{{ upload.md5_hash }}</code>
+                                </div>
+
+                                <div class="alert alert-warning">
+                                    <h6><i class="fas fa-exclamation-triangle"></i> {{ _('Important') }}</h6>
+                                    <ul class="mb-0 small">
+                                        <li>{{ _('This file was originally hosted on AndroidFileHost') }}</li>
+                                        <li>{{ _('Files are provided as-is for preservation purposes') }}</li>
+                                        <li>{{ _('Use at your own risk and ensure compatibility') }}</li>
+                                        <li>{{ _('Downloads are rate-limited to preserve bandwidth') }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if upload.uploader %}
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6><i class="fas fa-user"></i> {{ _('Contributed by') }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    {% if upload.uploader.display_avatar_url %}
+                                    <img src="{{ upload.uploader.display_avatar_url }}"
+                                        alt="{{ upload.uploader.display_name }}" class="rounded-circle me-2" width="32"
+                                        height="32">
+                                    {% endif %}
+                                    <span>{{ upload.uploader.display_name }}</span>
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
+                {% endblock %}
 
-                {% if unavailable_replicas %}
-                <div class="mb-4">
-                    <h5>{{ _('Unavailable Mirrors') }}</h5>
-                    <div class="list-group">
-                        {% for replica in unavailable_replicas %}
-                            <div class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-server text-muted"></i> {{ replica.mirror.name }}
-                                    <small class="text-muted ms-2">({{ replica.mirror.location }})</small>
-                                    {{ render_speed_tag(replica.mirror.port_speed_mbps|default(100, true)) }}
-                                </div>
-                                <span class="badge bg-danger rounded-pill">{{ _('Offline') }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <a href="{{ url_for('main.browse') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> {{ _('Back to Browse') }}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4">
-        <div class="card mb-3 border-warning">
-            <div class="card-header bg-warning text-dark">
-                <h5><i class="fas fa-coffee"></i> {{ _('Support AFHArchive') }}</h5>
-            </div>
-            <div class="card-body text-center">
-                <p><strong>{{ _('Help keep this archive running!') }}</strong></p>
-                <p class="text-muted small">{{ _('Your support helps cover hosting costs and keeps this preservation project alive.') }}</p>
-                <a href="https://buymeacoffee.com/joshatticus" target="_blank" class="btn btn-warning shadow">
-                    <i class="fas fa-coffee"></i> {{ _('Buy me a coffee') }}
-                </a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-info-circle"></i> {{ _('Download Information') }}</h5>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-info">
-                    <h6><i class="fas fa-shield-alt"></i> {{ _('File Verification') }}</h6>
-                    <p class="mb-2">{{ _('You can verify the file integrity using the MD5 hash:') }}</p>
-                    <code class="small">{{ upload.md5_hash }}</code>
-                </div>
-                
-                <div class="alert alert-warning">
-                    <h6><i class="fas fa-exclamation-triangle"></i> {{ _('Important') }}</h6>
-                    <ul class="mb-0 small">
-                        <li>{{ _('This file was originally hosted on AndroidFileHost') }}</li>
-                        <li>{{ _('Files are provided as-is for preservation purposes') }}</li>
-                        <li>{{ _('Use at your own risk and ensure compatibility') }}</li>
-                        <li>{{ _('Downloads are rate-limited to preserve bandwidth') }}</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        {% if upload.uploader %}
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6><i class="fas fa-user"></i> {{ _('Contributed by') }}</h6>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    {% if upload.uploader.display_avatar_url %}
-                    <img src="{{ upload.uploader.display_avatar_url }}" alt="{{ upload.uploader.display_name }}" class="rounded-circle me-2" width="32" height="32">
-                    {% endif %}
-                    <span>{{ upload.uploader.display_name }}</span>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
-});
-</script>
-{% endblock %}
+                {% block scripts %}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                            return new bootstrap.Tooltip(tooltipTriggerEl)
+                        });
+                    });
+                </script>
+                {% endblock %}
