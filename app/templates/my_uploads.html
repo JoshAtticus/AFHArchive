@@ -5,9 +5,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2><i class="fas fa-cloud-upload-alt"></i> {{ _('My Uploads') }}</h2>
-    <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
+    <!-- <a href="{{ url_for('main.upload') }}" class="btn btn-primary">
         <i class="fas fa-plus"></i> {{ _('Upload New File') }}
-    </a>
+    </a> -->
 </div>
 
 {% if uploads %}
@@ -34,19 +34,20 @@
                 <td>{{ upload.file_size_mb }} MB</td>
                 <td>
                     {% if upload.is_pending %}
-                        <span class="badge status-badge status-pending">{{ _('Pending') }}</span>
+                    <span class="badge status-badge status-pending">{{ _('Pending') }}</span>
                     {% elif upload.is_approved %}
-                        <span class="badge status-badge status-approved">{{ _('Approved') }}</span>
+                    <span class="badge status-badge status-approved">{{ _('Approved') }}</span>
                     {% else %}
-                        <span class="badge status-badge status-rejected" title="{{ upload.rejection_reason }}">{{ _('Rejected') }}</span>
+                    <span class="badge status-badge status-rejected" title="{{ upload.rejection_reason }}">{{
+                        _('Rejected') }}</span>
                     {% endif %}
                 </td>
                 <td>{{ upload.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
                 <td>
                     {% if upload.is_approved %}
-                        {{ upload.download_count }}
+                    {{ upload.download_count }}
                     {% else %}
-                        -
+                    -
                     {% endif %}
                 </td>
             </tr>
@@ -57,11 +58,12 @@
 {% else %}
 <div class="text-center py-5">
     <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
-    <h4>{{ _('No uploads yet') }}</h4>
-    <p class="text-muted">{{ _('Start contributing to the archive by uploading your first file!') }}</p>
-    <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-lg">
+    <h4>{{ _('No uploads') }}</h4>
+    <p class="text-muted">{{ _('There are no uploads associated with your account. AFHArchive is no longer accepting
+        contributions.') }}</p>
+    <!-- <a href="{{ url_for('main.upload') }}" class="btn btn-primary btn-lg">
         <i class="fas fa-upload"></i> {{ _('Upload First File') }}
-    </a>
+    </a> -->
 </div>
 {% endif %}
 {% endblock %}
