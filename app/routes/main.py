@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
 import hashlib
+import secrets
 import requests
 from datetime import datetime
 from app import db
@@ -388,9 +389,36 @@ def download(upload_id):
                 mirror_url = f"{mirror.url.rstrip('/')}/api/download/{upload.id}"
     
     # Show thank you page that will auto-start download
-    return render_template('thank_you.html', upload=upload, 
+    ad_token = secrets.token_hex(16)
+    session[f'ad_token_{upload.id}'] = ad_token
+    return render_template('thank_you.html', upload=upload,
                          in_direct_download_test=in_direct_download_test,
-                         mirror_url=mirror_url)
+                         mirror_url=mirror_url, ad_token=ad_token)
+
+
+@main_bp.route('/download/<int:upload_id>/verify-ad', methods=['POST'])
+def verify_ad(upload_id):
+    """Verify the client can read the ad slot token (ad blocker detection)."""
+    upload = get_or_fetch_upload(upload_id)
+    if not upload:
+        abort(404)
+
+    data = request.get_json(silent=True) or {}
+    token = str(data.get('token') or '')
+    expected = session.get(f'ad_token_{upload.id}')
+
+    if expected and token:
+        try:
+            if secrets.compare_digest(token.encode(), expected.encode()):
+                session.pop(f'ad_blocked_at_{upload.id}', None)
+                return jsonify({'status': 'ok', 'wait': 3})
+        except Exception:
+            pass
+
+    blocked_key = f'ad_blocked_at_{upload.id}'
+    if blocked_key not in session:
+        session[blocked_key] = datetime.utcnow().timestamp()
+    return jsonify({'status': 'blocked', 'wait': 30})
 
 
 @main_bp.route('/download/<int:upload_id>/direct')
@@ -405,6 +433,24 @@ def download_direct(upload_id):
     if not mirror_key and upload.status != 'approved':
         flash('File not available for download', 'error')
         return redirect(url_for('main.index'))
+
+    # Ad blocker gate: require valid ad slot token, or a completed 30s wait
+    if not mirror_key:
+        token = request.args.get('t', '')
+        expected = session.get(f'ad_token_{upload_id}')
+        allowed = False
+        if expected and token:
+            try:
+                allowed = secrets.compare_digest(token.encode(), expected.encode())
+            except Exception:
+                allowed = False
+        if not allowed:
+            blocked_at = session.get(f'ad_blocked_at_{upload_id}')
+            if blocked_at and (datetime.utcnow().timestamp() - blocked_at) >= 29:
+                allowed = True
+                session.pop(f'ad_blocked_at_{upload_id}', None)
+            else:
+                return redirect(url_for('main.download', upload_id=upload_id))
     
     # Increment download count
     upload.download_count += 1

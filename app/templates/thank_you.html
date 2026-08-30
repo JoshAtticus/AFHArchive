@@ -81,7 +81,18 @@
                             {% if upload.notes %}
                             <hr>
                             <p class="mb-0"><strong>{{ _('Notes') }}:</strong><br>{{ upload.notes }}</p>
-                            {% endif %}
+                    {% endif %}
+
+                    <div class="alert alert-warning mb-3 d-none" role="alert" id="adblockWarning">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>{{ _('Ad blocker detected') }}:</strong>
+                        {{ _('Downloads are slower for users with ad blockers. Please disable your ad blocker for this site to download faster.') }}
+                    </div>
+
+                    <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+                        <div id="aswift_0" class="adsbygoogle ad ads adsbox ad-banner banner-ad text-ad textads" data-ad-client="ca-pub-0000000000000000" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true" data-token="{{ ad_token }}" style="display:inline-block;width:728px;height:90px"></div>
+                    </div>
+
                         </div>
                     </div>
                 </div>
@@ -116,72 +127,133 @@
 </div>
 
 <script>
-let countdown = 3;
 const progressBar = document.getElementById('progressBar');
 const countdownText = document.getElementById('countdownText');
 const downloadBtn = document.getElementById('downloadBtn');
+const adblockWarning = document.getElementById('adblockWarning');
 const inDirectDownloadTest = {{ 'true' if in_direct_download_test else 'false' }};
 const mirrorUrl = {{ mirror_url|tojson|safe }};
 
-// Update countdown and progress bar
-const countdownInterval = setInterval(function() {
-    countdown--;
-    const progress = ((3 - countdown) / 3) * 100;
-    progressBar.style.width = progress + '%';
-    
-    if (countdown > 0) {
-        countdownText.textContent = `{{ _('Starting download in') }} ${countdown} {{ _('seconds...') }}`;
-    } else {
-        countdownText.textContent = '{{ _('Starting download...') }}';
-        clearInterval(countdownInterval);
-        
-        // Start download with appropriate URL based on A/B test
-        setTimeout(function() {
-            if (mirrorUrl) {
-                // Download from mirror
-                window.location.href = mirrorUrl;
-            } else if (inDirectDownloadTest) {
-                // Use direct server download - open in new tab to bypass mixed content warnings
-                window.open("https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
-            } else {
-                // Use standard download
-                window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
-            }
-            
-            // Update UI after download starts
-            setTimeout(function() {
-                progressBar.style.width = '100%';
-                progressBar.classList.remove('progress-bar-animated');
-                countdownText.textContent = '{{ _('Download started! Check your downloads folder.') }}';
-                downloadBtn.innerHTML = '<i class="fas fa-check"></i> {{ _('Download Started') }}';
-                downloadBtn.classList.remove('btn-success');
-                downloadBtn.classList.add('btn-outline-success');
-            }, 500);
-        }, 500);
-    }
-}, 1000);
+const adEl = document.getElementById('aswift_0');
+const adVisible = !!adEl && adEl.offsetHeight > 0 && window.getComputedStyle(adEl).display !== 'none';
+let blocked = !adVisible;
 
-// Manual download button click
-downloadBtn.addEventListener('click', function(e) {
-    if (countdown > 0) {
-        e.preventDefault();
-        clearInterval(countdownInterval);
+let totalWait = 30;
+let countdown = 30;
+let waiting = true;
+let countdownInterval = null;
+
+function baitRequest(url) {
+    return new Promise(function(resolve) {
+        const timeout = setTimeout(function() { resolve(false); }, 3000);
+        fetch(url, { mode: 'no-cors', cache: 'no-store' })
+            .then(function() { clearTimeout(timeout); resolve(false); })
+            .catch(function() { clearTimeout(timeout); resolve(true); });
+    });
+}
+
+function baseDownloadUrl() {
+    if (mirrorUrl) {
+        return mirrorUrl;
+    } else if (inDirectDownloadTest) {
+        return "https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}";
+    }
+    return "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+}
+
+function downloadUrl() {
+    const url = baseDownloadUrl();
+    if (!blocked && adEl && adEl.dataset.token && !mirrorUrl && !inDirectDownloadTest) {
+        return url + '?t=' + encodeURIComponent(adEl.dataset.token);
+    }
+    return url;
+}
+
+function startDownload() {
+    if (mirrorUrl) {
+        window.location.href = downloadUrl();
+    } else if (inDirectDownloadTest) {
+        window.open(downloadUrl(), '_blank');
+    } else {
+        window.location.href = downloadUrl();
+    }
+
+    setTimeout(function() {
         progressBar.style.width = '100%';
         progressBar.classList.remove('progress-bar-animated');
         countdownText.textContent = '{{ _('Download started! Check your downloads folder.') }}';
         downloadBtn.innerHTML = '<i class="fas fa-check"></i> {{ _('Download Started') }}';
         downloadBtn.classList.remove('btn-success');
         downloadBtn.classList.add('btn-outline-success');
-        
-        // Start download immediately with appropriate URL
-        if (mirrorUrl) {
-            window.location.href = mirrorUrl;
-        } else if (inDirectDownloadTest) {
-            window.open("https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}", '_blank');
+    }, 500);
+}
+
+function showBlockedWarning() {
+    adblockWarning.classList.remove('d-none');
+    downloadBtn.classList.add('d-none');
+}
+
+function startCountdown() {
+    countdown = totalWait;
+    countdownInterval = setInterval(function() {
+        countdown--;
+        const progress = ((totalWait - countdown) / totalWait) * 100;
+        progressBar.style.width = progress + '%';
+
+        if (countdown > 0) {
+            countdownText.textContent = `{{ _('Starting download in') }} ${countdown} {{ _('seconds...') }}`;
         } else {
-            window.location.href = "{{ url_for('main.download_direct', upload_id=upload.id) }}";
+            clearInterval(countdownInterval);
+            countdownText.textContent = '{{ _('Starting download...') }}';
+            waiting = false;
+            downloadBtn.classList.remove('d-none');
+            downloadBtn.href = downloadUrl();
+            setTimeout(startDownload, 500);
+        }
+    }, 1000);
+}
+
+downloadBtn.addEventListener('click', function(e) {
+    if (waiting) {
+        e.preventDefault();
+        if (!blocked) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            progressBar.style.width = '100%';
+            progressBar.classList.remove('progress-bar-animated');
+            waiting = false;
+            startDownload();
         }
     }
+});
+
+const baitUrls = [
+    "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
+    "https://securepubads.g.doubleclick.net/gpt/pubads_impl_current.js"
+];
+Promise.all(baitUrls.map(baitRequest)).then(function(results) {
+    blocked = blocked || results.indexOf(true) !== -1;
+    return fetch("{{ url_for('main.verify_ad', upload_id=upload.id) }}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ token: blocked ? null : adEl.dataset.token })
+    });
+})
+.then(function(r) { return r.json(); })
+.then(function(data) {
+    totalWait = data.wait || 30;
+    if (data.status === 'ok') {
+        downloadBtn.href = downloadUrl();
+    } else {
+        blocked = true;
+        showBlockedWarning();
+    }
+    startCountdown();
+})
+.catch(function() {
+    blocked = true;
+    showBlockedWarning();
+    startCountdown();
 });
 </script>
 {% endblock %}
