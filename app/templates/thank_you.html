@@ -34,17 +34,17 @@
                     
                     <div class="mb-4">
                         {% if mirror_url %}
-                        <a href="{{ mirror_url }}" class="btn btn-success btn-lg" id="downloadBtn">
+                        <a href="{{ mirror_url }}" class="btn btn-success btn-lg d-none" id="downloadBtn">
                             <i class="fas fa-download"></i> {{ _('Start Download') }}
                         </a>
                         {% elif in_direct_download_test %}
                         <a href="https://direct.afharchive.xyz{{ url_for('api.download_file', upload_id=upload.id) }}" 
-                           target="_blank" class="btn btn-success btn-lg" id="downloadBtn">
+                           target="_blank" class="btn btn-success btn-lg d-none" id="downloadBtn">
                             <i class="fas fa-download"></i> {{ _('Start Download') }}
                         </a>
                         {% else %}
                         <a href="{{ url_for('main.download_direct', upload_id=upload.id) }}" 
-                           class="btn btn-success btn-lg" id="downloadBtn">
+                           class="btn btn-success btn-lg d-none" id="downloadBtn">
                             <i class="fas fa-download"></i> {{ _('Start Download') }}
                         </a>
                         {% endif %}
@@ -55,6 +55,16 @@
                              role="progressbar" style="width: 0%" id="progressBar"></div>
                     </div>
                     <small class="text-muted" id="countdownText">{{ _('Starting download in 3 seconds...') }}</small>
+
+                    <div class="alert alert-warning mt-3 mb-0 d-none" role="alert" id="adblockWarning">
+                        <i class="fas fa-shield-alt"></i>
+                        <strong>{{ _('Ad blocker detected') }}:</strong>
+                        {{ _('Downloads are slower for users with ad blockers. Please disable your ad blocker for this site to download faster.') }}
+                    </div>
+
+                    <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+                        <div id="aswift_0" class="adsbygoogle ad ads adsbox ad-banner banner-ad text-ad textads" data-ad-client="ca-pub-0000000000000000" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true" data-token="{{ ad_token }}" style="display:inline-block;width:728px;height:90px"></div>
+                    </div>
                 </div>
             </div>
 
@@ -81,18 +91,7 @@
                             {% if upload.notes %}
                             <hr>
                             <p class="mb-0"><strong>{{ _('Notes') }}:</strong><br>{{ upload.notes }}</p>
-                    {% endif %}
-
-                    <div class="alert alert-warning mb-3 d-none" role="alert" id="adblockWarning">
-                        <i class="fas fa-shield-alt"></i>
-                        <strong>{{ _('Ad blocker detected') }}:</strong>
-                        {{ _('Downloads are slower for users with ad blockers. Please disable your ad blocker for this site to download faster.') }}
-                    </div>
-
-                    <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
-                        <div id="aswift_0" class="adsbygoogle ad ads adsbox ad-banner banner-ad text-ad textads" data-ad-client="ca-pub-0000000000000000" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true" data-token="{{ ad_token }}" style="display:inline-block;width:728px;height:90px"></div>
-                    </div>
-
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -247,6 +246,7 @@ Promise.all(baitUrls.map(baitRequest)).then(function(results) {
     totalWait = data.wait || 30;
     if (data.status === 'ok') {
         downloadBtn.href = downloadUrl();
+        downloadBtn.classList.remove('d-none');
     } else {
         blocked = true;
         showBlockedWarning();
