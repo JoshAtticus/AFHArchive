@@ -228,9 +228,12 @@ downloadBtn.addEventListener('click', function(e) {
 
 const baitUrls = [
     "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js",
-    "https://securepubads.g.doubleclick.net/gpt/pubads_impl_current.js"
+    "https://www.googletagservices.com/tag/js/gpt.js",
+    "https://www.googletagmanager.com/gtm.js",
+    "https://www.google-analytics.com/analytics.js"
 ];
 Promise.all(baitUrls.map(baitRequest)).then(function(results) {
+    baitUrls.forEach(function(u, i) { console.log('[adcheck] bait', u, results[i] ? 'BLOCKED' : 'allowed'); });
     blocked = blocked || results.indexOf(true) !== -1;
     return fetch("{{ url_for('main.verify_ad', upload_id=upload.id) }}", {
         method: 'POST',
