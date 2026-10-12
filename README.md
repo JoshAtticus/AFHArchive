@@ -1,28 +1,9 @@
 # AFHArchive
 
-A web application designed to preserve content from the now-defunct AndroidFileHost platform.
+A web application designed to preserve content from the now-defunct AndroidFileHost platform. **AFHArchive is no longer accepting files and is no longer receiving any updates.**
 
 ## Translators Needed!
 We need your help to translate AFHArchive into more languages. If you're fluent in English and another language other than English, please help translate by clicking [here](https://crowdin.com/project/afharchive/invite?h=f4b39a64ed3375b62f83cc0a988925af2513288) 
-
-## Features
-
-- **User Authentication**: Google OAuth2 sign-in
-- **File Upload**: Secure file uploads with metadata
-- **Rate Limiting**: Download speed limiting (10 Mbps per user)
-- **File Validation**: MD5 hash calculation and validation
-- **Search & Filter**: Browse files by manufacturer, model, and keywords
-- **Responsive Design**: Mobile-friendly interface
-
-
-## Security Features
-
-- Google OAuth2 authentication
-- File type validation
-- Path traversal protection
-- Admin-only access controls
-- Rate limiting for downloads
-- Secure file storage
 
 ## License
 
